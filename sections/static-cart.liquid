@@ -1,0 +1,437 @@
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+{% assign is_customer = false %}
+{% if shop.customer_accounts_enabled and customer %}
+  {% assign is_customer = true %}
+{% endif %}
+
+{% assign has_sidebar = false %}
+{% assign has_items = false %}
+{% assign show_continue_link = false %}
+
+{% if section.blocks.size > 0 %}
+  {% assign has_sidebar = true %}
+{% endif %}
+
+{% if cart.items.size > 0 %}
+  {% assign has_items = true %}
+{% endif %}
+
+{% assign continue_url = "/collections/all" %}
+{% if settings.continue_shopping_url != blank %}
+  {% assign continue_url = settings.continue_shopping_url %}
+{% endif %}
+
+{% if settings.continue_url_cart %}
+  {% assign show_continue_link = true %}
+  {%- capture continue_link_html -%}
+    <a class="cart-continue" href="{{ continue_url }}">
+      {{ 'cart.general.continue_shopping' | t }}
+      {% include 'icon-chevron-down-small' %}
+    </a>
+  {%- endcapture -%}
+{% endif %}
+
+
+{% assign  counter_filmity = 0 %}
+{% assign filmity = shop.metafields.farmacorp.online_membeship.value | first %}
+
+{% for item in cart.items %}
+  {% if  item.product.tags contains filmity.itemTag %} 
+    {% assign  counter_filmity = counter_filmity | plus: 1 %}
+  {% endif %}
+{% endfor %}
+
+<script>
+
+
+async function removeItem(data) {
+    const result = await fetch("/cart/change.json", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+
+    return result.json();
+}
+
+function removeItemById(id) {
+    return removeItem({ id: id ,  quantity: 0 })
+      .then((data) => {
+        
+          
+        });
+}
+
+  function removeItemByLine(index) {
+    return removeItem({ line: index ,  quantity: 0 }).then((data) => {
+           location.href = location.href + "?filmity=false";
+          
+        });
+}
+  
+{% assign  counter_filmity = 0 %}
+{% for item in cart.items %}
+  {% if  item.product.tags contains filmity.itemTag %} 
+    {% assign  counter_filmity = counter_filmity | plus: 1 %}
+  {% endif %}
+{% endfor %}
+
+{% assign  index = 1 %}
+{% if counter_filmity != cart.items.size and counter_filmity > 0 %}
+ 
+  {% for item in cart.items %}
+      {% if  item.product.tags contains filmity.itemTag %} 
+         removeItemByLine({{index}});
+      {% endif %}
+      {% assign  index = index | plus: 1 %}
+  {% endfor %}
+{% endif %}
+
+
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const filmity = urlParams.get('filmity')
+
+  if(filmity=='false'){
+
+    setTimeout(() => {
+       Toastify({
+            text: "Se quitaron los productos Filmity de tu carrito",
+            duration: 3000,
+            destination: "#",
+            newWindow: true,
+            close: true,
+            gravity: "bottom", // `top` or `bottom`
+            position: "center", // `left`, `center` or `right`
+            stopOnFocus: true, // Prevents dismissing of toast on hover
+            style: {
+              background: "#363434",
+            },
+            onClick: function(){} // Callback after click
+          }).showToast();
+    }, 1000);
+   
+  }
+</script>
+
+
+
+<script
+  type="application/json"
+  data-section-type="static-cart"
+  data-section-id="{{ section.id }}"
+  data-section-data>
+  {
+    "settings": {
+      "shipping": {{ section.settings.enable_shipping_calc | json }},
+      "money_format": {{ shop.money_format | strip_html | json }}
+    },
+    "shipping": {
+      "calculate_shipping": {{ 'cart.shipping.calculate_shipping' | t | json }},
+      "calculating": {{ 'cart.shipping.calculating' | t | json }},
+      "customer": {{ is_customer | default: false | json }},
+      "multiple_rates": {{ 'cart.shipping.multiple_rates' | t: number_of_rates: '*number_of_rates*', address: '*address*', rate: '*rate*' | json }},
+      "one_rate": {{ 'cart.shipping.one_rate' | t: address: '*address*' | json }},
+      "no_rates": {{ 'cart.shipping.no_rates' | t | json }},
+      "rate_value": {{ 'cart.shipping.rate_value' | t: rate_title: '*rate_title*', rate: '*rate*'  | json }},
+      "zip": {{ 'cart.shipping.zip' | t | json }},
+      "shipment_too_heavy": {{ 'cart.shipping.shipment_too_heavy' | t | json }},
+      "error_general": {{ 'cart.shipping.error_general' | t | json }}
+    }
+  }
+</script>
+
+
+<form
+  action="/checkout"
+  method="post"
+  aria-label="cart checkout"
+>
+  <header class="cart-title">
+    <div class="cart-title-left">
+      <h1>{{ 'cart.general.your_cart' | t }}</h1>
+
+      {% if has_items %}
+        <div class="cart-title-total--small"></div>
+      {% endif %}
+    </div>
+    
+    {% if has_items or show_continue_link %}
+      <div class="cart-title-right">
+        {% if has_items %}
+          <div class="cart-title-total--large">
+            <div class="cart-title-total" data-cart-title-total>
+              {{ 'cart.general.subtotal' | t }}
+
+              <span class="money" data-cart-total>
+                {{ cart.total_price | money }}
+              </span>
+            </div>
+          </div>
+
+          <button
+            class="button-primary cart-title-button button-secondary"
+            name="checkout"
+            type="submit"
+            aria-label="{{ 'cart.general.checkout' | t }}"
+            onclick="gtag_report_conversion_COMENZAR_COMPRA_SHOPIFY()"     
+          >
+            {% if settings.enable_checkout_lock_icon %}
+              {% include 'icon-checkout-lock' %}
+            {% else %}
+              {% include 'icon-cart' %}
+            {% endif %}
+            {{ 'cart.general.checkout' | t }}
+          </button>
+        {% elsif show_continue_link %}
+          {{ continue_link_html }}
+        {% endif %}
+      </div>
+    {% endif %}
+  </header>
+
+  <section class="cartitems--container {% if has_sidebar %}has-sidebar{% endif %}">
+    <div class="cartitems">
+      {% if has_items %}
+        {%
+          include 'cart-item-list',
+          cart: cart
+        %}
+
+      {% render 'emarsys-web-cart' %}
+      
+        <div class="cart-total">
+          <div class="cart-final-total">
+            <ul class="discount-list" data-cart-discounts aria-label="{{ 'product.general.discounts' | t }}">
+              {%
+                include 'cart-discounts',
+                cart: cart
+              %}
+            </ul>
+
+            <div class="cart-subtotal">
+              <span>{{ 'cart.general.subtotal' | t }}</span>
+              <span class="money" data-cart-total>{{ cart.total_price | money }}</span>
+            </div>
+          </div>
+
+          <div class="cart-shipping">
+            {% if cart.requires_shipping %}
+              {{ 'cart.general.shipping_at_checkout' | t }}
+            {% else %}
+              {{ 'cart.general.taxes_at_checkout' | t }}
+            {% endif %}
+
+            {% comment %}
+              snippets/cart-shipping.liquid has an internal check to see if shipping is required
+            {% endcomment %}
+            {% if section.settings.enable_shipping_calc %}
+              {% include 'cart-shipping' %}
+            {% endif %}
+          </div>
+
+ 
+          <div class="cart-checkout">
+            <button
+              class="button-primary button-secondary"
+              type="submit"
+              name="checkout"
+              aria-label="{{ 'cart.general.checkout' | t }}"
+            >
+              {% if settings.enable_checkout_lock_icon %}
+                {% include 'icon-checkout-lock' %}
+              {% else %}
+                {% include 'icon-cart' %}
+              {% endif %}
+              {{ 'cart.general.checkout' | t }}
+            </button>
+
+            {% if additional_checkout_buttons %}
+              <div class="additional-checkout-buttons">
+                {{ content_for_additional_checkout_buttons }}
+              </div>
+            {% endif %}
+
+            {% if show_continue_link %}
+              {{ continue_link_html }}
+            {% endif %}
+          </div>
+        </div>
+      {% else %}
+        <div class="cartitems-empty">
+          <div class="cartitems-empty--inner">
+            <p>{{ 'cart.general.cart_empty' | t }}</p>
+
+            {% if show_continue_link %}
+              <a class="button-primary" href="{{ continue_url }}">
+                {% include 'icon-cart' %}
+                {{ 'cart.general.continue_shopping' | t }}
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    {% if has_sidebar %}
+      <div class="cart-sidebar">
+        {% for block in section.blocks %}
+          {% if block.type == 'image' %}
+            {% assign image = block.settings.image %}
+
+            <article class="cart-sidebar-item">
+              {% if image %}
+                {%
+                  include 'rimg',
+                  img: image,
+                  class: 'cart-sidebar-item-image',
+                  size: '445x',
+                  lazy: true,
+                  canvas: true
+                %}
+              {% else %}
+                {{ 'image' | placeholder_svg_tag: 'placeholder--image cart-sidebar-item-image' }}
+              {% endif %}
+            </article>
+          {% endif %}
+
+          {% if block.type == 'richtext' %}
+            <article class="cart-sidebar-item cart-sidebar-item--text rte">
+              {{ block.settings.richtext }}
+            </article>
+          {% endif %}
+
+          {% if block.type == 'page' %}
+            <article class="cart-sidebar-item cart-sidebar-item--text rte">
+              {{ pages[block.settings.page].content }}
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </section>
+</form>
+
+{% if customer %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var checkoutButtons = document.querySelectorAll('button[name="checkout"], input[name="checkout"]');
+      checkoutButtons.forEach(function(button) {
+        button.addEventListener('click', function(event) {
+          event.preventDefault();
+
+          try {
+            var hasValidAddress = ({{ customer.default_address.address1 | json }} === null) ? false : true;
+
+            if (hasValidAddress) {
+              button.closest('form').submit();
+            } else {
+            Swal.fire({
+          title: 'Dirección de envío',
+          text: 'Por favor, añada una dirección de envío válida antes de proceder al pago..',
+          icon: 'warning',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Aceptar',
+          showCloseButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = '/account/addresses';
+          }
+        });
+            }
+          } catch (error) {
+          Swal.fire({
+          title: 'Dirección de envío',
+          text: 'Hubo un problema al verificar su dirección de envío. Por favor, intente nuevamente.',
+          icon: 'warning',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Aceptar',
+          showCloseButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            console.error('Error verifying address:', error);
+          }
+        });
+          }
+        });
+      });
+    });
+  </script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Cart page",
+  "class": "cart--section",
+  "max_blocks": 2,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_order_notes",
+      "label": "Enable order notes text box",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Shipping estimator"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_shipping_calc",
+      "label": "Enable shipping estimator",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "shipping_calc_default_country",
+      "label": "Default country",
+      "default": "United States"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "richtext",
+      "name": "Rich text",
+      "limit": 1,
+      "settings": [
+        {
+          "id": "richtext",
+          "type": "richtext",
+          "label": "Rich text",
+          "default": "<p>Use this section to welcome customers to your store, say a bit about your brand, or share news and seasonal promotions.</p>"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "name": "Image",
+      "limit": 1,
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+          "label": "Image"
+        }
+      ]
+    },
+    {
+      "type": "page",
+      "name": "Page",
+      "limit": 1,
+      "settings": [
+        {
+          "id": "page",
+          "type": "page",
+          "label": "Choose page"
+        }
+      ]
+    }
+  ]
+}
+
+{% endschema %}

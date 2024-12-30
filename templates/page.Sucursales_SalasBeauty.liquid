@@ -1,0 +1,567 @@
+<html>
+<head>
+<!DOCTYPE html>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Salud360</title>
+
+	<!--== Style Bootstrap ==-->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+	<style type="text/css">
+        /*body
+        {
+            background-color: #40458f;
+            max-width: 100%;
+        }*/
+        
+        .Contenedor
+        {
+            width: 100%;
+        }
+
+        #Banner
+        {
+            max-width: 100%;
+            margin: auto;
+        }
+        
+        #SectionSucursales
+        {
+            max-width: 100%;
+        }
+
+		.Sucursales
+		{
+			background: linear-gradient(90deg, #FFFFFF 0%, #CBECFC 100%);
+			color: #004581;
+            margin: auto;
+            font-family: Arial, Helvetica, sans-serif;
+		}
+        
+        .ListaSucursales
+        {
+            margin-left: 10%;
+        }
+
+		/*.Suc
+		{
+            font-size: 300%;
+		}*/
+
+		/*.title
+		{
+			font-size: 150%;
+            font-weight: bold;            
+		}*/
+
+        .Subtitle
+        {
+            font-size: 120%;
+            font-weight: bold;
+        }
+
+        .SubtitleP
+        {
+            font-size: 300%;
+            font-weight: bold;
+        }
+      
+      	.SubtitleD
+        {
+            font-size: 150%;
+            font-weight: bold;
+        }
+
+		a 
+		{
+		  	outline: none;
+		 	text-decoration: none;
+		  	color: #004581;
+		}
+        /*.mapa 
+        {
+            background-color: #40458f;
+        }*/
+
+        footer
+        {
+            background-color: #fff;
+        }
+
+        li
+        {
+            font-size: 100%;
+            margin-right: 2%;
+        }
+
+        #Campana
+        {
+            background-color: #40458f;
+            margin: auto;
+            margin-top: 0px;
+        }
+
+        #info
+        {
+            padding-bottom: 1%;
+        }
+	</style>
+</head>
+<body>
+    <div class="Contenedor">
+        <!--<div class="Banner">
+            <img src="header.jpg" width="100%" height="auto">
+        </div>-->
+        <div class="Sucursales" id="Sucursales">
+            <br/>
+            <br/>
+            <div class="section-title text-center"> 
+                <p class="SubtitleP">
+                    Farmacorp Salas Beauty
+                </p>
+              <p class="SubtitleD">
+                    Productos seleccionados de Belleza y Cuidado Personal
+                </p>
+            </div>
+            <div class="ListaSucursales">
+                <div class="row justify-content-center">
+                    <div class="col-md-5">
+                      <p class="Subtitle">
+                        SANTA CRUZ
+                      </p>
+                      <p class="Suc">
+                      	<ul>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.790573589341413%2C-63.19342734748856&z=18">
+                            <li>
+                              Sucursal Pirai 2do Anillo
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.792164307227807%2C-63.180045072422025&z=18">
+                            <li>
+                              Sucursal Irala Esq. Santiesteban
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.770315669546697%2C-63.17129015871719&z=18">
+                            <li>
+                              Sucursal Trinidad 2do Anillo
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.77814940238753%2C-63.188530538028715&z=18">
+                            <li>
+                              Sucursal Cañoto Esq. Mexico
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.765340979954935%2C-63.19577068009416&z=18">
+                            <li>
+                              Sucursal Equipetrol
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.794059265528894%2C-63.17912135161468&z=18">
+                            <li>
+                              Sucursal Andrés Manso esq. Santistevan
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.83300958839169%2C-63.185912219098526&z=18">
+                            <li>
+                              Sucursal Santos Dumont 5to Anillo
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.807474387547774%2C-63.20421695636458&z=18">
+                            <li>
+                              Sucursal Las Palmas
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.775016999792406%2C-63.183860808880766&z=18">
+                            <li>
+                              Sucursal Cañoto esq. Libertad
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.772429545805736%2C-63.20309578755325&z=18">
+                            <li>
+                              Sucursal Busch 3er Anillo
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.800924143913093%2C-63.187135405344236&z=18">
+                            <li>
+                              Sucursal Tomás de Lezo esq. 2do Anillo
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.77487539270991%2C-63.1345912625656&z=18">
+                            <li>
+                              Sucursal Virgen de Cotoca 5to Anillo
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.749957262269703%2C-63.16960572525008&z=18">
+                            <li>
+                              Sucursal Beni 4to Anillo
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.732176888503908%2C-63.16905319019301&z=18">
+                            <li>
+                              Sucursal Banzer 6to Anillo
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.791135286073256%2C-63.17327010548782&z=18">
+                            <li>
+                              Sucursal Irala esq. Argentina
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.81974176917356%2C-63.21814614674591&z=18">
+                            <li>
+                              Sucursal San Francisco
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.753389559174966%2C-63.19595066501236&z=18">
+                            <li>
+                              Sucursal Pablo Busch
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.749163645259625%2C-63.215528311758284&z=18">
+                            <li>
+                              Sucursal Urubó
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.785311788309876%2C-63.20441592418029&z=18">
+                            <li>
+                              Sucursal Biopetrol Roca y Coronado
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.34555593729555%2C-63.25492137301636&z=18">
+                            <li>
+                              Sucursal Montero
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.754711532032353%2C-63.20017156358598&z=18">
+                            <li>
+                              Sucursal Mall Ventura
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.50853096026826%2C-63.16889109731553&z=18">
+                            <li>
+                              Sucursal  Warnes
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.79909691374731%2C-63.22087636441803&z=18">
+                            <li>
+                              Sucursal Santa Mónica
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.795260983083317%2C-63.157401984130864&z=18">
+                            <li>
+                              Sucursal Tres Pasos al Frente
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.342237343505534%2C-63.25519572109138&z=18">
+                            <li>
+                              Sucursal Montero Plaza Principal
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.849689242245226%2C-63.18335430265831&z=18">
+                            <li>
+                              Sucursal Santos Dumont 6to Anillo y 7mo Anillo
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.714895940883153%2C-63.16636897916794&z=18">
+                            <li>
+                              Sucursal El Remanso
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.819218191090243%2C-63.23327044047547&z=18">
+                            <li>
+                              Sucursal Pirai entre 6to y 7mo Anillo
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.695627371793023%2C-63.156979084725194&z=18">
+                            <li>
+                              Sucursal Condominio Sevilla
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.811909780400786%2C-63.13665158702798&z=18">
+                            <li>
+                              Sucursal Radial 10 esq. Che Guevara
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.760591285548657%2C-63.195228603149424&z=18">
+                            <li>
+                              Sucursal San Martin Entre 3er Anillo y 4to Anillo
+                            </li>
+                          </a>
+                          <!--<a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.809065773031467%2C-63.20157513128281&z=18">
+                            <li>
+                              Proxi Escuadron Velasco
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.7568333485483%2C-63.191483385250095&z=18">
+                            <li>
+                              Proxi Canal Isuto
+                            </li>
+                          </a>-->
+                      	</ul>
+                      </p>
+                  	  <p class="Subtitle">
+                         BENI
+                      </p>
+                      <p class="Suc">
+                        <ul>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-14.833979042584131%2C-64.90398507738496&z=18">
+                            <li>
+                              Sucursal Beni
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-10.996333020297925%2C-66.07518157672119&z=18">
+                            <li>
+                              Sucursal Riberalta
+                            </li>
+                          </a>
+                      	</ul>
+                      </p>
+                  	</div>
+                	<div class="col-md-5">
+                      <p class="Subtitle">
+                         COCHABAMBA
+                      </p>
+                      <p class="Suc">
+                        <ul>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.371887219695516%2C-66.16410635676961&z=18">
+                            <li>
+                              Sucursal Adela Zamudio
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/u/0/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.385815949604748%2C-66.15818068146388&z=18">
+                            <li>
+                              Sucursal El Prado I
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/u/0/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.382709647759718%2C-66.15928355669247&z=18">
+                            <li>
+                              Sucursal El Prado II
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.37134103688581%2C-66.17577646102035&z=18">
+                            <li>
+                              Sucursal Melchor Perez
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.39076330244886%2C-66.21985319403672&z=18">
+                            <li>
+                              Sucursal Blanco Galindo
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.354059%2C-66.187984z=18">
+                            <li>
+                              Sucursal Ecologica
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/u/0/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.354422474168828%2C-66.18835950926207&z=18">
+                            <li>
+                              Sucursal Simon Lopez
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/u/0/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.37412625321658%2C-66.18131837470573&z=18">
+                            <li>
+                              Sucursal Beijing esquina Juan de la Rosa
+                            </li>
+                          </a>
+                          <!--
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.372873803078182%2C-66.15563887004473&z=18">
+                            <li>
+                              Sucursal America Edif. Aranjuez
+                            </li>
+                          </a>
+                          -->
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.362990296059948%2C-66.13237167246875&z=18">
+                            <li>
+                              Sucursal Pacata Alta
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.39724253191354%2C-66.28110848650594&z=18">
+                            <li>
+                              Sucursal Plaza 15 de Agosto
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.396139338090116%2C-66.18191265277862&z=18">
+                            <li>
+                              Sucursal Melchor Perez Chimba
+                            </li>
+                          </a>
+                          <!--<a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.396139338090116%2C-66.18191265277862&z=18">
+                            <li>
+                              Proxi Melchor Perez
+                            </li>
+                          </a>-->
+                      	</ul>
+                      </p>
+                      <p class="Subtitle">
+                         LA PAZ
+                      </p>
+                      <p class="Suc">
+                        <ul>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-16.511016331168243%2C-68.12697290670432&z=18">
+                            <li>
+                              Sucursal Avaroa
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-16.522186558140348%2C-68.15462445767211&z=18">
+                            <li>
+                              Sucursal Satelite
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-16.524981423387747%2C-68.11021135714722&z=18">
+                            <li>
+                              Sucursal Obrajes
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-16.54015632698738%2C-68.06805618783571&z=18">
+                            <li>
+                              Sucursal Cota Cota 1
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-16.495609155172474%2C-68.13508430555726&z=18">
+                            <li>
+                              Sucursal Shopping Norte
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-16.499788761062703%2C-68.13433328703309&z=18">
+                            <li>
+                              Sucursal Plaza Venezuela
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-16.496536072091658%2C-68.12398734854888&z=18">
+                            <li>
+                              Sucrusal Miraflores
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/u/0/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-16.544859610422083%2C-68.07714616075562&z=18">
+                            <li>
+                              Sucursal Los Pinos
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/u/0/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-16.521413119509436%2C-68.06372518280334&z=18">
+                            <li>
+                              Sucursal Achumani 2
+                            </li>
+                          </a>
+                          <!--<a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-16.50947044776333%2C-68.13267247368012&z=18">
+                            <li>
+                              CD Proxi Sopocachi
+                            </li>
+                          </a>-->
+                      	</ul>
+                      </p>
+          			  <p class="Subtitle">
+                         TARIJA
+                      </p>
+                      <p class="Suc">
+                        <ul>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-21.53025763193184%2C-64.73039571378835&z=18">
+                            <li>
+                              Sucursal América
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-21.539807154161025%2C-64.71425608598327&z=18">
+                            <li>
+                              Sucursal Juan XXIII
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-21.53218022365931%2C-64.74049983565139&z=18">
+                            <li>
+                              Sucursal las Americas Esq. 15 de Abril
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/u/0/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-21.534607461866237%2C-64.73514800736841&z=18">
+                            <li>
+                              Sucursal Nougat
+                            </li>
+                          </a>
+                      	</ul>
+                      </p>
+      				  <p class="Subtitle">
+                         ORURO
+                      </p>
+                      <p class="Suc">
+                        <ul>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.970588229944006%2C-67.11158467790986&z=18">
+                            <li>
+                              Sucursal Oruro
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/u/0/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-17.961846287071594%2C-67.10050284560583&z=18">
+                            <li>
+                              Sucursal Oruro 2
+                            </li>
+                          </a>
+                      	</ul>
+                      </p>
+  					  <p class="Subtitle">
+                         CHUQUISACA
+                      </p>
+                      <p class="Suc">
+                        <ul>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-19.04825453059689%2C-65.25982569577026&z=18">
+                            <li>
+                              Sucursal Sucre
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-19.043388578236275%2C-65.2460177043686&z=18">
+                            <li>
+                              Sucursal Las Americas
+                            </li>
+                          </a>
+                      	</ul>
+                      </p>
+  					  
+					  <p class="Subtitle">
+                         PANDO
+                      </p>
+                      <p class="Suc">
+                        <ul>
+                          <a href="https://www.google.com/maps/d/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-11.01818213726355%2C-68.75608571296692&z=18">
+                            <li>
+                              Sucursal Cobija 1
+                            </li>
+                          </a>
+                          <a href="https://www.google.com/maps/d/u/0/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-11.018881540041402%2C-68.75414004929875&z=18">
+                            <li>
+                              Sucursal Cobija 2
+                            </li>
+                          </a>
+                      	</ul>
+                      </p>
+                      <p class="Subtitle">
+                         POTOSI
+                      </p>
+                      <p class="Suc">
+                        <ul>
+                          <a href="https://www.google.com/maps/d/u/0/edit?hl=es&mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ll=-19.58093451320383%2C-65.75247994810292&z=18">
+                            <li>
+                              Sucursal Potosi
+                            </li>
+                          </a>
+                      	</ul>
+                      </p>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="section-title text-center" id="info">  
+                <a href="tel:+59177755555">
+                <p>
+                    <img src="{{ 'Smas-informacion.png' | asset_url }}" width="55%"/>
+                </p>
+                </a>
+                <p class="Subtitle" style="padding: 1px;">
+                    Horario de atención enfermerías: De 7:00 a 23:00
+                </p> 
+            </div>-->
+        </div>
+        <div class="mapa">
+            <iframe 
+                style="border:0"
+                loading="lazy"  
+                allowfullscreen
+                src="https://www.google.com/maps/d/embed?mid=1EWd2_taLkrPsc8AvLlVjxrhpWfY0Agc5&ehbc=2E312F" width="100%" height="480">
+            </iframe>
+        </div>
+    </div>
+</body>
+</html>

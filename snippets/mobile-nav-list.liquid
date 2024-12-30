@@ -1,0 +1,203 @@
+{% comment %}
+  This is the nav list for the mobile menu.
+
+  @param menu LinkedList
+    The menu handle to look up.
+
+  @param blocks Array
+    Array of blocks possibly containing meganav information
+
+{% endcomment %}
+
+<ul
+  class="navmenu navmenu-depth-1"
+  data-navmenu
+  {% if menu_title %}aria-label="{{ menu_title }}"{% endif %}
+>
+  {% assign sanitized_terms = search.terms %}
+  {% if sanitized_terms contains 'tag:' %}
+    	{% assign is_amarket = sanitized_terms | split: 'tag:' | last %}
+  {% endif %}
+  
+  {% for menu_item in menu_list %}
+   {%  if  shop.metafields.farmacorp.amarketCollections  contains  collection.id  or is_amarket == 'AMARKET'  %}
+  	 
+    {%  if  menu_item.title contains 'Amarket' or menu_item.title == 'Ir a Farmacorp' %}
+    {% assign show_subnav = true %}
+    {% if linklists[menu_item.handle] == blank %}
+      {% assign show_subnav = false %}
+    {% endif %}
+
+    {% assign meganav_block = null %}
+    {% assign meganav_trigger = null %}
+    {% if blocks.size > 0 %}
+      {% for block in blocks %}
+        {% if block.type == 'meganav_images' %}
+          {% assign meganav_trigger = block.settings.meganav_trigger | handle | strip %}
+        {% endif %}
+
+        {% if menu_item.handle == meganav_trigger and menu_item.links.size > 0 %}
+          {% assign meganav_block = block %}
+        {% elsif menu_item.title == meganav_trigger %}
+          {% assign meganav_block = block %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    {%- capture navmenu_item_classes -%}
+      navmenu-item
+      {% if show_subnav %}navmenu-item-parent{% endif %}
+      navmenu-id-{{ menu_item.handle }}
+    {%- endcapture -%}
+
+    <li
+      class="{{ navmenu_item_classes | strip_newlines }}"
+      {% if show_subnav %}data-navmenu-parent{% endif %}
+    >
+      <a
+        class="navmenu-link {% if show_subnav %}navmenu-link-parent{% endif %} {% if menu_item.active %}navmenu-link-active{% endif %}"
+        href="{{ menu_item.url }}"
+        {% if show_subnav %}
+          aria-haspopup="true"
+          aria-expanded="false"
+        {% endif %}
+      >
+        {{ menu_item.title }}
+      </a>
+
+      {% if show_subnav %}
+        {%
+          include 'mobile-navmenu-button',
+          button_label: menu_item.title,
+        %}
+      {% endif %}
+
+      {% if meganav_block %}
+        <div class="navmenu-submenu navmenu-meganav" data-navmenu-submenu>
+        {%
+          include 'meganav-promo',
+          meganav_block: meganav_block,
+          position: 'first'
+        %}
+      {% endif %}
+
+      {% if show_subnav %}
+        {%
+          include 'navlist',
+          menu_list: linklists[menu_item.handle].links,
+          depth: 2,
+          max_depth: 3,
+          show_arrows: true,
+          aria_expanded: false,
+          is_mobile: true,
+        %}
+      {% endif %}
+
+      {% if meganav_block %}
+        {%
+          include 'meganav-promo',
+          meganav_block: meganav_block,
+          position: 'last'
+        %}
+        </div>
+      {% endif %}
+    </li>
+    {% endif %}
+  
+  {% else%}
+  
+  {% if menu_item.title != 'Ir a Farmacorp' %}
+  {% assign show_subnav = true %}
+    {% if linklists[menu_item.handle] == blank %}
+      {% assign show_subnav = false %}
+    {% endif %}
+
+    {% assign show_meganav = false %}
+    {% assign show_multi_column = false %}
+    {% assign shopify_attributes = null %}
+    {% assign meganav_block = null %}
+    {% if blocks.size > 0 %}
+      {% for block in blocks %}
+        {% if block.type == 'meganav_images' %}
+          {% assign meganav_trigger = block.settings.meganav_trigger | handle | strip %}
+        {% elsif block.type == 'multi_column_menu' %}
+          {% assign meganav_trigger = block.settings.menu_trigger | handle | strip %}
+        {% endif %}
+
+        {% if menu_item.handle == meganav_trigger and menu_item.links.size > 0 %}
+          {% assign show_meganav = true %}
+          {% assign shopify_attributes = block.shopify_attributes %}
+          {% assign meganav_block = block %}
+          {% if block.type == 'multi_column_menu' %}
+            {% assign show_multi_column = true %}
+          {% endif %}
+        {% elsif menu_item.title == meganav_trigger %}
+          {% assign meganav_block = block %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    {%- capture navmenu_item_classes -%}
+      navmenu-item
+      {% if show_subnav %}navmenu-item-parent{% endif %}
+      navmenu-id-{{ menu_item.handle }}
+      {% if show_meganav %}navmenu-meganav-item-parent{% endif %}
+    {%- endcapture -%}
+
+  
+  
+    <li
+      class="{{ navmenu_item_classes | strip_newlines }}"
+      {% if show_meganav %}data-navmenu-meganav-trigger{% endif %}
+      {% if show_subnav %}data-navmenu-parent{% endif %}
+      {{ shopify_attributes }}
+    >
+      <a
+        class="navmenu-link {% if show_subnav %}navmenu-link-parent{% endif %} {% if menu_item.active %}navmenu-link-active{% endif %}"
+        href="{{ menu_item.url }}"
+        {% if show_subnav %}
+          aria-haspopup="true"
+          aria-expanded="false"
+        {% endif %}
+      >
+        {{ menu_item.title }}
+        {% if show_subnav %}
+          <span
+            class="navmenu-icon navmenu-icon-depth-1"
+            data-navmenu-trigger
+          >
+            {% include 'icon-chevron-down-small' %}
+          </span>
+        {% endif %}
+      </a>
+
+      {% if show_meganav %}
+        {% if show_multi_column %}
+          {%
+            include 'multi-column-menu',
+            menu: menu_item,
+            block: meganav_block,
+          %}
+        {% else %}
+          {%
+            include 'meganav',
+            menu: menu_item,
+            block: meganav_block,
+          %}
+        {% endif %}
+      {% elsif show_subnav %}
+        {%
+          include 'navlist',
+          menu_list: linklists[menu_item.handle].links,
+          depth: 2,
+          max_depth: 3,
+          show_arrows: true,
+          aria_expanded: false,
+          is_mobile: false,
+        %}
+      {% endif %}
+    </li> 
+  {% endif %}
+  {% endif %}
+  {% endfor %}
+</ul>

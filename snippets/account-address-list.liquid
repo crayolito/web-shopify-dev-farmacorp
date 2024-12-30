@@ -1,0 +1,28 @@
+{% comment %}
+  @param address {Object}
+    Object containing address items
+{% endcomment %}
+
+<ul class="account-address-list">
+
+    <li><b>{{ address.last_name }}</b></li>
+    {% comment %}
+    {% if address.company != blank %}
+      <li>{{ address.company }}</li>
+  {% endif %}    
+  {% endcomment %}
+  {% if address.street != blank %}
+    <li>{{ address.street }}</li>
+  {% endif %}
+  {% if address.city != blank %}
+    <li>
+      {{ address.city }}
+    </li>
+  {% endif %}
+  {% if address.phone != blank %}
+    <li>{{ address.phone }}</li>
+  {% endif %}
+ 
+</ul>
+
+	

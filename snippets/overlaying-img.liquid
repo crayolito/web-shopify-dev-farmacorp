@@ -1,0 +1,98 @@
+
+{% comment %}
+
+    @param productTags
+      list of tags associated to product
+    
+    @param primaryImg
+      An Image Drop to display.
+   
+    @param secondaryImg
+      An Image Drop to display.
+
+    @param primaryImgSize (optional)
+      The size to display the image at. Uses the same syntax as `img_url`.
+      Defaults to the image's native size.
+    
+    @param secondaryImgSize (optional)
+      The size to display the image at. Uses the same syntax as `img_url`.
+      Defaults to the image's native size.
+    
+    @param primaryImgClass
+      The size to display the image at. Uses the same syntax as `img_url`.
+      Defaults to the image's native size.
+    
+    @param secondaryImgClass
+      The size to display the image at. Uses the same syntax as `img_url`.
+      Defaults to the image's native size.
+    
+    @param content
+      The size to display the image at. Uses the same syntax as `img_url`.
+      Defaults to the image's native size.
+      
+    @param productTags
+      The size to display the image at. Uses the same syntax as `img_url`.
+      Defaults to the image's native size.
+    
+{% endcomment %}
+
+
+{{ 'prom-image-card.css' | asset_url | stylesheet_tag }}
+
+
+<div class="image-container">
+  {% if content %}
+    {{ content }}
+  {% else %}
+    {%
+      include 'rimg',
+      class: primaryImgClass,
+      img: primaryImg,
+      size: primaryImgSize,
+      crop: 'center',
+    %}
+    
+  {% endif %}
+    <div class="text-overlay">
+      {% assign inFilterCollection = false %}
+      {% assign inFilterBenetton = false %}
+      {%- assign tagList = settings.filterByCollection2| append: ',' | append: settings.filterByCollection | split: ',' -%}
+      {% for tagElem in tagList %}
+        {% if productTags contains tagElem %}
+          {% if tagElem == 'STICKERS' %}
+              {% assign inFilterBenetton = true %}
+              {% break %}
+            {% endif %}  
+      
+            {% if tagElem == 'UNETE' %}
+              {% assign inFilterCollection = true %}
+              {% break %}
+            {% endif %}
+        {% endif %}
+      {% endfor %}
+
+      {% if inFilterBenetton %}
+            <img 
+              src="{{ settings.imagen_sticker}}"
+              srcset= "{{ settings.imagen_sticker }}"
+              alt="imagen"
+              width="{{ secondaryImgSize }}"
+              height="{{ secondaryImgSize }}"
+              data-rimg-scale="1"
+              class="{{ secondaryImgClass }}"
+              >
+      {% endif %}
+      
+      {% if inFilterCollection %}
+        <img
+            src= "{{ secondaryImg }}"
+            srcset= "{{ secondaryImg }}"
+            alt="imagen"
+            width="{{ secondaryImgSize }}"
+            height="{{ secondaryImgSize }}"
+            data-rimg-scale="1"
+            class="{{ secondaryImgClass }}"
+          >
+      {% endif %}
+    </div>
+</div>

@@ -1,0 +1,622 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+  
+.buttonload {
+  background-color: white; 
+  border: none;
+  color: gray; 
+  font-size: 16px 
+}
+
+  .badge2x1 {
+  display: inline-block;
+  padding: 2px 8px;
+  background-color: red; 
+  color: #ffffff; 
+  border-radius: 5px; 
+  font-size: 1.5rem; 
+  font-weight: bold; 
+    margin-bottom : 15px;
+}
+  
+</style>
+
+{% comment %}
+  @param layout {String}
+    Layout type
+
+  @param is_product_modal {Bool}
+    Is the snippet being loaded in a QuickShop
+
+  @param hide_description {Bool}
+    If true, hide the product description
+
+  @param gallery_aspect_ratio {string}
+    This is the gallery aspect ratio, can be one of 'natural', 'short', 'square', 'long'
+
+  @param gallery_thumbnail_position {string}
+    This is the gallery thumbnail position, can be one of 'below', or 'left'
+
+  @param gallery_image_crop {boolean}
+    Whether to crop images
+
+  @param gallery_hover_zoom {String}
+    This is the hover zoom setting, which is either 'disabled', 'separate', or 'replace'
+
+  @param gallery_click_to_zoom {String}
+    This is the click to zoom setting, which is either 'disabled', 'mobile', 'desktop', or 'always'
+{% endcomment %}
+ {% assign is2x1 = false  %}
+      {% if settings.item_campania_2x1_enable  and product.tags contains settings.item_campania_2x1_tag %}
+          {% assign is2x1 = true  %}
+      {% endif %}
+{% assign enable_social_sharing = settings.product_social_sharing %}
+{% assign selected_variant = product.selected_or_first_available_variant %}
+{% assign compare_at_price = selected_variant.compare_at_price %}
+{% assign price = selected_variant.price %}
+{% assign sku = selected_variant.sku %}
+{% assign product_available = product.available %}
+
+{% comment %}For a potential divider in the product.description we need to split the content{% endcomment %}
+{% assign readmore_split = product.description | split: '<!-- more -->' %}
+
+{% if onboarding %}
+  {% assign compare_at_price = 2999 %}
+  {% assign price = 1999 %}
+{% endif %}
+
+{% assign on_sale = false %}
+{% if compare_at_price > price %}
+  {% assign on_sale = true %}
+{% endif %}
+
+{%
+  include 'consistent-savings',
+  variants: product.variants,
+  on_sale: on_sale
+%}
+
+
+{%- capture share_buttons -%}
+  {% assign social_image = false %}
+  {% if product.featured_image %}
+    {% assign social_image = product.featured_image | img_url: '1024x' %}
+  {% endif %}
+  {% assign social_url = shop.url | append: product.url %}
+  {%-
+    include 'share-buttons',
+    snippet_title: 'general.share_buttons.title',
+    social_image: social_image,
+    social_title: product.title,
+    social_url: social_url
+  -%}
+{%- endcapture  -%}
+
+<article class="product--outer">
+  {% comment %}
+    Product slideshow, never moves
+  {% endcomment %}
+  {%
+    include 'product-gallery',
+    product: product,
+    aspect_ratio: gallery_aspect_ratio,
+    thumbnail_position: gallery_thumbnail_position,
+    image_crop: gallery_image_crop,
+    click_to_zoom: gallery_click_to_zoom,
+    hover_zoom: gallery_hover_zoom
+  %}
+  <div class="product-main">
+    <div class="product-details" data-product-details>
+  {% if is2x1 %}
+    <span class='badge2x1'> {{ settings.item_campania_2x1_badge }}</span>
+  {% endif %}
+      {% if is_product_modal %}
+        <h2 class="product-title">
+          <a href="{{ product.url | within: collection }}">{{ product.title }}</a>
+        </h2>
+      {% else %}
+        {% if template == 'index' %}
+          <h2 class="product-title">
+        {% else %}
+          <h1 class="product-title">
+        {% endif %}
+          {% unless onboarding %}
+            {{ product.title }}
+          {% else %}
+            {{ 'onboarding.product.title' | t }}
+          {% endunless %}
+        {% if template == 'index' %}
+          </h2>
+        {% else %}
+          </h1>
+        {% endif %}
+      {% endif %}
+
+      {% if settings.product_show_vendor and product.vendor != blank or onboarding %}
+        <div class="product-vendor">
+          {% unless onboarding %}
+            {%- capture vendor_link -%}
+              {{ product.vendor | link_to_vendor }}
+            {%- endcapture -%}
+            {{ 'product.general.by_vendor_html' | t: vendor_link: vendor_link }}
+          {% else %}
+            {{ 'onboarding.product.by_vendor' | t }}
+          {% endunless %}
+        </div>
+      {% endif %}
+
+      {% if settings.product_ratings_reviews %}
+        <div class="product-ratings">
+          <span class="shopify-product-reviews-badge" data-id="{{ product.id }}">
+            <span class="spr-badge">
+              <span class="spr-starrating spr-badge-starrating">
+                <i class="spr-icon spr-icon-star-empty"></i>
+                <i class="spr-icon spr-icon-star-empty"></i>
+                <i class="spr-icon spr-icon-star-empty"></i>
+                <i class="spr-icon spr-icon-star-empty"></i>
+                <i class="spr-icon spr-icon-star-empty"></i>
+              </span>
+            </span>
+          </span>
+        </div>
+      {% endif %}
+
+      <div class="product-pricing" aria-live="polite">
+        {% comment %}
+
+        {%
+          include 'product-badge',
+          class_root: 'product',
+          product_available: product_available,
+          on_sale: on_sale,
+          price: price,
+          compare_at_price: compare_at_price,
+          show_saved: true
+        %}
+		{% endcomment %}
+
+       {% assign is2x1 = false  %}
+      {% if settings.item_campania_2x1_enable  and product.tags contains settings.item_campania_2x1_tag %}
+          {% assign is2x1 = true  %}
+      {% endif %}
+        
+        {%
+          include 'product-price',
+          class_root: 'product',
+          price: price,
+          price_varies: false,
+          compare_at_price: compare_at_price,
+          compare_at_price_varies: false,
+          on_sale: on_sale,
+          emphasize_price: false,
+          show_original: true,
+           is2x1 : is2x1
+        %}
+        
+      
+      </div>
+      {% if product_available == true and settings.product_show_cantidad == true %}
+      <div class="cantidadProducto">
+        <p>
+        <p id = "{{selected_variant.id}}"> 
+           {{ 'farmacorp.producto.cantidadProducto_html' | t: stock: selected_variant.inventory_quantity | strip_newlines }}
+        </p>
+      </div>
+      {% endif %}
+      
+      {% if settings.product_unidad_venta == true %}
+      {% if product.metafields.inventory.unidad_medida  %}
+      <p>
+      <p>   
+        {{ 'farmacorp.producto.unidadVenta_html' | t: unidad: product.metafields.inventory.unidad_medida | strip_newlines }}
+      </p>
+      
+      {% endif %}
+      {% endif %}
+
+      
+      {% if settings.product_show_sku == true %}
+        {% unless onboarding %}
+          <div
+            class="
+              product-sku
+              {% if sku == empty %}product-sku--empty{% endif %}
+            "
+          >
+            {{ 'product.general.sku_html' | t: sku: sku | strip_newlines }}
+          </div>
+        {% endunless %}
+      {% endif %}
+     
+    </div>
+
+    {% comment %}
+      Product form original location, will remain unless is 3 column layout
+    {% endcomment %}
+    <div class="product-form--regular" data-product-form-regular>
+      <div data-product-form-area>
+        {% if is_product_modal %}
+          <div data-product-quickshop-message class="product-message--container"></div>
+        {% endif %}
+
+        {% unless onboarding %}
+          {%
+            include 'product-form',
+            product: product,
+            selected_variant: selected_variant
+          %}
+        {% endunless %}
+
+        {% if hide_description %}
+          <a
+            href="{{ product.url | within: collection }}"
+            class="product-link"
+            data-product-details-link
+          >
+            {{ 'product.buttons.view_details' | t }}
+          </a>
+        {% endif %}
+        
+        {% comment %}
+          Product description field, never moves
+        {% endcomment %}
+
+
+        {% if readmore_split[0] != blank and hide_description != true %}
+          <div class="product-description rte" data-product-description>
+            {{ readmore_split[0] }}
+          </div>
+        {% endif %}
+
+        {% if enable_social_sharing and is_product_modal == false %}
+          {{ share_buttons | strip_newlines }}
+        {% endif %}
+      </div>
+    </div>
+
+    
+    
+    
+    {% if is_product_modal == false %}
+    {% if settings.product_show_locality == true %} 
+    <br/>
+    
+    <p>
+        <a class="product_show_locality" style="font-size: 18px;" data-toggle="collapse" href="#collapseExample" id="sucursales" role="button" aria-expanded="false" aria-controls="collapseExample">
+        {{ 'farmacorp.producto.buscaloEnTienda' | t }}
+      </a>
+    </p>
+    <div id="errorMessage"></div>
+    <div id="calcular" class="buttonload" style="display:none;"> 
+        		<i class="fa fa-refresh fa-spin"></i>  Verificando disponibilidad en sucursales.
+
+    </div>
+    <div class="collapse scrollSusursales" style="display:none;" id="collapseExample">
+      <ul id="sucursalesDisponibles" class="list-group">
+      </ul>
+    </div>
+    {% endif %}
+    {% endif %}
+    
+
+    
+    {% if enable_social_sharing and is_product_modal %}
+      {{ share_buttons | strip_newlines }}
+    {% endif %}
+  </div>
+  {% comment %}
+    If is a 3 column layout, the form will move here at $bp-large (layout.isBreakpoint('L'))
+  {% endcomment %}
+  {% if layout == 'layout--three-col' %}
+    <div class="product-form--alt" data-product-form-alt></div>
+  {% endif %}
+</article>
+
+{% if readmore_split[1] != blank and hide_description != true and is_product_modal != true %}
+  <div class="product-readmore rte" data-product-readmore>
+    {{ readmore_split[1] }}
+  </div>
+{% endif %}
+
+<script>
+  
+var jquery = null;
+if (window.jQuery) {
+   jquery = window.jQuery;
+} 
+
+  document.addEventListener("DOMContentLoaded", function() {
+  console.log('document.addEventListener("DOMContentLoaded", function() ');
+
+   if(document.getElementById("ventaSoloFarmacia")=== null){
+  	console.log('if(document.getElementById("ventaSoloFarmacia")=== null)');
+    Availability(); 
+     
+   }
+});
+
+jquery(document).ready(function(){	
+  
+   if (window.location.href.indexOf("products")  == -1) {
+     jquery(".product_show_locality").hide();
+   }
+
+  
+  jquery("#sucursales").on('click', function() {
+    cargarDisponibilidad();
+
+  });
+  
+  function cargarDisponibilidad(){
+      {% if settings.product_show_locality == true %} 
+    	document.getElementById("calcular").style.display = "block";
+ 		
+        getAvailabilityStockSucursal('{{sku}}',true)
+          .then(function(data) {    
+            if(data.data)
+            {
+              var sucursalesDisponibles = jquery('#sucursalesDisponibles');
+              data.data.forEach((word) => {
+                if(word.departamento.toLowerCase() == localStorage['city'].toLowerCase()){ 
+                
+                	if(word.hayMedicamentoBool){
+                      sucursalesDisponibles.append(`			
+                          <li class="list-group-item d-flex justify-content-between align-items-center">
+                              ${word.descripcion}
+                              <span class="badge badge-primary badge-success">{{'farmacorp.producto.disponible' |t }}</span>
+                          </li>`);
+                  	} 	else{
+                      sucursalesDisponibles.append(`			
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            ${word.descripcion}
+                            <span class="badge badge-primary badge-danger">Sin stock</span>
+                        </li>`);
+                    }
+              	}
+                {% comment %}
+                	else{
+                      sucursalesDisponibles.append(`			
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            ${word.descripcion}
+                            <span class="badge badge-primary badge-danger">Sin stock</span>
+                        </li>`);
+                  }
+                {% endcomment %}
+                });  
+                
+               document.getElementById("collapseExample").style.display = "block";
+              
+             
+              
+            }else{
+				var errorMessage = jquery('#errorMessage');
+                errorMessage.prepend(`
+                    <div class="noStock alert alert-danger alert-dismissible fade show" role="alert">
+                      `+JSON.parse(data.errors[0].message)[0].Message+`
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>`);
+            }
+           document.getElementById("calcular").style.display = "none";
+
+          }).catch(function(err) {
+              console.log(err);
+            document.getElementById("calcular").style.display = "none";
+            alert(err);
+          });
+        
+     {% endif %}
+  }
+
+});
+
+function Availability(){
+  if('{{ product.handle }}'.startsWith("bap-")){
+    console.log('No valida saldo');  
+    const spanElements = document.querySelectorAll('span.atc-button--icon');
+    
+    spanElements.forEach(spanElement => {
+        // Oculta cada elemento
+        spanElement.style.display = 'none';
+    });
+        
+  }else{
+        var divPayment = jquery('.smart-payment-enabled');
+        divPayment.find('input, button').attr('disabled', true);
+        if(document.getElementById("noStock")){
+          document.getElementById("noStock").remove();
+        }
+        divPayment.prepend(`			
+              <div id="noStock" class="buttonload noStock"> 
+                  <i class="fa fa-refresh fa-spin"></i>  {{ 'farmacorp.producto.verificandoStock' | t }}
+                  <br/><br/>
+              </div>`);
+        var city =jquery('#keyCiudad').val();
+        var available = {{ product.available | json}};
+        
+        if(available === true){    
+          var divPayment = jquery('.smart-payment-enabled');
+          divPayment.find('input, button').attr('disabled',true);
+          console.log(' getAvailabilityStockRegion');
+          getAvailabilityStockRegion('{{ product.handle }}','{{ product.selected_or_first_available_variant.id | json}}',city)
+          .then(function(data) {           
+            verifyAvailability(data.data, city);
+            setAvailabity(data.data);
+          }).catch(function(err) {
+            alert('error 4');
+            console.log(err);
+          });
+        }
+  }
+
+}
+
+
+  function getAvailabilityStockRegion(productoId, varianteId, ciudad){  
+    
+     var paramObject = {
+      idProducto : productoId,
+      idVariant : varianteId,
+      ciudad : ciudad
+    };
+    var sData = JSON.stringify(paramObject);
+    
+     return new Promise(function(resolve, reject) {
+       jQuery.ajax({
+            url: `{{settings.key_domain}}/api/v1.0/mobile/catalog/product/regional/availabity`,
+            type:'post',
+         	async: true,
+ 			data: sData,
+            contentType: 'application/json; charset=utf-8',
+            success: function(data) {
+               
+            		if(data.data>=0)
+                    {
+                      resolve(data) 
+                    }else
+                    {
+                    /*
+                     if((data.errors) && (data.errors.length>0))
+                     {
+                    	alert(data.errors[0].message);
+                     }*/
+                     alert('Error2');
+                    }
+      		},
+      		error: function(err) {
+                alert('Error');
+        		reject(err);
+     		}
+    	});
+    });
+   
+  }
+  
+function setAvailabity(cantidad)
+{
+  var input = document.createElement('input');
+        input.type = 'hidden';
+        input.id = 'var_stock_product';
+        input.value = cantidad;
+        document.body.appendChild(input);
+
+  
+  var selected_variant =  jquery(`#{{selected_variant.id}}`);
+  if(selected_variant)
+  {
+  	selected_variant.html(`{{ 'farmacorp.producto.cantidadProducto_html' | t: stock: 0 | strip_newlines }}`.replace("0", cantidad));
+  }
+}
+  
+function verifyAvailability(Availability, city){
+      
+  if(jquery(".noStock")){
+      jquery(".noStock").remove();
+  }
+  	var divPayment = jquery('.smart-payment-enabled');
+	if(Availability <= 0 ){ 
+     
+        if(jquery(".cantidadProducto")){
+            jquery(".cantidadProducto").hide();
+        }
+        divPayment.prepend(`
+			<div id="noStock" class="alert alert-warning alert-dismissible fade show" role="alert">
+  				 {{ 'farmacorp.producto.noDisponibleCiudad_html' | t }}
+  				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    			<span aria-hidden="true">&times;</span>
+  				</button>
+			</div>
+	  `);
+      
+      divPayment.find('input, button').attr('disabled', true);
+    }else{
+        if(jquery(".cantidadProducto")){
+            jquery(".cantidadProducto").show();
+        }      
+      
+       {% if settings.mostrarAlertaDisponibilidad == true %}
+       var var1 = {{settings.cantidadMinima}};
+        if (Availability <= var1)
+        {
+          divPayment.prepend(`
+                <div class="noStock alert alert-{{settings.tipoAlerta}} alert-dismissible fade show" role="alert">
+                      {{'farmacorp.producto.ordenePronto_html' | t}}
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>   
+          `);
+        }
+      {% endif %}
+      divPayment.find('input, button').attr('disabled',false);
+      
+      verifyCampaing();
+    }
+}
+  
+function verifyLocation(){
+    var modal = document.getElementById('availabityLocations');
+  	if(modal){
+    	modal.style.display = "block";  
+  	}
+}
+  
+function verifyCampaing(){
+      
+  
+  	{% assign productos = settings.item_campania_sticker | split: ',' %} 
+  	{% assign product_id =  product.handle | json %} 
+  
+  
+     var divPayment = jquery('.smart-payment-enabled');
+     {% if settings.item_campania_enable %}
+   		{% if productos contains product.handle  %}
+            {% if customer.metafields.farmacorp.idFarmacorp == nil  or customer.metafields.farmacorp.idFarmacorp == '' %}
+                divPayment.prepend(`
+                  <div class="noStock alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ settings.item_campania_sticker_mensaje_error }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>`);
+  
+  				divPayment.find('input, button').attr('disabled', true);
+            {% else %}
+                divPayment.prepend(`
+                  <div class="noStock alert alert-success alert-dismissible fade show" role="alert">
+                    {{ settings.item_campania_sticker_mensaje_exito }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>`);
+			 localStorage['discount_code'] = `{{ settings.item_campania_discount_code}}`;
+  				
+            {% endif %}
+  		{% endif %}
+      {% endif %}
+}
+
+
+
+
+</script>
+
+<style>
+.scrollSusursales {
+
+ /* border-top: 1px solid silver;
+  border-top-left-radius: 5px;
+  border-bottom: 1px solid gray;
+  border-bottom-left-radius: 5px;*/
+
+  overflow-y: scroll;
+  height : 240px;
+  
+}
+  
+.ocultar {
+    display: none;
+}
+</style>
+

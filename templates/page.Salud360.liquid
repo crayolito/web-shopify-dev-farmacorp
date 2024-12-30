@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Salud 360</title>
+    <!--== Favicon ==-->
+    <link
+      rel="shortcut icon"
+      href="assets/img/icono.ico"
+      type="image/x-icon"
+    />
+    <!--== Main Style CSS ==-->
+    <link href="https://farmacorp.myshopify.com/admin/themes/120210555012?key=assets%2FstyleSalud360.css" rel="stylesheet" />
+
+    
+    
+  </head>
+
+  <body>
+
+    <!--wrapper start-->
+    <div class="wrapper home-default-wrapper">
+
+      <!--== Start Preloader Content ==-->
+      <div class="preloader-wrap">
+        <div class="preloader">
+          <span class="dot"></span>
+          <div class="dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+      <!--== End Preloader Content ==-->
+
+      <!--== Start Header Wrapper ==-->
+      <header class="header">
+
+        <!-- header-middle start -->
+        <div class="header-middle mobile-sticky">
+          <div class="container">
+            <div class="row">
+              <div class="col-12">
+                <div class="header-middle-content">
+                  
+                  <div class="header-logo">
+                    <a href="index.html">
+                      <img class="sticky-img"
+                        src="{{ 'Logo_Salud360.png' | asset_url }}"
+                        alt="Logo"
+                        style="max-width: 100%; height: 50px;"
+                      />
+                    </a>
+                  </div>
+
+                  <ul class="media-wrap d-none d-lg-flex">
+
+                    <!-- media-list start -->
+                    <li class="media media-list">
+                      <span class="media-icon">
+                        <i class="icofont-clock-time"></i>
+                      </span>
+                      <a href="#Sucursales">
+                      <div class="media-content">
+                        <span class="media-sub-heading">
+                          Horarios
+                        </span>
+                        <span class="media-heading">
+                          LUN - VIE: 7.00 - 23.00
+                        </span>
+                      </div>
+                      </a>
+                    </li>
+                    <!-- media-list end -->
+
+                    <!-- media-list start -->
+                    <li class="media media-list">
+                      <span class="media-icon">
+                        <i class="icofont-ui-call"></i>
+                      </span>
+                      <div class="media-content">
+                        <span class="media-sub-heading">
+                          En linea 24/7
+                        </span>
+                        <a class="media-heading" href="tel:+59177755555">
+                          +591 77755555
+                        </a>
+                      </div>
+                    </li>
+                    <!-- media-list end -->
+
+                    <!-- media-list start -->
+                    <li class="media media-list">
+                      <span class="media-icon">
+                        <i class="icofont-envelope"></i>
+                      </span>
+                      <div class="media-content">
+                        <span class="media-sub-heading">
+                          correo electrónico
+                        </span>
+                        <a class="media-heading" href="mailto:djustinianoy@farmacorp.com">
+                          djustinianoy@farmacorp.com
+                        </a>
+                      </div>
+                    </li>
+                    <!-- media-list end -->
+
+                  </ul>
+
+                  <div class="mobile-menu-toggle d-lg-none">
+                    <a href="#offcanvas-mobile-menu" class="offcanvas-toggle">
+                      <svg viewBox="0 0 800 600">
+                        <path
+                          d="M300,220 C300,220 520,220 540,220 C740,220 640,540 520,420 C440,340 300,200 300,200"
+                          id="top"
+                        ></path>
+                        <path d="M300,320 L540,320" id="middle"></path>
+                        <path
+                          d="M300,210 C300,210 520,210 540,210 C740,210 640,530 520,410 C440,330 300,190 300,190"
+                          id="bottom"
+                          transform="translate(480, 320) scale(1, -1) translate(-480, -318)"
+                        ></path>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- header-middle end -->
+
+        <!-- header-bottom start -->
+        <div class="header-bottom sticky-header d-none d-lg-block">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="d-flex flex-wrap align-items-center justify-content-between">
+                  <div class="header-logo">
+                    <a href="index.html">
+                      <img
+                        class="sticky-img"
+                        src="assets/img/Logo_Salud360.png"
+                        alt="Logo"
+                        style="max-width: 100%; height: 50px;"
+                      />
+                    </a>
+                  </div> 
+                  <ul class="media-wrap d-none d-lg-flex">
+
+                    <!-- media-list start -->
+                    <li class="media media-list">
+                      <span class="media-icon"
+                        ><i class="icofont-clock-time"></i
+                      ></span>
+                      <div class="media-content">
+                        <span class="media-sub-heading">Horarios</span>
+                        <span class="media-heading"
+                          >LUN - VIE: 7.00 - 23.00
+                        </span>
+                      </div>
+                    </li>
+                    <!-- media-list end -->
+
+                    <!-- media-list start -->
+                    <li class="media media-list">
+                      <span class="media-icon"
+                        ><i class="icofont-ui-call"></i
+                      ></span>
+                      <div class="media-content">
+                        <span class="media-sub-heading">En linea 24/7</span>
+                        <a class="media-heading" href="tel:+59177755555"
+                          >+591 77755555</a
+                        >
+                      </div>
+                    </li>
+                    <!-- media-list end -->
+
+                    <!-- media-list start -->
+                    <li class="media media-list">
+                      <span class="media-icon"
+                        ><i class="icofont-envelope"></i
+                      ></span>
+                      <div class="media-content">
+                        <span class="media-sub-heading">correo electrónico</span>
+                        <a
+                          class="media-heading"
+                          href="mailto:djustinianoy@farmacorp.com"
+                          >djustinianoy@farmacorp.com</a>
+                      </div>
+                    </li>
+                    <!-- media-list end -->
+                    
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- header-bottom end -->
+      </header>
+      <!--== End Header Wrapper ==-->
+      
+      <main class="main-content site-wrapper-reveal">
+        <!--== Start Hero Area Wrapper ==-->
+        <section class="hero-slider">
+          <div class="swiper-container">
+            <div class="swiper-wrapper">
+              <!-- swiper-slide start-->
+              <div class="swiper-slide"
+              data-bg-img="assets/img/Panel/Panel1.jpg">
+              
+                <div class="container">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="slider-content">
+                        <!--<p class="text animated delay1">
+                          feel the difference with us
+                        </p>
+                        <h2 class="title animated delay2">
+                          Your Health <span>Is</span>
+                          <span class="d-block">Our Priority</span>
+                        </h2>
+                        <a href="#" class="btn btn-danger me-3 animated delay1"
+                          >Get a quote</a
+                        >
+                        <a
+                          href="#"
+                          class="btn btn-outline-secondary animated delay2"
+                          >our services</a
+                        >-->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- swiper-slide end -->
+              <!-- swiper-slide start-->
+              <div class="swiper-slide"
+              data-bg-img="assets/img/Panel/Sucursales.jpg"
+              style="background-color: #6373af;">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="slider-content">
+                        <!--<p class="text animated delay1">
+                          feel the difference with us
+                        </p>
+                        <h2 class="title animated delay2">
+                          Your Health <span>Is</span>
+                          <span class="d-block">Our Priority</span>
+                        </h2>
+                        <a href="#" class="btn btn-danger me-3 animated delay1"
+                          >Get a quote</a
+                        >
+                        <a
+                          href="#"
+                          class="btn btn-outline-secondary animated delay2"
+                          >our services</a
+                        >-->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-slide"
+              data-bg-img="assets/img/Panel/Servicios.jpg">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="slider-content">
+                        <!--<p class="text animated delay1">
+                          feel the difference with us
+                        </p>
+                        <h2 class="title animated delay2">
+                          Your Health <span>Is</span>
+                          <span class="d-block">Our Priority</span>
+                        </h2>
+                        <a href="#" class="btn btn-danger me-3 animated delay1"
+                          >Get a quote</a
+                        >
+                        <a
+                          href="#"
+                          class="btn btn-outline-secondary animated delay2"
+                          >our services</a
+                        >-->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- swiper-slide end -->
+            </div>
+
+            <div class="swiper-button-prev">
+              <i class="icofont-arrow-left"></i>
+            </div>
+            <div class="swiper-button-next">
+              <i class="icofont-arrow-right"></i>
+            </div>
+          </div>
+        </section>
+        <!--== End Hero Area Wrapper ==-->
+
+        <!-- static media start -->
+        <section class="static-media">
+          <div class="container">
+            <div class="row mb-n4">
+              <div class="col-lg-4 col-sm-6 mb-4">
+                <div class="media">
+                  <span class="icon icofont-nurse-alt" style="margin-right: 8%;"></span>
+                  <a href="#Servicios">
+                  <div class="media-body">
+                    <h4 class="title">Enfermeria</h4>
+                    <p>Servicio de enfermeria</p>
+                  </div>
+                  </a>
+                </div>
+              </div>
+              <div class="col-lg-4 col-sm-6 mb-4">
+                <div class="media">
+                  <span class="icon icofont-doctor" style="margin-right: 8%;"></span>
+                  <a href="#Servicios">
+                  <div class="media-body">
+                    <h4 class="title">Telemedicina</h4>
+                    <p>Servicio de telemedicina</p>
+                  </div>
+                  </a>
+                </div>
+              </div>
+              <div class="col-lg-4 col-sm-6 mb-4">
+                <div class="media">
+                  <span class="icon icofont-first-aid-alt" style="margin-right: 8%;"></span>
+                  <a href="#Catalogo">
+                  <div class="media-body">
+                    <h4 class="title">Vacunas</h4>
+                    <p>Cadena de frio</p>
+                  </div>
+                  </a>
+                </div>
+              </div>
+              <!--<div class="col-lg-3 col-sm-6 mb-4">
+                <div class="media">
+                  <span class="icon icofont-heart-beat-alt" style="margin-right: 8%;"></span>
+                  <div class="media-body">
+                    <h4 class="title">Monitoreo</h4>
+                    <p>Control de signos vitales</p>
+                  </div>
+                </div>
+              </div>-->
+            </div>
+          </div>
+        </section>
+        <!-- static media end -->
+
+        <!--== Start Feature Area Wrapper ==-->
+        <section class="feature-section" data-bg-color="#fff" id="Servicios">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-12">
+                <div
+                  class="section-title"
+                  data-aos="fade-up"
+                  data-aos-duration="1100"
+                >
+                  <p>Por qué elejir Sala Salud 360</p>
+                  <h2 class="title"><span>Lo mejor</span> para tu salud</h2>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12 col-xl-8">
+                <div class="row icon-box-style" data-aos="fade-up" data-aos-duration="1100">
+                  <div class="col-md-6">
+                    <div class="icon-box-item">
+                      <div class="icon">
+                        <i class="icofont-nurse-alt"></i>
+                      </div>
+                      <div class="content">
+                        <h5 class="title">Servicio de enfermeria</h5>
+                        <p>
+                          <ul>
+                            <li>Colocación de inyectables intramuscular</li>
+                            <li>Colocación de inyectables endovenoso</li>
+                            <li>Colocación de tapón heparinizado</li>
+                            <li>Control de glicemia</li>
+                            <li>Servicio de curaciones menores</li>
+                            <li>Servicio de enfermeria a domicilio</li>
+                            <li>Temperatura</li>
+                            <li>Peso</li>
+                            <li>Presión arterial</li>
+                            <li>Frecuencia cardiaca</li>
+                            <li>Saturación de oxígeno</li>
+                            <li>Control de Glucosa</li>
+                          </ul>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="icon-box-item">
+                      <div class="icon">
+                        <i class="icofont-doctor"></i>
+                      </div>
+                      <div class="content">
+                        <h5 class="title">Servicio de telemedicina</h5>
+                        <p>
+                          <ul>
+                            <li>Telemedicina en sucursales</li>
+                            <li>Telemedicina a domicilio</li>
+                          </ul>
+                        </p>
+                      </div>
+                    </div>
+                    <div class="icon-box-item">
+                      <div class="icon">
+                        <i class="icofont-first-aid-alt"></i>
+                      </div>
+                      <div class="content">
+                        <h5 class="title">Cadena de frio vacunas</h5>
+                        <p>
+                          Lorem ipsum dolor sit amet, consect adipisicing elit
+                          vero. Donec ultri sollicitudin lacus
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="thumb" data-aos="fade-left" data-aos-duration="1500">
+            <img src="assets/img/photos/doctor-01.png" alt="hope-Image" />
+          </div>
+        </section>
+        <!--== End Feature Area Wrapper ==-->
+
+        <!--== Start Team Area Wrapper ==-->
+        <section id="Catalogo" class="team-area team-default-area" data-bg-color="#f3f3f3">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="section-title text-center" data-aos="fade-up" data-aos-duration="1000">
+                  <p>Conoce nuestra cadena de frio</p>
+                  <h2 class="title">
+                    <span>Catálogo de </span> vacunas
+                  </h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!--== End Team Area Wrapper ==-->
+
+        <!--== Start Map Area Wrapper ==-->
+        <div class="map-area" id="Sucursales">
+          <br/>
+          <br/>
+          <div class="section-title text-center"
+            data-aos="fade-up"
+            data-aos-duration="1000">            
+            <p>Sucursales habilitadas</p>
+              <h2 class="title">
+                <span>Farmacorp</span> Sala Salud 360
+              </h2>
+          </div>
+          <div class="content">
+            <div class="row justify-content-around" data-aos="fade-up" data-aos-duration="1000">
+              <div class="col-md-4">
+                <h6 class="title">&nbsp&nbspAtención de 7:00am  a 23:00pm</h6>
+                <h6 class="title">
+                  &nbsp&nbspZONA NORTE
+                </h6>
+                <p>
+                  <ul>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.77075652752576%2C-63.17129403533825&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Trinidad 2do anillo</li>
+                    </a>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.732120687458284%2C-63.16853015838531&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Banzer 6do anillo</li>
+                    </a>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.752205242951415%2C-63.16371291349182&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Alemana 4do anillo</li>
+                    </a>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.7747849883471%2C-63.17519219510651&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Uruguay Esq. Mamore</li>
+                    </a>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.74371113713118%2C-63.14963919874193&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. 2 de agosto</li>
+                    </a>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.71495215552114%2C-63.16609539384842&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Remanso 8vo anillo</li>
+                    </a>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.695520053274898%2C-63.156464100594334&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Sevilla zona Norte Km11</li>
+                    </a>
+                  </ul>
+                <p>
+                <h6 class="title">
+                  &nbsp&nbspZONA ESTE
+                </h6>
+                <p>
+                  <ul>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.800325982495075%2C-63.15031847850418&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Héroes del Chaco 4to anillo</li>
+                    </a>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.779603140855528%2C-63.173023746032705&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Argomosa Esq. Charcas</li>
+                    </a>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.782650601494502%2C-63.16428917560195&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Virgen de Cotoca 2do anillo</li>
+                    </a>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.774916263521035%2C-63.135076742397295&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Virgen de Cotoca 5to anillo</li>
+                    </a>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.836593299409376%2C-63.1273547754631&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Mechero Av. Paurito</li>
+                    </a>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.801895813702657%2C-63.13514821593858&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Che Guevara 6to anillo</li>
+                    </a>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.765803818775368%2C-63.14944758225373&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Paragua 4to anillo</li>  
+                    </a>
+                  </ul>
+                </p>
+                <h6 class="title">
+                  &nbsp&nbspZONA SUR
+                </h6>
+                <p>
+                  <ul>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.814328395595624%2C-63.18289473075789&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Santo Dumont 3er anillo</li>
+                    </a>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.8242025961878%2C-63.20633817790984&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Av. Vallegrande 5to anillo</li>
+                    </a>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.850033281023073%2C-63.18292836805344&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Santo Dumont 6to y 7mo anillo</li>
+                    </a>
+                    <li><br/></li>
+                  </ul>
+                </p>
+              </div>
+              <div class="col-md-4  ">
+                <h6 class="title">&nbsp</h6>
+                <h6 class="title">
+                  &nbsp&nbspZONA OESTE
+                </h6>
+                <p>
+                  <ul>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.79044594867112%2C-63.195038987152216&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Piraí 2do anillo</li>
+                    </a>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.790276929879603%2C-63.20481776498764&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Chiriguano 3er anillo</li>
+                    </a>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.820043089263933%2C-63.21809250256561&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Grigota 5to anillo San Francisco</li>
+                    </a>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.80104162263941%2C-63.18773622016357&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Tomas de Lexzo 2do anillo</li>
+                    </a>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.80152723592246%2C-63.19723597553254&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Grigota esq. Barrientos</li>
+                    </a>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.792615851313172%2C-63.182335392129076&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Irala #564</li>
+                    </a>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.799082779528142%2C-63.220902265493336&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Av. Piraí Santa Mónica</li>
+                    </a>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.77520601218042%2C-63.18384203341766&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Cañoto esq. Libertad</li>
+                    </a>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.765335519333338%2C-63.196213244581614&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. San Martin Equipetrol 3er y 2do anillo</li>
+                    </a>
+                  </ul>
+                </p>
+                <h6 class="title">
+                  &nbsp&nbspAtención de 9:00am a 21:00pm
+                </h6>
+                <h6 class="title">
+                  &nbsp&nbspZONA NORTE
+                </h6>
+                <p>
+                  <ul>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.75054393947503%2C-63.16964293247676&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Beni 4to anillo <img src="assets/LogoMia.png" style="width:12%; height:12%;"/></li>
+                    </a>
+                  </ul>
+                </p>  
+                <h6>
+                  &nbsp&nbspZONA ESTE
+                </h6>
+                <p>
+                  <ul>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.784140416056587%2C-63.17219995891994&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Viedma esq Ballivian <img src="assets/LogoMia.png" style="width:12%; height:12%;"/></li>
+                    </a>
+                  </ul>
+                </p>
+                <h6>
+                  &nbsp&nbspZONA OESTE
+                </h6>
+                <p>
+                  <ul>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.78363579631548%2C-63.18922656495409&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Cañoto esq. Junín <img src="assets/LogoMia.png" style="width:12%; height:12%;"/></li>
+                    </a>
+                    <a href="https://www.google.com/maps/d/edit?hl=es&mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll=-17.79223558289906%2C-63.17984136849054&z=18">
+                      <li>&nbsp&nbsp&nbsp&nbspSuc. Irala Santiesteban <img src="assets/LogoMia.png" style="width:12%; height:12%;"/></li>
+                    </a>
+                  </ul>
+                </p>
+              </div>
+            </div>
+          </div>
+          <iframe
+            style="border:0"
+            loading="lazy"  
+            allowfullscreen
+
+            src="https://www.google.com/maps/d/embed?mid=1u2q0g3Jzdt9u2qpC8FAxvwf5L0QwZcAZ&ll"
+          ></iframe>
+          <!--<iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3151.8402891185374!2d144.95373631590425!3d-37.81720974201477!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad65d4c2b349649%3A0xb6899234e561db11!2sEnvato!5e0!3m2!1sen!2ssg!4v1607294780661!5m2!1sen!2ssg"
+          ></iframe>-->
+        </div>
+        <!--== End Map Area Wrapper ==-->
+      </main>
+
+      <!--== Start Footer Area Wrapper ==-->
+      <footer class="footer-area">
+        <div class="footer-bottom">
+          <div class="container">
+            <div class="row text-center">
+              <div class="col-sm-12">
+                <div class="widget-copyright">
+                  <p>
+                    &copy; 2022 <span class="text-uppercase">FARMACORP</span> - BOLIVIA <i class="icofont-heart-alt"></i> 
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+      <!--== End Footer Area Wrapper ==-->
+
+      <!-- offcanvas-overlay start -->
+      <div class="offcanvas-overlay"></div>
+      <!-- offcanvas-overlay end -->
+
+      <!--== Scroll Top Button ==-->
+      <div class="scroll-to-top">
+        <span class="icofont-rounded-up">
+
+        </span>
+      </div>
+    </div>
+    <!--wrapper end-->
+
+<!-- all js -->
+
+<!--=== Modernizr Min Js ===-->
+<script src="assets/js/modernizr.js"></script>
+<!--=== jQuery Min Js ===-->
+<script src="assets/js/jquery-3.6.0.min.js"></script>
+<!--=== jQuery Migration Min Js ===-->
+<script src="assets/js/jquery-migrate-3.3.2.min.js"></script>
+<!--=== Bootstrap Min Js ===-->
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+<!--=== jquery UI Min Js ===-->
+<script src="assets/js/jquery-ui.min.js"></script>
+<!--=== Plugin Collection Js ===-->
+<script src="assets/js/plugincollection.js"></script>
+<!--=== Custom Js ===-->
+<script src="assets/js/custom.js"></script>
+
+<!--=== JS Zoom Catalogo ===-->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="assets\js\jquery.zoom.js"></script>
+<script>
+	$(document).ready(function(){
+		$('#ex1').zoom();
+    $('.zoom').zoom();
+		$('#ex2').zoom({ on:'grab' });
+		$('#ex3').zoom({ on:'click' });			 
+		$('#ex4').zoom({ on:'toggle' });
+		});
+</script>
+
+  </body>
+
+</html>

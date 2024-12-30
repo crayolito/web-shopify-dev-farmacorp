@@ -1,0 +1,606 @@
+<style>
+  form { display: inline-block; }
+
+          /* Always set the map height explicitly to define the size of the div
+         * element that contains the map. */
+        .map {
+     		height: 100%;
+          width: 100%;
+          }
+
+          .map_parent {
+              height: 350px;
+              width: 100%;
+              position: relative;
+          }
+
+
+          #pin {
+              position: absolute;
+              top: 68px;
+              left: 50%;
+          }
+
+    		.ocultar {
+    			display: none;
+  		}
+
+   #btnSelected{
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+
+.form-action-row{
+float:right;
+}
+
+.columna-nuevo{
+  	float:left;
+  	width:100%;
+      border:none;
+      background : #EDF2F8;
+      border-radius: 4px;
+      box-shadow: 0px 3px 6px #00000024;
+      padding: 20px;
+      margin: 10px;
+      text-align : start;
+      display: flex;
+      align-items:center;
+
+}
+
+#columna-nuevo-titulo{
+    color: #205495;
+    margin-left:15px;
+    font-size: 32px;
+    font-weight: 500;
+}
+
+
+#img-plus{
+  width:70%;
+  height:70%
+}
+
+#arrow-back{
+  display:none;
+}
+
+.row{
+      padding:0 23px;
+    }
+
+
+    .columna{
+  	float:left;
+  	width:100%;
+      border-radius: 5px;
+      padding: 20px;
+      margin: 10px 3px;
+      box-shadow: 0px 3px 6px #00000024;
+      flex-direction: column;
+
+      }
+
+      .columna-footer{
+        text-align: center;
+        width:100%;
+      }
+
+  @media screen and (min-width: 480px) {
+      .columna{
+       width:100%;
+      }
+      .columna-nuevo{
+       width:100%;
+      }
+      #img-plus{
+  width:60%;
+  height:60%
+}
+  }
+
+@media screen and (min-width: 780px) {
+.columna{
+    width:31%;
+    margin: 10px;
+}
+
+#img-plus{
+ width:60%;
+ height:60%
+}
+
+.columna-nuevo{
+    width:31%;
+    margin:10px;
+ }
+
+#arrow-text{
+margin-left:5px;
+color:#3A89FD;
+font-size:17px;
+font-weight:400;
+}
+
+#arrow-back{
+display:block;
+float:left;
+margin-left:10px;
+width:auto;
+height:auto;
+}
+  }
+
+
+#frm-address{
+width:100%;
+}
+</style>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://malsup.github.io/jquery.blockUI.js"></script>
+<script>
+  
+  
+  
+  
+  
+  var jquery = null;
+if (window.jQuery) {
+   jquery = window.jQuery;
+} 
+
+
+function disable() {
+// To get the scroll position of current webpage
+TopScroll = window.pageYOffset || document.documentElement.scrollTop;
+LeftScroll = window.pageXOffset || document.documentElement.scrollLeft,
+
+// if scroll happens, set it to the previous value
+window.onscroll = function() {
+window.scrollTo(LeftScroll, TopScroll);
+        };
+}
+
+function enable() {
+window.onscroll = function() {};
+}
+   
+   var map, infoWindow;
+   var longitude, latitude;
+   var geocoder;
+   var bolivia = {"latitud":"-16.71474081542849","longitud":"-65.12559375","zoom":"5"};
+   var coordenadas = {{customer.metafields.CustAddressInfo | json }};
+   coordenadas.new = {"latitud":"-17.783318","longitud":"-63.182126","zoom":"12"};//Santa Cruz
+
+   jquery(document).ready(function(){  
+     setTimeout(()=>{ initMap()}, 2000);
+   });
+
+   function initMap() {
+
+     map = new google.maps.Map(document.getElementById('map_new'), {
+       center: { lat:  parseFloat(coordenadas.new.latitud), lng:  parseFloat(coordenadas.new.longitud) },
+       zoom: parseFloat(coordenadas.new.zoom),
+       zoomControl: false,
+        scaleControl: false,
+        streetViewControl: false,
+        fullscreenControl: false,
+       mapTypeControl  : false
+     });
+     
+     longitude = map.getCenter().lng();
+     latitude = map.getCenter().lat();
+
+     infoWindow = new google.maps.InfoWindow;
+     geocoder = new google.maps.Geocoder;
+
+
+     // GET coordinates and adress
+     map.addListener('center_changed', function() {
+       longitude = map.getCenter().lng();
+       latitude = map.getCenter().lat();   		
+       coordenadas.new = {"latitud":latitude.toString(),"longitud":longitude.toString(),"zoom":map.getZoom()};
+
+     });
+
+   }
+
+   // GEOLOCATION
+   function geolocation() {
+
+     if (navigator.geolocation) {
+       navigator.geolocation.getCurrentPosition(function(position) {
+         var pos = {
+           lat: position.coords.latitude,
+           lng: position.coords.longitude
+         };
+
+         map.setCenter(pos);
+       }, function() {
+         handleLocationError(true, infoWindow, map.getCenter());
+       });
+     } else {
+       // Browser doesn't support Geolocation
+       handleLocationError(false, infoWindow, map.getCenter());
+     }
+   }
+
+   // GEOLOCATION Error
+   function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+     infoWindow.setPosition(pos);
+     infoWindow.setContent(browserHasGeolocation ?
+                           'Error: The Geolocation service failed.' :
+                           'Error: Your browser doesn\'t support geolocation.');
+     infoWindow.open(map);
+   }
+
+   function geocodeLatLng(latitude, longitude, geocoder, map) {
+     var latlng = {lat: latitude, lng: longitude};
+     var address = document.getElementById('AddressLastNameNew');
+
+     geocoder.geocode({'location': latlng}, function(results, status) {
+       if (status === 'OK') {
+         if (results[0]) {
+           address.innerText = results[0].formatted_address;
+         } else {
+           address.innerText = 'No results found';
+         }
+       } else {
+         window.alert('Geocoder failed due to: ' + status);
+       }
+     });
+   }
+   
+   function showNew(){
+     document.getElementById('modal_new').style.display = 'block';
+
+   }
+   
+   function EditMap(id, latLng) {
+     var modal = document.getElementById('modal_'+id);
+     modal.style.display = "block";  
+     
+     var e = document.getElementById(`keyCiudadAddress_${id}`);
+     var city =e.value;    
+
+     document.getElementById(`customer_addr_${id}_city`).value = city;
+     
+     setTimeout(()=>{
+
+         if(!latLng){
+            latLng = bolivia;
+         }
+     
+         var coordinatesLat = parseFloat(latLng.latitud);
+         var coordinatesLong = parseFloat(latLng.longitud);
+     	 var zoom = parseFloat(latLng.zoom);
+
+
+         var pos = {lat: coordinatesLat, lng: coordinatesLong};
+         coordenadas[id] = {"latitud":coordinatesLat.toString(),"longitud":coordinatesLong.toString(),"zoom":zoom};
+
+         map = new google.maps.Map(document.getElementById('map_'+id), {
+                    center: pos,
+                    zoom: zoom,            
+       				  zoomControl: false,
+        scaleControl: false,
+        streetViewControl: false,
+        fullscreenControl: false,
+       mapTypeControl  : false
+                });
+
+
+         infoWindow = new google.maps.InfoWindow;
+         geocoder = new google.maps.Geocoder;
+
+
+         // GET coordinates and adress
+         map.addListener('center_changed', function() {
+            longitude = map.getCenter().lng();
+            latitude = map.getCenter().lat();
+            coordenadas[id] = {"latitud":latitude.toString(),"longitud":longitude.toString(),"zoom":map.getZoom()};
+         });
+
+
+      }, 200);
+                
+   }
+   
+   function cambioCiudadAddress(address_id){  
+    
+      var e = document.getElementById(`keyCiudadAddress_${address_id}`);
+      var city =e.value;    
+
+      document.getElementById(`customer_addr_${address_id}_city`).value = city;
+
+      {{settings.citysConfig}}
+
+      var cityConfig = citys.find( c => c.city === city );
+      if(cityConfig){
+         var latLng = {latitud:cityConfig.latitud,longitud:cityConfig.longitud,zoom:14}
+          EditMap(address_id, latLng);
+      }
+     
+   }
+
+   function cambioAliasAddress(address_id){  
+      {% assign mAlias = shop.metafields.farmacorp.alias.value  %}
+      var select = document.getElementById(`keyAliasAddress_${address_id}`);
+      var alias =select.value;    
+     
+      document.getElementById(`customer_addr_${address_id}_lastname`).value = '';
+       if (alias === '{{ mAlias.otherKey}}'){
+         
+
+             Swal.fire({
+                title: '{{ mAlias.otherKey}}',
+                input: 'text',
+                inputAttributes: {
+                  autocapitalize: 'off'
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Ok',
+                showLoaderOnConfirm: true,
+                preConfirm: (alias) => {
+                    document.getElementById(`customer_addr_${address_id}_lastname`).value = alias;
+                    var opt = document.createElement('option');
+                    opt.value = alias;
+                    opt.selected = true;
+                    opt.innerHTML = alias;
+                    select.insertBefore(opt, select.lastElementChild);
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+              })
+       }else{
+          document.getElementById(`customer_addr_${address_id}_lastname`).value = alias;
+       }
+   }
+
+    function validarTelefono(phone) {
+    const regex = /^(6|7)\d{7}$|^([2-5]\d{7})$/;
+    if (regex.test(phone)) {
+      return true; 
+    } else {
+      return false;
+    }
+  }
+
+  
+   function crearDireccion(address1, address2, city, phone, firstName, lastName, idAddress, isDefault){
+    
+      if(!lastName)
+     {
+     	alert('El campo Alias es un dato requerido.');
+       return;
+     }
+     
+     if(!address1)
+     {
+     	alert('El campo dirección es un dato requerido.');
+       return;
+     }
+   
+   	 if(!phone)
+     {
+     	alert('El campo Teléfono es un dato requerido.');
+       return;
+     }
+     
+  if(!validarTelefono(phone))
+    {
+      alert('¡Ingrese un Teléfono valido!');
+      return;
+    }
+
+
+      jquery.blockUI(
+    			{ 
+    				message : 'Actualizando direcciones...',
+    				css: { 
+    					border: 'none', 
+    					padding: '15px', 
+    					backgroundColor: '#000', 
+    					'-webkit-border-radius': '10px', 
+    					'-moz-border-radius': '10px', 
+    					opacity: .5, 
+    					color: '#fff' 
+    				} 
+    			}); 
+     
+     let latitud = coordenadas[idAddress].latitud;
+     let longitud = coordenadas[idAddress].longitud;
+     let zoom = coordenadas[idAddress].zoom;
+     
+      upsertDireccionCliente(`{{ customer.id | json }}`,  address1, address2, city, phone, firstName, lastName, idAddress, isDefault, zoom,latitud, longitud)
+          .then(function(data) { 
+            document.cookie = "addressUpdated=true; path=/";
+             if(data.ok){
+               location.reload();
+             }
+          }).catch(function(err) {
+  			 alert(`{{ 'farmacorp.direccion.error_nueva_direccion' | t}}`);
+           	 console.log(err);           
+          
+    	   });
+
+   }
+   
+   function eliminarCoordenadas(address_id, isDefault){
+     
+     if (window.confirm(`{{ 'farmacorp.direccion.delete_confirm' | t }}`)) {
+           direccionEliminar(`{{ customer.id | json }}`, address_id, isDefault)
+          .then(function(data) { 
+             if(!data.ok){
+                  alert(`{{ 'farmacorp.direccion.eliminar_coordenadas_error' | t}}`);
+             }else{
+             	location.reload();
+             }
+          }).catch(function(err) {
+  			 alert(`{{ 'farmacorp.direccion.eliminar_coordenadas_error' | t}}`);
+           	 console.log(err);           
+          
+    		});
+     } 
+   }
+   
+   if (window.jQuery) {
+        jquery = window.jQuery;
+   } else if (window.Checkout && window.Checkout.$) {
+        jquery = window.Checkout.$;
+   }
+  
+   jquery(document).ready(function(){     
+        document.getElementById("address_default_address_new").checked = true;
+     
+   });
+   
+
+
+
+
+
+
+</script>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{settings.keyGoogleMap}}"></script>
+
+<section
+  class="account-page account-page-addresses"
+  data-template-account-addresses
+  data-template-account
+>
+  <header class="account-page-masthead">
+      <div id="arrow-back">
+      <a href="{{ routes.account_url }}">
+        <svg
+          class="svgName"
+          height="15"
+          width="15"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="#FFF"
+          viewBox="0 0 32 32"
+          role="img"
+          aria-hidden="true"
+        >
+          <image xlink:href="{{ 'arrow-left-icon.svg' | asset_url }}" width="32" height="32"/>
+        </svg>
+        <span id="arrow-text">Volver a mi cuenta</span>
+      </a>
+    </div>
+    <h1 class="account-page-title">
+      {{ 'customers.addresses.title' | t }}
+    </h1>
+  </header>
+
+  <div class="container">
+    <h2 class="account-page-subtitle">
+      {{ 'customers.addresses.addresses_list_title' | t }}
+    </h2>
+    <div class="row">
+      <button type="button" class="columna-nuevo" data-edit-address="new" onclick="showNew();">
+        <img id="img-plus" height="50%" width="50%" src="{{'plus.svg' | asset_url }}"><br>
+        <span id="columna-nuevo-titulo">{{ 'farmacorp.direccion.nuevaDireccion' | t }}</span>
+      </button>
+      {% for address in customer.addresses %}
+        <div class="columna">
+          {% form 'customer_address', address %}
+            <input type="checkbox" name="address[default]" checked hidden>
+
+            <div class="columna-footer">
+              <button
+                type="button"
+                class="btn btn-default btn-sm"
+                data-edit-address="{{ address.id }}"
+                style=" font-size : 13px;"
+                onclick="EditMap('{{ address.id }}',coordenadas['{{ address.id }}']);"
+              >
+                {{ 'customers.addresses.edit' | t }}
+              </button>
+
+              {% if address == customer.default_address %}
+                 <input
+                  id="btnSelected"
+                  type="button"
+                  class="btn  btn-primary btn-sm"
+                  readonly
+                  style=" font-size : 13px;"
+                  value="Direccion seleccionada"
+                >
+              {% else %}
+                <input
+                  type="submit"
+                  class="btn btn-default btn-sm"
+                  style=" font-size : 13px;"
+                  value="{{ 'customers.addresses.default_address_message' | t }}"
+                >
+              {%- endif -%}
+            </div>
+          {% endform %}
+
+          {% if address == customer.default_address %}
+            <button
+              class="btn btn-default btn-sm"
+              style=" font-size : 13px;"
+              onclick="eliminarCoordenadas({{address.id}}, true)"
+              ;
+            >
+              {{ 'customers.addresses.delete' | t }}
+            </button>
+          {% else %}
+            <button
+              class="btn btn-default btn-sm"
+              style=" font-size : 13px;"
+              onclick="eliminarCoordenadas({{address.id}}, false)"
+              ;
+            >
+              {{ 'customers.addresses.delete' | t }}
+            </button>
+          {%- endif -%}
+
+          {% include 'account-address-list', address: address %}
+
+          <!-- {% if address == customer.default_address %}
+            <h5>
+              <span class="badge badge-success"> {{ 'customers.addresses.default_address_message' | t }}</span>
+            </h5>
+          {%- endif -%} -->
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+            <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Función para obtener el valor de una cookie
+        function getCookie(name) {
+            let value = "; " + document.cookie;
+            let parts = value.split("; " + name + "=");
+            if (parts.length === 2) return parts.pop().split(";").shift();
+        }
+
+        // Leer el valor de la cookie 'addressUpdated'
+        let addressUpdated = getCookie('addressUpdated');
+        
+        if (addressUpdated === 'true') {
+            document.cookie = "addressUpdated=false; path=/";
+            let cartLength = {{cart.item_count}};
+            if (cartLength > 0) {
+                jquery.blockUI({
+                    message: 'Redirigiendo a la pantalla de pago...',
+                    css: {
+                        border: 'none',
+                        padding: '15px',
+                        backgroundColor: '#000',
+                        '-webkit-border-radius': '10px',
+                        '-moz-border-radius': '10px',
+                        opacity: .5,
+                        color: '#fff'
+                    }
+                });
+                window.location.href = '/checkout';
+            }
+        }
+    });
+</script>

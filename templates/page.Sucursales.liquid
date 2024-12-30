@@ -1,0 +1,346 @@
+ <style>
+  
+  .map {
+    height: 500px;
+    width: 100%;
+  }
+
+  .map_parent {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    margin: 10px auto;
+    padding: 0px 50px 0px 50px;
+  }
+  </style>
+
+
+<script>
+  var jquery = null;
+  if (window.jQuery) {
+    jquery = window.jQuery;
+  } 
+
+  jquery(document).ready(function(){
+   checkAll();
+   pintarSucusales();
+   getServicios()
+  	.then(function(data) {    
+      if(data.data.elements)
+      {
+      	var servicios = jquery('#servicios');
+      
+        data.data.elements.forEach((word) => {
+
+          	servicios.append(`
+                    <li class="list-group-item">
+                        ${word.descripcion}
+                        <div class="material-switch pull-right">
+                            <input id="SwitchOptionDefault_${word.id}" value="${word.descripcion}" name="someSwitchOption001" type="checkbox" checked/>
+                            <label for="SwitchOptionDefault_${word.id}" class="label-primary"></label>
+                        </div>
+                    </li>`);
+          
+             jquery(`#SwitchOptionDefault_${word.id}`).click(function () {    
+                 
+                 var favorite = [];
+                 jquery.each(jquery("input[type='checkbox']:checked"), function(){
+                   favorite.push(jquery(this).val());
+                 });
+               
+                 markers.forEach((m) => {
+                  	m.m.setVisible(false);
+                 });
+                 
+                 favorite.forEach((f) => {
+                    var ser_includes = markers.filter(ms => ms.s!==null && ms.s.includes(f));
+                    ser_includes.forEach((mar) => {
+                      mar.m.setVisible(true);
+                    });
+                 });
+             });
+          });        
+      }
+    
+    }).catch(function(err) {
+        console.log(err)
+    });
+
+  }); 
+  
+
+  window.addEventListener("load", function(){
+       var servicios = jquery('#servicios');
+
+      if(servicios[0].childElementCount == 1){
+
+          location.reload(); 
+      }
+  });
+  
+
+  function pintarSucusales(){
+    
+    var region = '001';
+    var citys =  {{settings.citysConfig}};
+
+    var citiesConfig = citys.find( c => c.city.toLowerCase() === document.getElementById("keyCiudad").value.toLowerCase());
+    if(citiesConfig){
+      region = citiesConfig.keyRegion;
+    }
+ 
+   map.setCenter(new google.maps.LatLng(citiesConfig.latitud,citiesConfig.longitud));
+   getSucursales(region)
+    .then(function(data) {    
+       if(data.data.elements)
+       {
+         jquery('#tituloSucursal').html(`{{ page.title }}`);
+         
+         var marker_icon = {url: `{{ 'mark-map-farmacorp.png' | asset_url }}`};
+         data.data.elements.forEach((sucursal) => {
+           
+
+               var myLatlng = new google.maps.LatLng(sucursal.latitud, sucursal.longitud);
+               var markerOptions = {
+                 map: map,
+                 position: myLatlng,
+                 icon: marker_icon		
+               };
+               var marker = createMarker_map(markerOptions, sucursal);
+
+               marker.set("content", 
+                          `<h3>Farmacorp</h3> 
+                           <h5>${sucursal.descripcion}</h5> 
+                           <p>${sucursal.direccion}</p>
+                           <p>${sucursal.region}</p>
+                           <p>Horarios: ${sucursal.horario}</p>
+                           <p>Tel&eacute;fono: <a href=\"callto:${sucursal.telefono}\">${sucursal.telefono}</a></p>
+                           <p>Celular: <a href=\"callto:${sucursal.celular}\">${sucursal.celular}</a></p>
+                           <p>Servicios: ${sucursal.servicios}</p>
+                           <div style=\"width:100%\"><a href=\"http://maps.google.com/?cbll=${sucursal.longitud},${sucursal.latitud}&cbp=12,20.09,,0,5&layer=c\" target=\"_blank\" class=\"pull-right\">&nbsp;Streetview&nbsp;<i class=\"fa fa-street-view\"></i></a><a href=\"http://maps.google.com/?q=${sucursal.longitud},${sucursal.latitud}\" target=\"_blank\" class=\"pull-right\">&nbsp;Mapa&nbsp;<i class=\"fa fa-map-marker\"></i></a></div>`);
+
+               google.maps.event.addListener(marker, "click", function(event) {
+                 iw_map.setContent(this.get("content"));
+                 iw_map.open(map, this);
+
+               });
+
+         });        
+       }
+   }).catch(function(err) {
+     console.log(err)
+   });
+       
+    map.setCenter(new google.maps.LatLng(citiesConfig.latitud,citiesConfig.longitud));
+    
+  }
+    
+  function checkAll()
+  {
+     jquery('#checkAll').click(function () {    
+       jquery('input:checkbox').prop('checked', this.checked);    
+     });
+    
+    jquery(`#checkAll`).click(function () {    
+      var favorite = [];
+      jquery.each(jquery("input[type='checkbox']:checked"), function(){
+        favorite.push(jquery(this).val());
+      });
+
+      markers.forEach((m) => {
+        m.m.setVisible(false);
+      });
+
+      favorite.forEach((f) => {
+        var ser_includes = markers.filter(ms => ms.s!==null && ms.s.includes(f));
+        ser_includes.forEach((mar) => {
+          mar.m.setVisible(true);
+        });
+      });
+    });
+  }
+  
+</script>  
+
+<script type="text/javascript">
+var centreGot = false;
+function errorGeolocation(objPositionError)
+{
+	console.log(objPositionError);
+	var url = baseUrl("web/store/set_location/");
+	switch (objPositionError.code)
+	{
+		case objPositionError.PERMISSION_DENIED:
+			window.location.assign(url);
+			//content.innerHTML = "No se ha permitido el acceso a la posición del usuario.";
+		break;
+		case objPositionError.POSITION_UNAVAILABLE:
+			window.location.assign(url);
+			//content.innerHTML = "No se ha podido acceder a la información de su posición.";
+		break;
+		case objPositionError.TIMEOUT:
+			window.location.assign(url);
+			//content.innerHTML = "El servicio ha tardado demasiado tiempo en responder.";
+		break;
+		default:
+			window.location.assign(url);
+			//content.innerHTML = "Error desconocido.";
+	}
+
+}
+</script>
+<script>
+  var map; 
+  var iw_map;
+  var markers = [];
+
+  function initialize_map() {
+
+    iw_map = new google.maps.InfoWindow();
+
+    var myOptions = {
+      zoom: 14,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+    if(navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        map.setCenter(new google.maps.LatLng(position.coords.latitude,position.coords.longitude));
+        //map.setCenter(new google.maps.LatLng(-17.792390, -63.181944));
+      }, errorGeolocation);
+      // Browser doesn't support Geolocation
+    }else{
+      alert('Your browser does not support geolocation.');
+    }
+
+  }
+
+
+  function createMarker_map(markerOptions, sucursal) {
+    var marker = new google.maps.Marker(markerOptions);
+    markers.push({m:marker, s:sucursal.servicios });
+    return marker;
+  }
+		
+  // Sets the map on all markers in the array.
+function setMapOnAll(map) {
+  for (var i = 0; i < markers.length; i++) {
+    markers[i].setMap(map);
+  }
+}
+
+// Removes the markers from the map, but keeps them in the array.
+function clearMarkers() {
+  setMapOnAll(null);
+}
+
+// Shows any markers currently in the array.
+function showMarkers() {
+  setMapOnAll(map);
+}
+
+// Deletes all markers in the array by removing references to them.
+function deleteMarkers() {
+  clearMarkers();
+  markers = [];
+}
+   
+</script>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{settings.keyGoogleMap}}&callback=initialize_map">
+</script>
+
+<article class="site-page" data-template-page>
+  <header class="page-masthead">
+    <h1 id="tituloSucursal" class="container">
+      <i class="fa fa-spinner fa-spin"></i>&nbsp;&nbsp;  {{ 'farmacorp.sucursal.loading' | t}}
+    </h1>
+  </header>
+
+  {% if page.content != blank %}
+    <div class="page-content rte">
+      {{ page.content }}
+    </div>
+  {% endif %}
+  
+    <div class="container headerOffset">
+
+      <section id="contact" class="container">
+          <div class="row">
+  			<div class="col-md-3">
+            	 <div class="panel panel-default">
+                <ul id="servicios" class="list-group">
+                    <li class="list-group-item">
+                        {{ 'farmacorp.sucursal.selectAll' | t}}
+                        <div class="material-switch pull-right">
+                            <input type="checkbox" id="checkAll" name="someSwitchOption001" checked/>
+                            <label for="checkAll" class="label-primary"></label>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
+            </div>
+            <div class="col-md-9">
+            	<div id="map_canvas" class="map">
+           		</div>
+             </div>
+           </div>	
+      </section>
+	</div>
+  
+  
+</article>
+
+<style>
+.label-primary{
+  background-color:#428bca
+}.label-primary[href]:hover,.label-primary[href]:focus{
+  background-color:#3071a9
+}
+.material-switch > input[type="checkbox"] {
+    display: none;   
+}
+
+.material-switch > label {
+    cursor: pointer;
+    height: 0px;
+    position: relative; 
+    width: 40px;  
+}
+
+.material-switch > label::before {
+    background: rgb(0, 0, 0);
+    box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    content: '';
+    height: 16px;
+    margin-top: -8px;
+    position:absolute;
+    opacity: 0.3;
+    transition: all 0.4s ease-in-out;
+    width: 40px;
+}
+.material-switch > label::after {
+    background: rgb(255, 255, 255);
+    border-radius: 16px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    content: '';
+    height: 24px;
+    left: -4px;
+    margin-top: -8px;
+    position: absolute;
+    top: -4px;
+    transition: all 0.3s ease-in-out;
+    width: 24px;
+}
+.material-switch > input[type="checkbox"]:checked + label::before {
+    background: inherit;
+    opacity: 0.5;
+}
+.material-switch > input[type="checkbox"]:checked + label::after {
+    background: inherit;
+    left: 20px;
+}
+</style>

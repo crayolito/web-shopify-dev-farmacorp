@@ -1,0 +1,447 @@
+<script
+  type="application/json"
+  data-section-type="static-highlights-banners"
+  data-section-id="{{ section.id }}">
+</script>
+
+
+{% if section.settings.show_highlights_banner and section.blocks.size > 0 %}
+  <style>
+       
+
+    .highlights-banners-container {
+    background-color: {{ section.settings.background_color }};
+    overflow-x: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+       .highlights-banners {
+         display: flex;
+         overflow-x: auto;
+         justify-content:flex-start;
+         white-space: nowrap;
+         -ms-overflow-style: none;
+         scrollbar-width: none;
+         gap:18px;
+       }
+
+
+       .highlights-banners::-webkit-scrollbar {
+         display: none;
+       }
+
+       .card-cotiza {
+         padding: 17px 37px;
+         color: #025BA4;
+         margin-left: 0;
+         width: 272px;
+         height: 132px;
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+         justify-content: center;
+         text-align: center;
+         flex-shrink: 0;
+         overflow: visible;
+         background: #F8F8F8 0% 0% no-repeat padding-box;
+         box-shadow: 0px 3px 6px #00000029;
+         border-radius: 8px;
+         opacity: 1;
+         position: relative;
+       }
+
+    .card-cotiza .first-card {
+         transition: margin-left 0.3s ease;
+       }
+
+       .card-icon{
+         margin-bottom:10px;
+       }
+
+
+       #ventas_corp{
+         margin-bottom:8px;
+       }
+
+       #buenvivir{
+         margin-bottom:13px;
+       }
+
+       #oferta{
+         margin-bottom:12px;
+       }
+
+       .card-title {
+         text-align: left;
+         font: normal normal bolder 18px/22px Cabin;
+         letter-spacing: 0px;
+         opacity: 1;
+         margin-bottom: 0px;
+       }
+
+       .card-paragraph {
+         text-align: center;
+         font: normal normal normal 14px/17px Cabin;
+         letter-spacing: 0px;
+         opacity: 1;
+         white-space: normal;
+         word-wrap: break-word;
+       }
+
+       .cotizado {
+         background: #F8F8F8 0% 0% no-repeat padding-box;
+         position: relative;
+         overflow: visible;
+       }
+
+       .cotizado .card-title, .cotizado .card-paragraph {
+         color: #FFFFFF !important;
+       }
+
+       .cotizado .nuevo-label {
+         position: absolute;
+         top: -5px;
+         left: 15px;
+         background-color: #DF0002;
+         color: #FFFFFF;
+         padding: 5px 12px;
+         font-size: 1rem;
+         font-weight: bold;
+         border-radius: 4px;
+         z-index: 10;
+       }
+
+      .cotizado .card-title, .cotizado .card-paragraph {
+        color: #025BA4 !important;
+      }
+
+           .card-link{
+         text-decoration:none;
+         margin:0px !important;
+       }
+
+      @media screen and (max-width: 767px)  {
+         .card-cotiza {
+           width: 40vw !important;
+           height: 100% !important;
+           padding: 10px;
+
+         }
+
+         .highlights-banners{
+           gap:8px;
+         }
+
+         .cotizado .nuevo-label {
+           font-size: 0.65rem;
+           padding: 4px 10px;
+           top: -8px;
+           left: 9px;
+         }
+
+
+
+         .card-title {
+           font: normal normal bold 12px/15px Cabin;
+         }
+
+         .card-paragraph {
+           font: normal normal normal 11px/17px Cabin;
+           margin-top:2px;
+         }
+
+    .card-icon{
+      margin-bottom:5px !important;
+    }
+
+        #sana_semana>img{
+          width:21px ;
+          height:19px ;
+          /* margin-bottom:6px; */
+        }
+
+        #cotiza>img{
+          width:19px ;
+          height:19px ;
+        }
+
+        #ventas_corp>img{
+          width:20px ;
+          height:20px ;
+        }
+
+        #buenvivir>img{
+          width:19px ;
+          height:15px ;
+        }
+
+        #oferta>img{
+          width:16px ;
+          height:19px ;
+        }
+
+
+
+
+       }
+  </style>
+
+  <div class="highlights-banners-container">
+    <div class="highlights-banners" id="scroll-container">
+      <a href="https://wa.me/59175581955" class="card-link" target="_blank">
+        <div class="card-cotiza cotizado">
+          <div class="nuevo-label">¡Nuevo!</div>
+          <div class="card-icon" id="cotiza">
+            <img src="{{ 'receta.svg' | asset_url }}" width="37" height="37">
+          </div>
+          <div class="card-title">Cotiza tu receta</div>
+          <div class="card-paragraph">Y recibe lo que necesitas</div>
+        </div>
+      </a>
+
+      <a href="{{ shop.url }}/collections/sana-semana" class="card-link">
+        <div class="card-cotiza first-card">
+          <div class="card-icon" id="sana_semana">
+            <img src="{{ 'sana_semana.svg' | asset_url }}" width="42" height="37">
+          </div>
+          <div class="card-title">Sana Semana</div>
+          <div class="card-paragraph">Ahorra en medicamentos</div>
+        </div>
+      </a>
+
+      <a href="{{ shop.url }}/collections/ofertas" class="card-link">
+        <div class="card-cotiza">
+          <div class="card-icon" id="oferta">
+            <img src="{{ 'buenas_ofertas.svg' | asset_url }}" width="30" height="37">
+          </div>
+          <div class="card-title">Ofertas</div>
+          <div class="card-paragraph">Los mejores descuentos</div>
+        </div>
+      </a>
+
+      <a href="{{ shop.url }}/pages/ventas-corporativas" class="card-link">
+        <div class="card-cotiza">
+          <div class="card-icon" id="ventas_corp">
+            <img src="{{ 'ventas_corporativas.svg' | asset_url }}" width="40" height="40">
+          </div>
+          <div class="card-title">Ventas corporativas</div>
+          <div class="card-paragraph">Compra para tu empresa</div>
+        </div>
+      </a>
+
+      <a href="https://buenvivirdigital.com" class="card-link">
+        <div class="card-cotiza">
+          <div class="card-icon" id="buenvivir">
+            <img src="{{ 'buen_vivir.svg' | asset_url }}" width="38" height="30">
+          </div>
+          <div class="card-title">Buen vivir</div>
+          <div class="card-paragraph">Los post más leídos</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var container = document.getElementById("scroll-container");
+      var firstCard = document.querySelector('.first-card');
+
+      if (container.scrollWidth > container.clientWidth) {
+      }
+      container.scrollLeft = 0;
+    });
+  </script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Highlights banner",
+  "class": "highlights-banners--section",
+  "settings": [
+    {
+      "id": "show_highlights_banner",
+      "type": "checkbox",
+      "label": "Enable highlights banner",
+      "default": true
+    },
+    {
+      "id": "color",
+      "type": "color",
+      "label": "Text color",
+      "default": "#4d4d4d"
+    },
+    {
+      "id": "icon_color",
+      "type": "color",
+      "label": "Icon color",
+      "default": "#4d4d4d"
+    },
+    {
+      "id": "background_color",
+      "type": "color",
+      "label": "Background color",
+      "default": "#f8f8f8"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "highlight",
+      "name": "Highlight",
+      "settings": [
+        {
+          "id": "icon",
+          "type": "select",
+          "label": "Icon",
+          "options": [
+            {
+              "value": "none",
+              "label": "No icon"
+            },
+            {
+              "value": "icon-cell-phone",
+              "label": "Cell phone"
+            },
+            {
+              "value": "icon-chat",
+              "label": "Chat"
+            },
+            {
+              "value": "icon-chat-alternate",
+              "label": "Chat alternate"
+            },
+            {
+              "value": "icon-chat-solid",
+              "label": "Chat solid"
+            },
+            {
+              "value": "icon-credit-card",
+              "label": "Credit card"
+            },
+            {
+              "value": "icon-delivery",
+              "label": "Delivery"
+            },
+            {
+              "value": "icon-email",
+              "label": "Email"
+            },
+            {
+              "value": "icon-envelope",
+              "label": "Envelope"
+            },
+            {
+              "value": "icon-gift-card",
+              "label": "Gift card"
+            },
+            {
+              "value": "icon-heart",
+              "label": "Heart"
+            },
+            {
+              "value": "icon-label-tag",
+              "label": "Label tag"
+            },
+            {
+              "value": "icon-lock-alternate",
+              "label": "Lock"
+            },
+            {
+              "value": "icon-people",
+              "label": "People"
+            },
+            {
+              "value": "icon-people-alternate",
+              "label": "People alternate"
+            },
+            {
+              "value": "icon-pin",
+              "label": "Pin"
+            },
+            {
+              "value": "icon-pin-solid",
+              "label": "Pin solid"
+            },
+            {
+              "value": "icon-question-mark",
+              "label": "Question mark"
+            },
+            {
+              "value": "icon-smile",
+              "label": "Smile"
+            },
+            {
+              "value": "icon-store",
+              "label": "Store"
+            },
+            {
+              "value": "icon-transfer",
+              "label": "Transfer"
+            }
+          ],
+          "default": "none"
+        },
+        {
+          "id": "image",
+          "type": "image_picker",
+          "label": "Image",
+          "info": "50x50 recommended. Uploading an image will override any icon selected above."
+        },
+        {
+          "id": "title",
+          "type": "text",
+          "label": "Heading"
+        },
+        {
+          "id": "text",
+          "type": "richtext",
+          "label": "Text"
+        },
+        {
+          "id": "link",
+          "type": "url",
+          "label": "Link"
+        }
+      ],
+      "limit": 10
+    }
+  ],
+  "default": {
+    "blocks": [
+      {
+        "type": "highlight",
+        "settings": {
+          "icon": "icon-delivery",
+          "title": "Free Shipping",
+          "text": "<p>When you spend $100+</p>"
+        }
+      },
+      {
+        "type": "highlight",
+        "settings": {
+          "icon": "icon-cell-phone",
+          "title": "Give Us A Call",
+          "text": "<p>+1 (201) 555-5555</p>"
+        }
+      },
+      {
+        "type": "highlight",
+        "settings": {
+          "icon": "icon-chat-alternate",
+          "title": "Chat With Us",
+          "text": "<p>We offer 24-hour chat support</p>"
+        }
+      },
+      {
+        "type": "highlight",
+        "settings": {
+          "icon": "icon-pin",
+          "title": "Locations",
+          "text": "<p>Find a store near you</p>"
+        }
+      }
+    ]
+  },
+
+}
+{% endschema %}

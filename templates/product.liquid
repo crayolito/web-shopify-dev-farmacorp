@@ -1,0 +1,133 @@
+{%- capture contentForQuerystring -%}{{ content_for_header }}{%- endcapture -%}
+{%- assign page_url = contentForQuerystring
+  | split: '"pageurl":"'
+  | last
+  | split: '"'
+  | first
+  | split: '.myshopify.com'
+  | last
+  | replace: '\/', '/'
+  | replace: '%20', ' '
+  | replace: '\u0026', '&'
+-%}
+{%- assign param_page = '' -%}
+{%- for i in (1..1) -%}
+  {%- unless page_url contains '?' -%}{% break %}{%- endunless -%}
+  {%- assign query_string = page_url | split: '?' | last -%}
+  {%- assign qry_parts = query_string | split: '&' -%}
+  {%- for part in qry_parts -%}
+    {%- assign key_and_value = part | split: '=' -%}
+    {%- if key_and_value.size > 1 -%}
+      {% if key_and_value[0] == 'app' %}
+        {%- assign param_handle = key_and_value[1] -%}
+      {% endif %}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endfor -%}
+
+{% assign handle = param_handle %}
+
+{% include 'breadcrumbs' %}
+
+{% section 'static-product' %}
+
+{% if product.metafields.inventory.alternateProducts %}
+  <section class="product-section--container product-row--container product-alternate--container">
+    <h2 class="product-section--title product-recommendations--title">
+      <!-- {{ 'farmacorp.producto.titulo_producto_alternativos' | t }} -->
+    </h2>
+    <div id="sustitutos" style="width: 100%; overflow-x: auto;">
+      <ul
+        class="product-section--content product-row"
+        data-product-row
+      >
+        {% assign product_limit = 5 %}
+        {% assign alternateProducts = product.metafields.inventory.alternateProducts.value %}
+        {% for alternate in alternateProducts limit:20 %}
+          {% if all_products[alternate.handle].id != '' %}
+              {%
+              include 'product-grid-item',
+              product: {{all_products[alternate.handle]}}
+            %}
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+{% endif %}
+
+{% section 'static-product-recommendations' %} 
+
+{% section 'static-product-emarsys-recommendation' %}
+
+{% comment %}{% section 'static-product-reviews' %}{% endcomment %}
+{% comment %}{% section 'static-recently-viewed' %}{% endcomment %}
+
+{% section 'product_related_emarsys' %}
+{% section 'product_also_bougth_emarsys' %}
+
+<style>
+  #sustitutos::-webkit-scrollbar{
+      height: 6px;
+      background-color: #F5F5F5;
+  }
+  #sustitutos::-webkit-scrollbar-track{
+      -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+      background-color: #F5F5F5;
+  }
+  #sustitutos::-webkit-scrollbar-thumb{
+      background-color: {{settings.color_header_background}};
+      background-image: -webkit-linear-gradient(90deg,rgba(255, 255, 255, .2) 25%,transparent 25%,transparent 50%,rgba(255, 255, 255, .2) 50%,rgba(255, 255, 255, .2) 75%,transparent 75%,transparent)
+  }
+</style>
+
+<script>
+  var isIOS = (function () {
+      var iosQuirkPresent = function () {
+          var audio = new Audio();
+
+          audio.volume = 0.5;
+          return audio.volume === 1;   // volume cannot be changed from "1" on iOS 12 and below
+      };
+
+      var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      var isAppleDevice = navigator.userAgent.includes('Macintosh');
+      var isTouchScreen = navigator.maxTouchPoints >= 1;   // true for iOS 13 (and hopefully beyond)
+
+      return isIOS || (isAppleDevice && (isTouchScreen || iosQuirkPresent()));
+  })();
+
+  if(!window.location.href.includes('collections'))
+  {
+  window.addEventListener('load', function () {
+     if(isIOS)
+    {
+    try{
+       // window.location.href = 'farmacorp://{{product.handle}}';
+    } catch (error) {
+      console.error(error);
+    }
+
+    }
+  });
+  }
+</script>
+
+    <!-- dataLayer Test -->
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      'event': 'view_item',
+      'ecommerce': {
+        'currency': '{{ shop.currency }}',
+        'items': [{
+          'item_name': '{{ product.title }}',
+          'item_id': '{{ product.id }}',
+          'price': '{{ product.price | money_without_currency | replace: ',', '.' }}',
+          'item_category': '{{ product.type }}',
+          'item_variant': '{{ product.selected_or_first_available_variant.title }}'
+        }]
+      }
+    });
+    </script>
+    <!-- End dataLayer Test -->

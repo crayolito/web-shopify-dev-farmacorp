@@ -1,0 +1,22 @@
+
+<article class="site-page" data-template-page>
+  <header class="page-masthead">
+     <script type='text/javascript'>
+                  (function() {
+                    var proto  = document.location.protocol || 'http:';
+                    var node   = document.createElement('script');
+                    node.type  = 'text/javascript';
+                    node.async = true;
+                    node.src   = 'https://webchat-farmacorp.i6.inconcertcc.com/v3/click_to_chat?token=A52FE349C14B5223115674B426C1B80A';
+                    var s = document.getElementsByTagName('script')[0];
+                    s.parentNode.insertBefore(node, s);
+                  })();
+                </script>
+  </header>
+
+  {% if page.content != blank %}
+    <div class="page-content rte">
+      {{ page.content }}
+    </div>
+  {% endif %}
+</article>

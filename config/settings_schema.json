@@ -1,0 +1,1482 @@
+[ {
+    "name": "Configuración LST ",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Parametrización de url para el LST de instaleap"
+      },
+      {
+        "type": "textarea",
+        "id": "LST_pickup",
+        "label": "Url para ver estado de pedidos tipo Retiro en tienda",
+        "info": "Modelo operativo : pickup"
+      },
+      {
+        "type": "textarea",
+        "id": "LST_scheduled",
+        "label": "Url para ver estado de pedidos tipo Envio a domicilio",
+        "info": "Modelo operativo : scheduled"
+      },
+      {
+        "type": "textarea",
+        "id": "LST_express",
+        "label": "Url para ver estado de pedidos tipo Envio Express",
+        "info": "Modelo operativo : express."
+      }
+    ]
+  },
+  {
+    "name": "Contact Center Farmacorp",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Call Center"
+      },
+      {
+        "type": "richtext",
+        "id": "callCenterSantaCruz",
+        "label": "Número de telefono de call center para Santa Cruz",
+        "info": "Número de telefono de call center para Santa Cruz agregar el link con 'tel:335555'.",
+        "default": "<p><a href=\"tel:3335555\" title=\"tel:3335555\"><strong>355-555<\/strong><\/a><\/p>"
+      },
+      {
+        "type": "richtext",
+        "id": "callCenterLaPaz",
+        "label": "Número de telefono de call center para La Paz",
+        "info": "Número de telefono de call center para La Paz agregar el link con 'tel:335555'.",
+        "default": "<p><a href=\"tel:22311311\" title=\"tel:22311311\"><strong>231-1311<\/strong><\/a>  Centro<br><strong><a href=\"tel:22790645\">279-0645<\/a><\/strong> Zona Sur<br><strong><a href=\"tel:22795252\">279-5252<\/a><\/strong> Zona Sur<\/p>"
+      },
+      {
+        "type": "richtext",
+        "id": "callCenterCochabamba",
+        "label": "Número de telefono de call center para Cochabamba",
+        "info": "Número de telefono de call center para Cochabamba agregar el link con 'tel:335555'.",
+        "default": "<p><a href=\"tel:44524244\" title=\"tel:44524244\"><strong>452-4244<\/strong><\/a><\/p>"
+      },
+      {
+        "type": "richtext",
+        "id": "callCenterOruro",
+        "label": "Número de telefono de call center para Oruro",
+        "info": "Número de telefono de call center para Oruro agregar el link con 'tel:335555'.",
+        "default": "<p><a href=\"tel:25250500\" title=\"tel:25250500\"><strong>525-0500<\/strong><\/a><\/p>"
+      },
+      {
+        "type": "richtext",
+        "id": "callCenterChuquisaca",
+        "label": "Número de telefono de call center para Chuquisaca",
+        "info": "Número de telefono de call center para Chuquisaca agregar el link con 'tel:335555'.",
+        "default": "<p><a href=\"tel:46464977\" title=\"tel:46464977\"><strong>646-4977<\/strong><\/a><\/p>"
+      },
+      {
+        "type": "richtext",
+        "id": "callCenterTarija",
+        "label": "Número de telefono de call center para Tarija",
+        "info": "Número de telefono de call center para Tarija agregar el link con 'tel:335555'.",
+        "default": "<p><a href=\"tel:46655555\" title=\"tel:46655555\"><strong>665-5555<\/strong><\/a><\/p>"
+      },
+      {
+        "type": "header",
+        "content": "Delivery Farmamóvil"
+      },
+      {
+        "type": "richtext",
+        "id": "deliveryFarmamovilSantaCruz",
+        "label": "Número de telefono de delivery Farmamóvil para Santa Cruz",
+        "info": "Número de telefono de delivery Farmamóvil para Santa Cruz agregar el link con 'tel:335555'.",
+        "default": "<p><a href=\"tel:3335555\" title=\"tel:3335555\"><strong>355-555<\/strong><\/a><\/p>"
+      },
+      {
+        "type": "richtext",
+        "id": "deliveryFarmamovilLaPaz",
+        "label": "Número de telefono de delivery Farmamóvil para La Paz",
+        "info": "Número de telefono de delivery Farmamóvil para La Paz agregar el link con 'tel:335555'.",
+        "default": "<p><a href=\"tel:22311311\" title=\"tel:22311311\"><strong>231-1311<\/strong><\/a>  Centro<br><strong><a href=\"tel:22790645\">279-0645<\/a><\/strong> Zona Sur<br><strong><a href=\"tel:22795252\">279-5252<\/a><\/strong> Zona Sur<\/p>"
+      },
+      {
+        "type": "richtext",
+        "id": "deliveryFarmamovilCochabamba",
+        "label": "Número de telefono de delivery Farmamóvil para Cochabamba",
+        "info": "Número de telefono de delivery Farmamóvil para Cochabamba agregar el link con 'tel:335555'.",
+        "default": "<p><a href=\"tel:44524244\" title=\"tel:44524244\"><strong>452-4244<\/strong><\/a><\/p>"
+      },
+      {
+        "type": "richtext",
+        "id": "deliveryFarmamovilOruro",
+        "label": "Número de telefono de delivery Farmamóvil para Oruro",
+        "info": "Número de telefono de delivery Farmamóvil para Oruro agregar el link con 'tel:335555'.",
+        "default": "<p><a href=\"tel:25250500\" title=\"tel:25250500\"><strong>525-0500<\/strong><\/a><\/p>"
+      },
+      {
+        "type": "richtext",
+        "id": "deliveryFarmamovilChuquisaca",
+        "label": "Número de telefono de delivery Farmamóvil para Chuquisaca",
+        "info": "Número de telefono de delivery Farmamóvil para Chuquisaca agregar el link con 'tel:335555'.",
+        "default": "<p><a href=\"tel:46464977\" title=\"tel:46464977\"><strong>646-4977<\/strong><\/a><\/p>"
+      },
+      {
+        "type": "richtext",
+        "id": "deliveryFarmamovilTarija",
+        "label": "Número de telefono de delivery Farmamóvil para Tarija",
+        "info": "Número de telefono de delivery Farmamóvil para Tarija agregar el link con 'tel:335555'.",
+        "default": "<p><a href=\"tel:46655555\" title=\"tel:46655555\"><strong>665-5555<\/strong><\/a><\/p>"
+      },
+      {
+        "type": "header",
+        "content": "Correo"
+      },
+      {
+        "type": "text",
+        "id": "contactEmail",
+        "label": "Url del correo de Farmacorp",
+        "info": "Url del correo de Farmacorp.",
+        "default": "mailto:info@farmacorp.com?subject=Consulta&body=Hola, mi consulta es"
+      },
+      {
+        "type": "header",
+        "content": "Facebook messenger"
+      },
+      {
+        "type": "text",
+        "id": "messengerFarmacorp",
+        "label": "Url del messenger Facebook Farmacorp",
+        "info": "Url del messenger Facebook Farmacorp.",
+        "default": "https:\/\/www.messenger.com\/t\/Farmacorp"
+      },
+      {
+        "type": "header",
+        "content": "Whatsapp"
+      },
+      {
+        "type": "text",
+        "id": "urlWhatsapp",
+        "label": "Url de whatsapp Farmacorp",
+        "info": "Url de whatsapp Farmacorp.",
+        "default": "https:\/\/api.whatsapp.com\/send?phone=59175367559&text=Hola, mi consulta es"
+      },
+      {
+        "type": "text",
+        "id": "numeroWhatsapp",
+        "label": "Número de whatsapp Farmacorp",
+        "info": "Número de whatsapp Farmacorp.",
+        "default": "692-55055"
+      }
+    ]
+  },
+  {
+    "name": "Payments",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Pagos en el pie de página"
+      },
+      {
+        "type": "textarea",
+        "id": "enabled_payment_types_farmacorp",
+        "label": "Pagos",
+        "default": "visa,master,american_express,paypal",
+        "info": "Pagos aceptados. https:\/\/shopify.dev\/tutorials\/customize-theme-add-credit-card-icons"
+      }
+    ]
+  },
+  {
+    "name": "Campaña sticker",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Campaña formato sticker"
+      },
+      {
+        "type": "checkbox",
+        "id": "item_campania_enable",
+        "label": "Activar campaña",
+        "default": false,
+        "info": "Habilitar o Inhabilitar la campaña formato cartilla."
+      },
+      {
+        "type": "textarea",
+        "id": "item_campania_sticker",
+        "label": "Id´s",
+        "default": "123,456",
+        "info": "Id´s de los artículos de canje para la campaña. Ej: 123,456,789"
+      },
+      {
+        "type": "text",
+        "id": "item_campania_discount_code",
+        "label": "Discount code",
+        "default": " 37:1102:CCS_12_01",
+        "info": "Código de descuento de canje para la campaña. Ej:  37:1102:CCS_12_01"
+      },
+      {
+        "type": "richtext",
+        "id": "item_campania_sticker_mensaje_exito",
+        "label": "Alerta cliente es farmaclub página web",
+        "default": "<p>Al momento de recibir el producto deberá presetar una cartilla.<\/p>"
+      },
+      {
+        "type": "richtext",
+        "id": "item_campania_sticker_mensaje_error",
+        "label": "Alerta cliente no es farmaclub página web",
+        "default": "<p>Para canjear este producto identificate como cliente Farmaclub pulsando : <a href=\"https:\/\/farmacorp.com\/account\">aquí<\/a><\/p>"
+      },
+      {
+        "type": "textarea",
+        "id": "item_campania_sticker_mensaje_exito_mobile",
+        "label": "Alerta cliente es farmaclub aplicación móvil",
+        "default": "Al momento de recibir el producto deberá presetar una cartilla."
+      },
+      {
+        "type": "textarea",
+        "id": "item_campania_sticker_mensaje_error_mobile",
+        "label": "Alerta cliente no es farmaclub aplicación móvil",
+        "default": "Para canjear este producto identificate como cliente Farmaclub"
+      }
+    ]
+  },
+  {
+    "name": "Logo Sticker",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "sticker_image",
+        "label": "Carga logo del sticker",
+        "info": "Esta imagen es solo para el sticker de campaña"
+      }
+    ]
+  },
+  {
+    "name": "Recomendaciones Emarsys",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "emarsys-recommendation-enable",
+        "label": "habilitar recomendaciones",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Categorias usadas por Emarsys",
+    "settings": [
+      {
+        "type": "text",
+        "id": "category1_title",
+        "label": "Título de la Categoría 1",
+        "default": "Preciosos Diciembre"
+      },
+      {
+        "type": "checkbox",
+        "default": true,
+        "id": "show_category1",
+        "label": "Mostrar Categoría 1"
+      },
+      {
+        "type": "text",
+        "id": "category2_title",
+        "label": "Título de la Categoría 2",
+        "default": "Suplementos y Vitaminas"
+      },
+      {
+        "type": "checkbox",
+        "default": true,
+        "id": "show_category2",
+        "label": "Mostrar Categoría 2"
+      },
+      {
+        "type": "text",
+        "id": "category3_title",
+        "label": "Título de la Categoría 3",
+        "default": "Mis medicamentos"
+      },
+      {
+        "type": "checkbox",
+        "default": true,
+        "id": "show_category3",
+        "label": "Mostrar Categoría 3"
+      },
+      {
+        "type": "text",
+        "id": "category4_title",
+        "label": "Título de la Categoría 4",
+        "default": "Mi canasta familiar"
+      },
+      {
+        "type": "checkbox",
+        "default": true,
+        "id": "show_category4",
+        "label": "Mostrar Categoría 4"
+      },
+      {
+        "type": "text",
+        "id": "category5_title",
+        "label": "Título de la Categoría 5",
+        "default": "Los Más Vendidos"
+      },
+      {
+        "type": "checkbox",
+        "default": true,
+        "id": "show_category5",
+        "label": "Mostrar Categoría 5"
+      }
+    ]
+  },
+  {
+    "name": "Farmaclub",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Configuraciones Farmaclub"
+      },
+      {
+        "type": "checkbox",
+        "id": "pago_puntos_farmaclub_enable",
+        "label": "Activar Pago con puntos Farmaclub",
+        "default": false,
+        "info": "Habilitar o Inhabilitar Pago con puntos Farmaclub."
+      }
+    ]
+  },
+  {
+    "name": "Campaña 2x1",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Campaña 2x1"
+      },
+      {
+        "type": "checkbox",
+        "id": "item_campania_2x1_enable",
+        "label": "Activar campaña",
+        "default": false,
+        "info": "Habilitar o Inhabilitar la campaña 2x1."
+      },
+      {
+        "type": "text",
+        "id": "item_campania_2x1_tag",
+        "label": "Tag",
+        "default": "2x1",
+        "info": "Escribe el tag que contiene el producto que habilita el comportamiento 2x1."
+      },
+      {
+        "type": "text",
+        "id": "item_campania_2x1_badge",
+        "label": "Leyenda",
+        "default": "2 x 1",
+        "info": "Este es el texto que aparecera en el badge"
+      }
+    ]
+  },
+  {
+    "name": "Descuento Pickup",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Descuento para Pickup"
+      },
+      {
+       "type": "text",
+        "id": "descuento_pickup_valor",
+        "label": "Codigo de de descuento para pickup",
+        "info": "El valor definido en este campo sera el codigo de descuento que se aplicara a la ordenes pickup."
+      }
+    ]
+  },
+  {
+    "name": "Monto mínimo de venta",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Monto mínimo de venta"
+      },
+      {
+        "type": "textarea",
+        "id": "monto_minimo_leyenda",
+        "label": "Mensaje de alerta de monto mínimo",
+        "default": "El monto mínimo para la venta es :",
+        "info": "Mensaje que aparece al usuario cuando el monto de su carrito esta por debajo del monto mínimo."
+      },
+      {
+        "type": "number",
+        "id": "monto_minimo_valor",
+        "label": "Valor de monto mínimo",
+        "default": 30,
+        "info": "Es el monto mínimo permitido para realizar un pedido, debe ser un valor entero."
+      }
+    ]
+  },
+  {
+    "name": "App Movil cache",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Definir el uso de cache de servicios para las aplicaciones moviles"
+      },
+      {
+        "type": "checkbox",
+        "id": "app_cache",
+        "label": "Habilitar cache para los servicios de la aplicacion movil.",
+        "default": true
+      },
+      {
+        "type": "number",
+        "id": "app_cache_time",
+        "label": "Tiempo de vida de la cache (Minutos)",
+        "default": 10
+      }
+    ]
+  },
+  {
+    "name": "Setting Farmacorp",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Ciudades farmamovil"
+      },
+      {
+        "type": "textarea",
+        "id": "citys",
+        "label": "Ciudades",
+        "info": "Ciudades donde existen bodegas farmamovil, agregar separadas por coma(,)."
+      },
+      {
+        "type": "textarea",
+        "id": "citysConfig",
+        "label": "Ciudades configuración",
+        "info": "Variable(Array) Javascript con la configuracion de latitud, longitud y código de región."
+      },
+      {
+        "type": "header",
+        "content": "Google Map"
+      },
+      {
+        "type": "text",
+        "id": "keyGoogleMap",
+        "label": "Api key google map",
+        "info": "Api key google map."
+      },
+      {
+        "type": "header",
+        "content": "Api farmacorp"
+      },
+      {
+        "type": "text",
+        "id": "key_domain",
+        "label": "Api key domain from backend",
+        "info": "Api key domain from backend."
+      },
+      {
+        "type": "text",
+        "id": "key_client_id",
+        "label": "Api key client_id from backend",
+        "info": "Api key client_id from backend."
+      },
+      {
+        "type": "text",
+        "id": "key_client_secret",
+        "label": "Api key client_secre from backend",
+        "info": "Api key client_secre from backend."
+      },
+      {
+        "type": "text",
+        "id": "url_tracking",
+        "label": "Url de tracking",
+        "info": "Url de tracking."
+      },
+      {
+        "type": "text",
+        "id": "estado_tracking",
+        "label": "Estado para habilitar tracking",
+        "info": "Estado para habilitar tracking."
+      },
+      {
+        "type": "text",
+        "id": "mensaje_fuera_cobertura_movil",
+        "label": "Mensaje fuera de cobertura en aplicación móvil.",
+        "info": "Puede utilzar el comodin {ciudad} para indicar concatenación en el mensaje final."
+      }
+    ]
+  },
+  {
+    "name": "Colecciones Farmacorp",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Busqueda agrupadas"
+      },
+      {
+        "type": "textarea",
+        "id": "filtros_agrupados",
+        "label": "Títulos de colecciones",
+        "info": "Colecciones en las cuales se debe aplicar filtros agrupados.",
+        "default": "INVERNOL,SANA SEMANA"
+      }
+    ]
+  },
+  {
+    "name": "Products Farmacorp",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Opciones"
+      },
+      {
+        "type": "checkbox",
+        "id": "product_unidad_venta",
+        "label": "Mostrar unidad de venta.",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "product_unidad_venta_cantidad",
+        "label": "Mostrar unidad de venta en el selector de cantidad.",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "product_show_sku",
+        "label": "Mostar SKU.",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "product_show_cantidad",
+        "label": "Mostar Cantidad de productos disponibles.",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Disponibilidad"
+      },
+      {
+        "type": "checkbox",
+        "id": "product_show_locality",
+        "label": "Mostar disponibilidad en otras sucursales.",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Alerta disponibilidad"
+      },
+      {
+        "type": "checkbox",
+        "id": "mostrarAlertaDisponibilidad",
+        "label": "Mostrar Alerta de disponibilidad.",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "tipoAlerta",
+        "label": "Tipo alerta",
+        "options": [
+          {
+            "value": "primary",
+            "label": "primary"
+          },
+          {
+            "value": "secondary",
+            "label": "secondary"
+          },
+          {
+            "value": "success",
+            "label": "success"
+          },
+          {
+            "value": "danger",
+            "label": "danger"
+          },
+          {
+            "value": "warning",
+            "label": "warning"
+          },
+          {
+            "value": "info",
+            "label": "info"
+          },
+          {
+            "value": "light",
+            "label": "light"
+          },
+          {
+            "value": "dark",
+            "label": "dark"
+          }
+        ],
+        "default": "danger",
+        "info": "Define el color de la alerta."
+      },
+      {
+        "type": "range",
+        "id": "cantidadMinima",
+        "min": 1,
+        "max": 100,
+        "step": 1,
+        "label": "Cantidad Mínima",
+        "default": 15
+      },
+      {
+        "type": "header",
+        "content": "Alerta venta solo en farmacia"
+      },
+      {
+        "type": "checkbox",
+        "id": "mostrarAlertaSoloFarmacia",
+        "label": "Mostrar Alerta venta solo en farmacia.",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "tipoAlertaVentaFarmacia",
+        "label": "Tipo alerta",
+        "options": [
+          {
+            "value": "primary",
+            "label": "primary"
+          },
+          {
+            "value": "secondary",
+            "label": "secondary"
+          },
+          {
+            "value": "success",
+            "label": "success"
+          },
+          {
+            "value": "danger",
+            "label": "danger"
+          },
+          {
+            "value": "warning",
+            "label": "warning"
+          },
+          {
+            "value": "info",
+            "label": "info"
+          },
+          {
+            "value": "light",
+            "label": "light"
+          },
+          {
+            "value": "dark",
+            "label": "dark"
+          }
+        ],
+        "default": "danger",
+        "info": "Define el color de la alerta."
+      }
+    ]
+  },
+  {
+    "name": "theme_info",
+    "theme_name": "Empire",
+    "theme_author": "Pixel Union",
+    "theme_version": "5.2.0",
+    "theme_documentation_url": "http:\/\/support.pixelunion.net\/category\/385-empire",
+    "theme_support_url": "https:\/\/support.pixelunion.net\/hc\/en-us\/requests\/new"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "header",
+        "content": "General"
+      },
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Background",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "color_headings",
+        "label": "Headings",
+        "default": "#222222"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Text",
+        "default": "#4d4d4d"
+      },
+      {
+        "type": "color",
+        "id": "color_text_light",
+        "label": "Light text",
+        "default": "#949494"
+      },
+      {
+        "type": "color",
+        "id": "color_links",
+        "label": "Links",
+        "default": "#1E8570"
+      },
+      {
+        "type": "header",
+        "content": "Buttons"
+      },
+      {
+        "type": "color",
+        "id": "color_button_background",
+        "label": "Primary button background",
+        "default": "#ffab41"
+      },
+      {
+        "type": "color",
+        "id": "color_button_text",
+        "label": "Primary button text",
+        "default": "#1a390c"
+      },
+      {
+        "type": "color",
+        "id": "color_button_secondary_background",
+        "label": "Secondary button background",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "color_button_secondary_text",
+        "label": "Secondary button text",
+        "default": "#1E8570"
+      },
+      {
+        "type": "color",
+        "id": "color_button_secondary_border",
+        "label": "Secondary button border",
+        "default": "#dddddd"
+      },
+      {
+        "type": "header",
+        "content": "Header"
+      },
+      {
+        "type": "color",
+        "id": "color_header_background",
+        "label": "Background",
+        "default": "#30656b"
+      },
+      {
+        "type": "color",
+        "id": "color_header_text",
+        "label": "Text",
+        "default": "#ffffff"
+      },
+      {
+        "type": "header",
+        "content": "Forms"
+      },
+      {
+        "type": "color",
+        "id": "color_input_text",
+        "label": "Input text",
+        "default": "#4d4d4d"
+      },
+      {
+        "type": "color",
+        "id": "color_input_background",
+        "label": "Input background",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "color_input_border",
+        "label": "Input border",
+        "default": "#dddddd"
+      },
+      {
+        "type": "header",
+        "content": "Product"
+      },
+      {
+        "type": "color",
+        "id": "color_product_sale_accent",
+        "label": "Sale accent",
+        "default": "#de0101"
+      },
+      {
+        "type": "color",
+        "id": "color_product_review_star",
+        "label": "Review star",
+        "default": "#f6c347"
+      },
+      {
+        "type": "header",
+        "content": "Footer"
+      },
+      {
+        "type": "color",
+        "id": "color_footer_background",
+        "label": "Background",
+        "default": "#f8f8f8"
+      },
+      {
+        "type": "color",
+        "id": "color_footer_text",
+        "label": "Text",
+        "default": "#5c5c5c"
+      },
+      {
+        "type": "header",
+        "content": "Site overlays",
+        "info": "Used on modals and mobile nav overlays"
+      },
+      {
+        "id": "color_overlay",
+        "type": "color",
+        "label": "Overlay",
+        "default": "#000000"
+      },
+      {
+        "id": "overlay_opacity",
+        "type": "range",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "label": "Opacity",
+        "default": 50
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Global"
+      },
+      {
+        "id": "type_size_base",
+        "type": "range",
+        "min": 15,
+        "max": 18,
+        "step": 1,
+        "unit": "px",
+        "label": "Base font size",
+        "default": 16
+      },
+      {
+        "type": "header",
+        "content": "Headings"
+      },
+      {
+        "id": "type_heading",
+        "type": "font_picker",
+        "label": "Font",
+        "default": "helvetica_n7"
+      },
+      {
+        "id": "type_heading_size",
+        "type": "select",
+        "label": "Size",
+        "info": "All heading sizes will be adjusted",
+        "options": [
+          {
+            "value": "0.8",
+            "label": "Small"
+          },
+          {
+            "value": "1",
+            "label": "Medium"
+          },
+          {
+            "value": "1.2",
+            "label": "Large"
+          }
+        ],
+        "default": "1"
+      },
+      {
+        "id": "type_heading_capitalize",
+        "type": "checkbox",
+        "label": "Uppercase",
+        "default": false
+      },
+      {
+        "id": "type_heading_spacing",
+        "type": "range",
+        "min": -5,
+        "max": 25,
+        "step": 1,
+        "unit": "%",
+        "label": "Letter Spacing",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Body text"
+      },
+      {
+        "id": "type_body",
+        "type": "font_picker",
+        "label": "Font",
+        "default": "helvetica_n4"
+      },
+      {
+        "type": "header",
+        "content": "Main menu"
+      },
+      {
+        "id": "type_menu",
+        "type": "font_picker",
+        "label": "Font",
+        "default": "helvetica_n4"
+      },
+      {
+        "id": "type_menu_capitalize",
+        "type": "checkbox",
+        "label": "Uppercase",
+        "default": false
+      },
+      {
+        "type": "range",
+        "id": "type_menu_spacing",
+        "min": -5,
+        "max": 25,
+        "step": 1,
+        "unit": "%",
+        "label": "Letter Spacing",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Buttons"
+      },
+      {
+        "id": "type_button",
+        "type": "font_picker",
+        "label": "Font",
+        "default": "helvetica_n4"
+      },
+      {
+        "id": "type_button_capitalize",
+        "type": "checkbox",
+        "label": "Uppercase",
+        "default": false
+      },
+      {
+        "id": "type_button_spacing",
+        "type": "range",
+        "min": -5,
+        "max": 25,
+        "step": 1,
+        "unit": "%",
+        "label": "Letter Spacing",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Section headings"
+      },
+      {
+        "id": "type_section",
+        "type": "font_picker",
+        "label": "Font",
+        "default": "helvetica_n4"
+      },
+      {
+        "id": "type_section_capitalize",
+        "type": "checkbox",
+        "label": "Uppercase",
+        "default": false
+      },
+      {
+        "id": "type_section_spacing",
+        "type": "range",
+        "min": -5,
+        "max": 25,
+        "step": 1,
+        "unit": "%",
+        "label": "Letter Spacing",
+        "default": 0
+      }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Site width"
+      },
+      {
+        "id": "layout_max_width",
+        "type": "range",
+        "min": 1200,
+        "max": 1600,
+        "step": 100,
+        "unit": "px",
+        "label": "Max width",
+        "default": 1400
+      }
+    ]
+  },
+  {
+    "name": "Products",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "product_show_vendor",
+        "label": "Show vendor",
+        "default": true
+      },
+      {
+        "id": "product_option_style",
+        "type": "select",
+        "label": "Option style",
+        "options": [
+          {
+            "value": "select",
+            "label": "Dropdown"
+          },
+          {
+            "value": "radio",
+            "label": "Selectable boxes"
+          }
+        ],
+        "default": "select"
+      },
+      {
+        "type": "checkbox",
+        "id": "product_sales_badge",
+        "label": "Enable sale badges",
+        "default": true
+      },
+      {
+        "id": "product_sales_badge_style",
+        "type": "select",
+        "label": "Sale badge style",
+        "options": [
+          {
+            "value": "percentile",
+            "label": "Save 10%"
+          },
+          {
+            "value": "money",
+            "label": "Save $10"
+          },
+          {
+            "value": "text",
+            "label": "Sale"
+          }
+        ],
+        "default": "percentile"
+      },
+      {
+        "type": "checkbox",
+        "id": "product_social_sharing",
+        "label": "Enable social sharing",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Product reviews"
+      },
+      {
+        "type": "checkbox",
+        "id": "product_ratings_reviews",
+        "label": "Enable product reviews and ratings",
+        "info": "[Learn more](https:\/\/apps.shopify.com\/product-reviews)",
+        "default": true
+      },
+      {
+        "type": "radio",
+        "id": "product_ratings_star_display",
+        "label": "Display star ratings",
+        "options": [
+          {
+            "label": "Product page and product cards",
+            "value": "all"
+          },
+          {
+            "label": "Product page only",
+            "value": "prod-page"
+          }
+        ],
+        "default": "all"
+      },
+      {
+        "type": "header",
+        "content": "Product cards"
+      },
+      {
+        "type": "checkbox",
+        "id": "product_grid_show_second_image",
+        "label": "Show second product image on hover",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "product_grid_emphasize_price",
+        "label": "Emphasize price",
+        "info": "Emphasizing the price will show the product's price above the title.",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "product_grid_image_style",
+        "label": "Media aspect ratio",
+        "options": [
+          {
+            "value": "natural",
+            "label": "Natural"
+          },
+          {
+            "value": "small",
+            "label": "Short (4:3)"
+          },
+          {
+            "value": "medium",
+            "label": "Square (1:1)"
+          },
+          {
+            "value": "large",
+            "label": "Tall (2:3)"
+          }
+        ],
+        "default": "natural"
+      },
+      {
+        "type": "checkbox",
+        "id": "product_grid_image_crop",
+        "label": "Enable image crop",
+        "default": false,
+        "info": "If disabled, white space will be applied around the image. Has no effect when media aspect ratio is set to natural."
+      },
+      {
+        "type": "select",
+        "id": "product_grid_show_quickshop",
+        "label": "\"Quick shop\" button",
+        "options": [
+          {
+            "value": "disabled",
+            "label": "Disabled"
+          },
+          {
+            "value": "desktop",
+            "label": "Enable on desktop only"
+          },
+          {
+            "value": "always",
+            "label": "Enable on desktop and mobile"
+          }
+        ],
+        "default": "always"
+      },
+      {
+        "type": "select",
+        "id": "product_grid_show_atc",
+        "label": "\"Add to cart\" button",
+        "options": [
+          {
+            "value": "disabled",
+            "label": "Disabled"
+          },
+          {
+            "value": "desktop",
+            "label": "Enable on desktop only"
+          },
+          {
+            "value": "always",
+            "label": "Enable on desktop and mobile"
+          }
+        ],
+        "default": "desktop"
+      },
+      {
+        "type": "checkbox",
+        "id": "quickshop_show_dcb",
+        "label": "Show dynamic checkout button",
+        "info": "Each customer will see their preferred payment method from those available on your store, such as PayPal or Apple Pay. [Learn more](https:\/\/help.shopify.com\/manual\/using-themes\/change-the-layout\/dynamic-checkout)",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "quickshop_product_cart_redirect",
+        "label": "Enable cart redirection",
+        "info": "Automatically sends users to the Cart page after adding a product.",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "Quickshop media"
+      },
+      {
+        "type": "paragraph",
+        "content": "Learn more about [media types](https:\/\/help.shopify.com\/en\/manual\/products\/product-media\/product-media-types)"
+      },
+      {
+        "type": "select",
+        "id": "quickshop_gallery_aspect_ratio",
+        "label": "Aspect ratio",
+        "options": [
+          {
+            "value": "natural",
+            "label": "Natural"
+          },
+          {
+            "value": "short",
+            "label": "Short (4:3)"
+          },
+          {
+            "value": "square",
+            "label": "Square (1:1)"
+          },
+          {
+            "value": "tall",
+            "label": "Tall (2:3)"
+          }
+        ],
+        "default": "natural"
+      },
+      {
+        "type": "checkbox",
+        "id": "quickshop_gallery_image_crop",
+        "label": "Enable image crop",
+        "info": "If disabled, white space will be applied around the image. Has no effect when media aspect ratio is set to natural.",
+        "default": false
+      },
+      {
+        "id": "quickshop_gallery_thumbnail_position",
+        "type": "select",
+        "label": "Thumbnails position",
+        "options": [
+          {
+            "value": "below",
+            "label": "Below main image"
+          },
+          {
+            "value": "left",
+            "label": "Left of main image"
+          }
+        ],
+        "default": "below"
+      },
+      {
+        "type": "checkbox",
+        "id": "quickshop_gallery_video_autoplay",
+        "label": "Enable video autoplay",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "quickshop_gallery_video_looping",
+        "label": "Enable video looping",
+        "default": true
+      },
+      {
+        "id": "quickshop_gallery_hover_zoom",
+        "type": "select",
+        "label": "Roll-over image zoom",
+        "options": [
+          {
+            "value": "disabled",
+            "label": "Disabled"
+          },
+          {
+            "value": "replace",
+            "label": "Enabled (replace main image)"
+          }
+        ],
+        "info": "Only applies to desktop screen sizes.",
+        "default": "disabled"
+      },
+      {
+        "type": "paragraph",
+        "content": "For the best zoom results, make sure your images are larger than 1600px."
+      },
+      {
+        "type": "header",
+        "content": "Color swatches"
+      },
+      {
+        "type": "checkbox",
+        "id": "swatches_enable",
+        "label": "Enable color swatches",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "swatches_swatch_trigger",
+        "label": "Swatch trigger",
+        "default": "Color"
+      },
+      {
+        "type": "radio",
+        "id": "swatches_shape",
+        "label": "Swatch shape",
+        "options": [
+          {
+            "value": "square",
+            "label": "Square"
+          },
+          {
+            "value": "circle",
+            "label": "Circle"
+          }
+        ],
+        "default": "square"
+      },
+      {
+        "type": "range",
+        "id": "swatches_product_card_size",
+        "min": 16,
+        "max": 32,
+        "step": 1,
+        "unit": "px",
+        "label": "Product card swatch size",
+        "default": 20
+      },
+      {
+        "type": "range",
+        "id": "swatches_product_page_size",
+        "min": 16,
+        "max": 64,
+        "step": 1,
+        "unit": "px",
+        "label": "Product page swatch size",
+        "default": 32
+      },
+      {
+        "type": "select",
+        "id": "swatches_option_style",
+        "label": "Color option style",
+        "info": "Applies to product page and product card swatches.",
+        "options": [
+          {
+            "value": "color_swatch",
+            "label": "Color swatch"
+          },
+          {
+            "value": "variant_image",
+            "label": "Variant image"
+          }
+        ],
+        "default": "color_swatch"
+      },
+      {
+        "type": "textarea",
+        "id": "swatches_custom_colors",
+        "label": "Custom colors",
+        "info": "Like “Deep Purple: #7000AA” - one color per line, with names that exactly match your variants."
+      }
+    ]
+  },
+  {
+    "name": "Social media",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "social_default_image",
+        "label": "Default social sharing image",
+        "info": "The image shown when sharing a link if a page-specific image isn't available"
+      },
+      {
+        "type": "header",
+        "content": "Accounts"
+      },
+      {
+        "type": "text",
+        "id": "social_facebook",
+        "label": "Facebook",
+        "info": "https:\/\/facebook.com\/pixelunion"
+      },
+      {
+        "type": "text",
+        "id": "social_twitter",
+        "label": "Twitter",
+        "info": "https:\/\/twitter.com\/pixelunion"
+      },
+      {
+        "type": "text",
+        "id": "social_pinterest",
+        "label": "Pinterest",
+        "info": "https:\/\/pinterest.com\/pixelunion"
+      },
+      {
+        "type": "text",
+        "id": "social_instagram",
+        "label": "Instagram",
+        "info": "https:\/\/instagram.com\/pixelunion"
+      },
+      {
+        "type": "text",
+        "id": "social_tumblr",
+        "label": "Tumblr",
+        "info": "http:\/\/shopify.tumblr.com"
+      },
+      {
+        "type": "text",
+        "id": "social_vimeo",
+        "label": "Vimeo",
+        "info": "https:\/\/vimeo.com\/shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_youtube",
+        "label": "YouTube",
+        "info": "https:\/\/www.youtube.com\/shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_linkedin",
+        "label": "LinkedIn",
+        "info": "https:\/\/linkedin.com\/company\/shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_email",
+        "label": "Email address",
+        "info": "info@example.com"
+      }
+    ]
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon image",
+        "info": "32 x 32px .png required"
+      }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_checkout_lock_icon",
+        "label": "Show lock icon on checkout buttons",
+        "default": false
+      }
+    ]
+  },
+  {
+    "name": "Advanced",
+    "settings": [
+      {
+        "type": "header",
+        "content": "\"Continue shopping\" link"
+      },
+      {
+        "type": "url",
+        "id": "continue_shopping_url",
+        "label": "Continue shopping link",
+        "info": "Where to direct customers after clicking \"Continue shopping\""
+      },
+      {
+        "type": "checkbox",
+        "id": "continue_url_cart",
+        "label": "Show on \"Cart\" page",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "continue_url_404",
+        "label": "Show on \"404\" page",
+        "default": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,1115 @@
+{% assign layout = 'slideshow' %}
+{% assign product_count = section.settings.product_count %}
+{% assign emphasize_price = settings.product_grid_emphasize_price %}
+{% assign quick_shop_display = settings.product_grid_show_quickshop %}
+{% assign atc_display = settings.product_grid_show_atc %}
+{% assign product_ratings_reviews = settings.product_ratings_reviews %}
+{% assign product_ratings_star_display = settings.product_ratings_star_display %}
+{% assign money_format = shop.money_format | strip_html %}
+{% assign onboarding = true %}
+{% assign compare_at_price = 1999 %}
+{% assign compare_at_price_varies = false %}
+{% assign price = 1999 %}
+{% assign price_varies = false %}
+{% assign product_available = true %} 
+
+
+
+{%- capture classes -%}
+  productgrid--item
+  imagestyle--{% if settings.product_grid_image_crop and settings.product_grid_image_style != 'natural' %}cropped-{% endif %}
+  {{ settings.product_grid_image_style }}
+  {% unless product.featured_image %}imagestyle--no-image{% endunless %}
+  {% if on_sale %}productitem--sale{% endif %}
+  {% if emphasize_price %}productitem--emphasis{% endif %}
+  {% if recently_viewed %}product-recently-viewed-card{% endif %}
+  {% if atc_display == 'always' or quick_shop_display == 'always' %}show-actions--mobile{% endif %}
+{%- endcapture -%}
+
+
+<script>
+
+      function sendToEmarsys(){
+        sendCustomerID();
+        sendCategory();
+        sendViewProduct();
+        sendCart();
+        {% if settings.emarsys-recommendation-enable %}
+        showHomeRecommendation();
+        showCategoryRecommendation();
+        showSearchRecommendation();
+        showProductRecommendation();
+        showCartRecommendation();
+        {% endif %}
+        ScarabQueue.push(['go']);
+      }
+
+
+      function sendViewProduct(){
+        {% if product.handle %}
+        ScarabQueue.push(['view','{{product.handle}}']);
+        {% endif  %}
+      }
+
+
+
+
+      function sendCategory(){
+         {% if template == 'collection' %}
+          var category = "";
+      {% if collection.description != "" %}
+          category =  `{{collection.description | strip_html | strip_newlines | replace: "&gt;", ">"}}`;
+      {% else %}
+        category = "{{ collection.title }}";
+      {% endif %}
+          ScarabQueue.push(['category',category]);
+        {% endif %}
+      }
+
+
+      function sendCustomerID(){
+        {% if customer.id %}
+        ScarabQueue.push(['setCustomerId','{{customer.id}}']);
+        {% endif %}
+      }
+
+
+ function loadCart(){
+  const sessionCart = sessionStorage.getItem('shopifyCart');
+
+  if(sessionCart) {
+    return JSON.parse(sessionCart);
+  }
+
+  const cartItems = [
+    {% for item in cart.items %}
+      {
+        item: '{{ item.sku }}',
+        price: {{ item.price |money_without_currency | replace: ',','.' | plus: 0 | times: item.quantity}},
+        quantity: {{ item.quantity }}
+      },
+    {% endfor %}
+  ];
+
+  sessionStorage.setItem('shopifyCart', JSON.stringify(cartItems));
+
+  return cartItems;
+}
+
+function sendCart(){
+  let cartItems = loadCart();
+  ScarabQueue.push(['cart', cartItems]);
+}
+
+const open = window.XMLHttpRequest.prototype.open;
+
+function listenCart(){
+  this.addEventListener("load", function() {
+    if([
+      "/cart/add.js",
+      "/cart/update.js",
+      "/cart/change.js",
+      "/cart/clear.js",
+    ].includes(this._url)) {
+      sendUpdateCartToEmarsys(this.response);
+    }
+  });
+  return open.apply(this,arguments);
+}
+
+window.XMLHttpRequest.prototype.open = listenCart;
+
+function sendUpdateCartToEmarsys(cartJson) {
+  let carritoJson = JSON.parse(cartJson);
+  let cartToSend;
+  {% if template.name=='collection' or template.name=='index' or template.name=='search' %}
+    ScarabQueue.push(['view',carritoJson.handle]);
+  {% endif %}
+  
+  if(carritoJson.hasOwnProperty("items")){
+    cartToSend = carritoJson.items.map(obj => {
+      return {
+        "item": obj.sku,
+        "price": parseFloat((obj.price * obj.quantity/100).toFixed(2)),
+        "quantity": obj.quantity
+      };
+    });
+  } else {
+    const { price, quantity, sku } = carritoJson;
+    let currentCart = loadCart();
+    const itemIndex = currentCart.findIndex(obj => obj.item === sku);
+
+    if (itemIndex !== -1) {
+      currentCart[itemIndex].price = parseFloat((price * quantity/100).toFixed(2));
+      currentCart[itemIndex].quantity = quantity;
+    } else {
+      currentCart.push({
+        "item": sku,
+        "price": parseFloat((price * quantity/100).toFixed(2)),
+        "quantity": quantity
+      });
+    }
+
+    cartToSend = currentCart;
+  }
+
+  sessionStorage.setItem('shopifyCart', JSON.stringify(cartToSend));
+
+  ScarabQueue.push(['cart', cartToSend]);
+  ScarabQueue.push(['go']);
+}
+
+  function goToProduct(url){
+    window.location.href=url;
+  }
+  
+
+
+  //Emarsys recommendations functions
+      function showHomeRecommendation(){
+        {% if template.name == 'index' %}
+          for (var i = 1; i < 6; i++) {
+            ScarabQueue.push(['recommend', {
+            logic: 'HOME_' + i,
+            limit: 15,
+            containerId: 'home' + i,
+            templateId: 'home-tmpl',
+            success: function(SC, render) {
+                if (SC.topicLocalized) {
+                    SC.title = SC.topicLocalized.replace(/Root Catalog>/g, '');
+                    render(SC);
+                }
+              }
+            }]);
+          }
+        {% endif %}
+      }
+
+  function showCategoryRecommendation(){
+      {% if template.name == 'collection' %}
+        ScarabQueue.push(['recommend', {
+          logic: 'CATEGORY',
+          limit: '15',
+          containerId: 'category-emarsys',
+          templateId: 'category-tmpl'
+        }]);
+      {% endif %}
+    }
+
+        function showSearchRecommendation(){
+      {% if template.name =='search' %}
+        var searchText = {{search.terms | json | remove: "*"}};
+        ScarabQueue.push(['searchTerm', searchText]);
+        ScarabQueue.push(['recommend',{
+          logic: 'SEARCH',
+          limit: '15',
+          containerId: 'search-emarsys',
+          templateId: 'search-tmpl',
+          success: function(SC,render){
+            render(SC);
+          }
+        }]);
+      {% endif %}
+    }
+
+    function showProductRecommendation(){
+      {% if template.name == 'product' %}
+        ScarabQueue.push(['recommend', {
+          logic: 'ALSO_BOUGHT',
+          limit: '10',
+          containerId: 'product-emarsys',
+          templateId: 'product-tmpl',
+          success: function(SC,render){
+            render(SC);
+          }
+        }]);
+      {% endif %}
+    }
+
+
+        function showCartRecommendation(){
+      {% if template.name == 'cart' %}
+         ScarabQueue.push(['recommend', {
+          logic: 'CART',
+          containerId: 'cart-emarsys',
+          templateId: 'cart-tmpl',
+          limit: '15',
+          }]);
+      {% endif %}
+    }
+      
+  //Fin
+
+</script>
+
+
+ <!-- TEMPLATE HOME doT.JS -->
+{% raw %}
+<script  type="text/html" id="home-tmpl">
+    <![CDATA[
+<section class="featured-collection--container">
+      <h2 class="home-section--title">
+        {{
+       var texto = SC.title;
+       var partes = texto.split(">");
+       var resultado = partes.length > 1 ? partes[1] : texto;
+      }}  
+  {{= resultado  }}  
+    </h2>    
+  {% endraw %}
+
+<ul
+  class="home-section--content featured-collection--content"
+  data-content
+  data-layout="{{ layout }}"
+>
+  {% raw %} 
+      {{ for (var i=0; i < SC.page.products.length; i++) { }}
+          {{ var p = SC.page.products[i]; }}
+          {{ 
+          var priceText = String(p.price).replace('.', ',');
+          var decimals = priceText.split(',')[1];
+          
+          if (decimals && decimals.length === 1) {
+              priceText += '0';
+          }          
+              if (priceText.indexOf(",")==-1){
+              priceText += ",00";
+          }
+        }}
+
+      {% endraw %}
+
+  <li
+    class="{{ classes | strip_newlines }}"
+    data-product-item
+  >
+    <div class="productitem" data-product-item-content>
+      {% raw %}
+        <span data-scarabitem="{{= p.id }}">
+          <a  href="{{=p.link}}" class="productitem--image-link">
+            <div class="productitem--image" data-product-item-image>
+              <div class="image-container">
+              {{ if (p.c_tags !== null) { }}
+                {{ if (p.c_tags.includes("UNETE")) { }}
+              {% endraw %}     
+                  <div class="text-overlay">
+                    {% if settings.assetStickerPromo %}
+                      <img src={{ settings.assetStickerPromo }}
+                            srcset={{ settings.assetStickerPromo }}
+                      alt="sticker unete" width="50" height="50" class="productitem--image-primary">
+                    {% endif %}
+                  </div>
+                   {% raw %}
+                {{ } else if (p.c_tags.includes("Stickers")) { }}
+                   {% endraw %}
+                  <div class="text-overlay">
+                    {% if settings.imagen_sticker %}
+                      <img src="{{ settings.imagen_sticker }}"
+                            srcset="{{ settings.imagen_sticker }}" 
+                      alt="sticker" width="50" height="50" class="productitem--image-primary">
+                    {% endif %}
+                  </div>
+                   {% raw %}
+                {{ } }}
+              {{ } }}
+              <img  class="productitem--image-primary" style="width:100%;height:auto;" src="{{=p.image}}" loading="lazy">
+              {{ if (p.msrp !=0) { }}
+                <span class="productitem--badge badge--sale" data-badge-sales="">
+                  Ahorra <span data-price-percent-saved="">
+                  {{= Math.round(((p.msrp - p.price) / p.msrp) * 100) }}
+                </span>%
+                </span>
+              {{ } }}
+              </div>
+            </div>
+          </a>
+            <div class="productitem--info">
+                {{ if(p.msrp ==0) { }}
+                    <div class="productitem--price" >
+                  <div class="price--main" >
+                    <span class="money">
+                      Bs{{= priceText  }} </span>
+                    </span>
+                    </div>
+                  </div>
+                {{ } }}
+  
+                {{ if(p.msrp !=0) { }}
+                    <div class="productitem--price ">
+                    <div class="price--compare-at visible">                      
+                        <span class="money">
+                         Antes Bs{{= String(p.msrp).replace('.', ',') }}
+                        </span>
+                    </div>
+                  <div class="price--main productitem--emphasis" >
+                    <span class="money" style="color: #de0101;">Ahora Bs{{= priceText  }} </span>
+                    </div>
+                  </div>
+                {{ } }}
+                <h2 class="productitem--title">
+                    <a href="{{=p.link}}">{{= p.title }}</a>
+                </h2>
+              <div class="productitem--ratings">
+            <span class="shopify-product-reviews-badge" data-id="{{= p.id }}">
+              <span class="spr-badge">
+                <span class="spr-starrating spr-badge-starrating">
+                  <i class="spr-icon spr-icon-star-empty"></i>
+                  <i class="spr-icon spr-icon-star-empty"></i>
+                  <i class="spr-icon spr-icon-star-empty"></i>
+                  <i class="spr-icon spr-icon-star-empty"></i>
+                  <i class="spr-icon spr-icon-star-empty"></i>
+                </span>
+              </span>
+            </span>
+          </div>
+              </div>
+  </span>
+
+      <div class="productitem--actions" data-product-actions="">
+        <div class="productitem--action  quickshop-button">
+         <span data-scarabitem="{{= p.id }}">
+          <button
+            id="emarsys"
+            class="productitem--action-trigger productitem--action-atc button-primary productitem--action-trigger button-secondary"
+            type="button"
+            aria-label="Agregar al carrito"
+            data-variant-id="{{= p.c_id_shopify }}"       
+            onclick = "goToProduct('{{= p.link }}')"
+            >
+            <span class="atc-button--text"> Agregar al carrito </span>
+            <span class="atc-button--icon">
+                <svg aria-hidden="true" focusable="false" role="presentation" width="26" height="26" viewBox="0 0 26 26"
+                 xmlns="http://www.w3.org/2000/svg">
+                  <g fill-rule="nonzero" fill="currentColor">
+                    <path
+                      d="M13 26C5.82 26 0 20.18 0 13S5.82 0 13 0s13 5.82 13 13-5.82 13-13 13zm0-3.852a9.148 9.148 0 1 0 0-18.296 9.148 9.148 0 0 0 0 18.296z"
+                      opacity=".29"></path>
+                    <path
+                    d="M13 26c7.18 0 13-5.82 13-13a1.926 1.926 0 0 0-3.852 0A9.148 9.148 0 0 1 13 22.148 1.926 1.926 0 0 0 13 26z"></path>
+                </g></svg>
+            </span>
+          </button>
+  </span>
+        </div>
+      </div>
+    </div>
+  </li>
+      {{ } }}
+   {% endraw %}
+                  <li class="productgrid--item featured-collection--title-card is-selected" style="background-position: 100% 50%;background-image: url(https://cdn.shopify.com/s/files/1/0368/1363/5716/files/Banner-Web-Amarket-500x750px-aprobado.png?v=1715095008);">
+                  {% raw %}
+                      {{ 
+                    var urlTitle = "https://farmacorp.com/collections/"+procesarTexto(SC.title);
+                    }}
+                    <a class="featured-collection--title-card--outer" href="{{= urlTitle }}">
+                      <div class="featured-collection--title-card--inner">
+          <span class="featured-collection--title-card--pre-heading">
+              Ver más
+          </span>
+          <span class="featured-collection--title-card--heading">
+              {{=SC.title  }}
+           </span>
+        </div>
+                    </a>
+                    {% endraw %}
+                    </li>
+      {% raw %}
+</ul>
+</section>
+  ]]>
+  </script>
+{% endraw %}
+<!-- END TEMPLATE HOME doT.JS -->
+  
+
+<!-- TEMPLATE CATEGORY doT.JS -->
+{% raw %}
+<script type="text/html" id="category-tmpl">
+<![CDATA[
+ {{ if (SC.page.products.length>0) { }}
+<div class="background-emarsys">
+<div class="emarsys-category">
+<section class="featured-collection--container" style="text-align:left;">
+    <h2 class="subtitulo s-desktop">
+        Sugerencias para ti
+      </h2>
+      <h4 class="subtitulo s-movil">
+            Sugerencias para ti        
+          </h4> 
+  {% endraw %}
+<ul
+  data-size="4"
+  class="home-section--content featured-collection--content"
+  data-content
+  data-layout="{{ layout }}"
+>
+  {% raw %} 
+      {{ for (var i=0; i < SC.page.products.length; i++) { }}
+          {{ var p = SC.page.products[i]; }}
+          {{ 
+          var priceText = String(p.price).replace('.', ',');
+          var decimals = priceText.split(',')[1];
+          
+          if (decimals && decimals.length === 1) {
+              priceText += '0';
+          }
+      if (priceText.indexOf(",")==-1){
+              priceText += ",00";
+          }
+       
+        }}
+
+      {% endraw %}
+
+  <li
+    class="{{ classes | strip_newlines }}"
+    data-product-item
+  >
+    <div class="productitem" data-product-item-content>
+      {% raw %}
+        <span data-scarabitem="{{= p.id }}">
+          <a  href="{{=p.link}}" class="productitem--image-link">
+            <div class="productitem--image" data-product-item-image>
+              <div class="image-container">
+              {{ if (p.c_tags !== null) { }}
+                {{ if (p.c_tags.includes("UNETE")) { }}
+              {% endraw %}     
+                  <div class="text-overlay">
+                    {% if settings.assetStickerPromo %}
+                      <img src={{ settings.assetStickerPromo }}
+                            srcset={{ settings.assetStickerPromo }}
+                      alt="sticker unete" width="50" height="50" class="productitem--image-primary">
+                    {% endif %}
+                  </div>
+                   {% raw %}
+                {{ } else if (p.c_tags.includes("Stickers")) { }}
+                   {% endraw %}
+                  <div class="text-overlay">
+                    {% if settings.imagen_sticker %}
+                      <img src="{{ settings.imagen_sticker }}"
+                            srcset="{{ settings.imagen_sticker }}" 
+                      alt="sticker" width="50" height="50" class="productitem--image-primary">
+                    {% endif %}
+                  </div>
+                   {% raw %}
+                {{ } }}
+              {{ } }}
+              <img  class="productitem--image-primary" style="width:100%;height:auto;" src="{{=p.image}}" loading="lazy">
+              {{ if (p.msrp !=0) { }}
+                <span class="productitem--badge badge--sale" data-badge-sales="">
+                  Ahorra <span data-price-percent-saved="">
+                  {{= Math.round(((p.msrp - p.price) / p.msrp) * 100) }}
+                </span>%
+                </span>
+              {{ } }}
+              </div>
+            </div>
+          </a>
+            <div class="productitem--info">
+                {{ if(p.msrp ==0) { }}
+                    <div class="productitem--price" >
+                  <div class="price--main" >
+                    <span class="money">
+                      Bs{{= priceText  }} </span>
+                    </span>
+                    </div>
+                  </div>
+                {{ } }}
+  
+                {{ if(p.msrp !=0) { }}
+                    <div class="productitem--price ">
+                    <div class="price--compare-at visible">                      
+                        <span class="money">
+                         Antes Bs{{= String(p.msrp).replace('.', ',') }}
+                        </span>
+                    </div>
+                  <div class="price--main productitem--emphasis" >
+                    <span class="money" style="color: #de0101;">Ahora Bs{{= priceText  }} </span>
+                    </div>
+                  </div>
+                {{ } }}
+                <h2 class="productitem--title">
+                    <a href="{{=p.link}}">{{= p.title }}</a>
+                </h2>
+
+              </div>
+  </span>
+
+      <div class="productitem--actions" data-product-actions="">
+        <div class="productitem--action  quickshop-button">
+         <span data-scarabitem="{{= p.id }}">
+          <button
+            id="emarsys"
+            class="productitem--action-trigger productitem--action-atc button-primary productitem--action-trigger button-secondary"
+            type="button"
+            aria-label="Agregar al carrito"
+            data-variant-id="{{= p.c_id_shopify }}"
+            onclick = "goToProduct('{{= p.link }}')"            
+            >
+            <span class="atc-button--text"> Agregar al carrito </span>
+            <span class="atc-button--icon">
+                <svg aria-hidden="true" focusable="false" role="presentation" width="26" height="26" viewBox="0 0 26 26"
+                 xmlns="http://www.w3.org/2000/svg">
+                  <g fill-rule="nonzero" fill="currentColor">
+                    <path
+                      d="M13 26C5.82 26 0 20.18 0 13S5.82 0 13 0s13 5.82 13 13-5.82 13-13 13zm0-3.852a9.148 9.148 0 1 0 0-18.296 9.148 9.148 0 0 0 0 18.296z"
+                      opacity=".29"></path>
+                    <path
+                    d="M13 26c7.18 0 13-5.82 13-13a1.926 1.926 0 0 0-3.852 0A9.148 9.148 0 0 1 13 22.148 1.926 1.926 0 0 0 13 26z"></path>
+                </g></svg>
+            </span>
+          </button>
+  </span>
+        </div>
+      </div>
+    </div>
+  </li>
+      {{ } }}
+</ul>
+{{ } }}
+]]>
+</section>
+    </div>
+
+</script>
+{% endraw %}
+<!-- END TEMPLATE CATEGORY doT.JS -->
+  
+
+
+<!-- TEMPLATE SEARCH doT.JS -->
+{% raw %}
+<script type="text/html" id="search-tmpl">
+<![CDATA[
+  {{ if (SC.page.products.length) { }}
+  <div class="background-emarsys">
+  <div class="emarsys-category">
+<section class="featured-collection--container" style="text-align:left;">
+    <h2 class="subtitulo s-desktop">
+        Sugerencias para ti
+      </h2>
+      <h4 class="subtitulo s-movil">
+            Sugerencias para ti de 
+    {% endraw %}
+            "{{ search.terms | remove: '*' }}"
+    {% raw %}              
+          </h4> 
+  {% endraw %}
+<ul
+  data-size="4"
+  class="home-section--content featured-collection--content"
+  data-content
+  data-layout="{{ layout }}"
+>
+  {% raw %} 
+      {{ for (var i=0; i < SC.page.products.length; i++) { }}
+          {{ var p = SC.page.products[i]; }}
+          {{ 
+          var priceText = String(p.price).replace('.', ',');
+          var decimals = priceText.split(',')[1];
+          if (decimals && decimals.length === 1) {
+              priceText += '0';
+          }
+
+          if (priceText.indexOf(",")==-1){
+              priceText += ",00";
+          }
+
+          
+        }}
+
+      {% endraw %}
+
+  <li
+    class="{{ classes | strip_newlines }}"
+    data-product-item
+  >
+    <div class="productitem" data-product-item-content>
+      {% raw %}
+        <span data-scarabitem="{{= p.id }}">
+          <a  href="{{=p.link}}" class="productitem--image-link">
+            <div class="productitem--image" data-product-item-image>
+              <div class="image-container">
+              {{ if (p.c_tags !== null) { }}
+                {{ if (p.c_tags.includes("UNETE")) { }}
+              {% endraw %}     
+                  <div class="text-overlay">
+                    {% if settings.assetStickerPromo %}
+                      <img src={{ settings.assetStickerPromo }}
+                            srcset={{ settings.assetStickerPromo }}
+                      alt="sticker unete" width="50" height="50" class="productitem--image-primary">
+                    {% endif %}
+                  </div>
+                   {% raw %}
+                {{ } else if (p.c_tags.includes("Stickers")) { }}
+                   {% endraw %}
+                  <div class="text-overlay">
+                    {% if settings.imagen_sticker %}
+                      <img src="{{ settings.imagen_sticker }}"
+                            srcset="{{ settings.imagen_sticker }}" 
+                      alt="sticker" width="50" height="50" class="productitem--image-primary">
+                    {% endif %}
+                  </div>
+                   {% raw %}
+                {{ } }}
+              {{ } }}
+              <img  class="productitem--image-primary" style="width:100%;height:auto;" src="{{=p.image}}" loading="lazy">
+              {{ if (p.msrp !=0) { }}
+                <span class="productitem--badge badge--sale" data-badge-sales="">
+                  Ahorra <span data-price-percent-saved="">
+                  {{= Math.round(((p.msrp - p.price) / p.msrp) * 100) }}
+                </span>%
+                </span>
+              {{ } }}
+              </div>
+            </div>
+          </a>
+            <div class="productitem--info">
+                {{ if(p.msrp ==0) { }}
+                    <div class="productitem--price" >
+                  <div class="price--main" >
+                    <span class="money">
+                      Bs{{= priceText  }} </span>
+                    </span>
+                    </div>
+                  </div>
+                {{ } }}
+  
+                {{ if(p.msrp !=0) { }}
+                    <div class="productitem--price ">
+                    <div class="price--compare-at visible">                      
+                        <span class="money">
+                         Antes Bs{{= String(p.msrp).replace('.', ',') }}
+                        </span>
+                    </div>
+                  <div class="price--main productitem--emphasis" >
+                    <span class="money" style="color: #de0101;">Ahora Bs{{= priceText  }} </span>
+                    
+                    </div>
+                  </div>
+                {{ } }}
+                <h2 class="productitem--title">
+                    <a href="{{=p.link}}">{{= p.title }}</a>
+                </h2>
+
+              </div>
+  </span>
+
+      <div class="productitem--actions" data-product-actions="">
+        <div class="productitem--action  quickshop-button">
+         <span data-scarabitem="{{= p.id }}">
+          <button
+            id="emarsys"
+            class="productitem--action-trigger productitem--action-atc button-primary productitem--action-trigger button-secondary"
+            type="button"
+            aria-label="Agregar al carrito"
+            data-variant-id="{{= p.c_id_shopify }}"
+            onclick = "goToProduct('{{= p.link }}')"
+            >
+            <span class="atc-button--text"> Agregar al carrito </span>
+            <span class="atc-button--icon">
+                <svg aria-hidden="true" focusable="false" role="presentation" width="26" height="26" viewBox="0 0 26 26"
+                 xmlns="http://www.w3.org/2000/svg">
+                  <g fill-rule="nonzero" fill="currentColor">
+                    <path
+                      d="M13 26C5.82 26 0 20.18 0 13S5.82 0 13 0s13 5.82 13 13-5.82 13-13 13zm0-3.852a9.148 9.148 0 1 0 0-18.296 9.148 9.148 0 0 0 0 18.296z"
+                      opacity=".29"></path>
+                    <path
+                    d="M13 26c7.18 0 13-5.82 13-13a1.926 1.926 0 0 0-3.852 0A9.148 9.148 0 0 1 13 22.148 1.926 1.926 0 0 0 13 26z"></path>
+                </g></svg>
+            </span>
+          </button>
+  </span>
+        </div>
+      </div>
+    </div>
+  </li>
+      {{ } }}
+</ul>
+</section>
+    </div>
+  {{ } }}
+]]>
+</script>
+{% endraw %}
+<!-- END TEMPLATE SEARCH doT.JS -->
+
+
+<!-- TEMPLATE PRODUCT doT.JS -->
+{% raw %}
+<script type="text/html" id="product-tmpl">
+<div class="emarsys-category" >
+<section class="featured-collection--container" style="text-align:left;">
+    <h2 class="subtitulo s-desktop">
+        Otros tambien compraron
+      </h2>
+      <h4 class="subtitulo s-movil">
+           Otros tambien compraron          
+          </h4> 
+<![CDATA[
+  {% endraw %}
+<ul  
+  class="home-section--content featured-collection--content"
+  data-content
+  data-size="4"
+  data-layout="{{ layout }}"
+>
+  {% raw %} 
+      {{ for (var i=0; i < SC.page.products.length; i++) { }}
+          {{ var p = SC.page.products[i]; }}
+          {{ 
+          var priceText = String(p.price).replace('.', ',');
+          var decimals = priceText.split(',')[1];
+          
+          if (decimals && decimals.length === 1) {
+              priceText += '0';
+          }          
+
+            if (priceText.indexOf(",")==-1){
+              priceText += ",00";
+          }
+        }}
+
+      {% endraw %}
+
+  <li
+    class="{{ classes | strip_newlines }}"
+    data-product-item
+  >
+    <div class="productitem" data-product-item-content>
+      {% raw %}
+        <span data-scarabitem="{{= p.id }}">
+          <a  href="{{=p.link}}" class="productitem--image-link">
+            <div class="productitem--image" data-product-item-image>
+              <div class="image-container">
+              {{ if (p.c_tags !== null) { }}
+                {{ if (p.c_tags.includes("UNETE")) { }}
+              {% endraw %}     
+                  <div class="text-overlay">
+                    {% if settings.assetStickerPromo %}
+                      <img src={{ settings.assetStickerPromo }}
+                            srcset={{ settings.assetStickerPromo }}
+                      alt="sticker unete" width="50" height="50" class="productitem--image-primary">
+                    {% endif %}
+                  </div>
+                   {% raw %}
+                {{ } else if (p.c_tags.includes("Stickers")) { }}
+                   {% endraw %}
+                  <div class="text-overlay">
+                    {% if settings.imagen_sticker %}
+                      <img src="{{ settings.imagen_sticker }}"
+                            srcset="{{ settings.imagen_sticker }}" 
+                      alt="sticker" width="50" height="50" class="productitem--image-primary">
+                    {% endif %}
+                  </div>
+                   {% raw %}
+                {{ } }}
+              {{ } }}
+              <img  class="productitem--image-primary" style="width:100%;height:auto;" src="{{=p.image}}" loading="lazy">
+              {{ if (p.msrp !=0) { }}
+                <span class="productitem--badge badge--sale" data-badge-sales="">
+                  Ahorra <span data-price-percent-saved="">
+                  {{= Math.round(((p.msrp - p.price) / p.msrp) * 100) }}
+                </span>%
+                </span>
+              {{ } }}
+              </div>
+            </div>
+          </a>
+            <div class="productitem--info">
+                {{ if(p.msrp ==0) { }}
+                    <div class="productitem--price" >
+                  <div class="price--main" >
+                    <span class="money">
+                      Bs{{= priceText  }} </span>
+                    </span>
+                    </div>
+                  </div>
+                {{ } }}
+  
+                {{ if(p.msrp !=0) { }}
+                    <div class="productitem--price ">
+                    <div class="price--compare-at visible">                      
+                        <span class="money">
+                         Antes Bs{{= String(p.msrp).replace('.', ',') }}
+                        </span>
+                    </div>
+                  <div class="price--main productitem--emphasis" >
+                    <span class="money" style="color: #de0101;">Ahora Bs{{= priceText  }} </span>
+                    </div>
+                  </div>
+                {{ } }}
+                <h2 class="productitem--title">
+                    <a href="{{=p.link}}">{{= p.title }}</a>
+                </h2>
+
+              </div>
+  </span>
+
+      <div class="productitem--actions" data-product-actions="">
+        <div class="productitem--action  quickshop-button">
+         <span data-scarabitem="{{= p.id }}">
+          <button
+            id="emarsys"
+            class="productitem--action-trigger productitem--action-atc button-primary productitem--action-trigger button-secondary"
+            type="button"
+            aria-label="Agregar al carrito"
+            data-variant-id="{{= p.c_id_shopify }}"
+            onclick = "goToProduct('{{= p.link }}')"
+            >
+            <span class="atc-button--text"> Agregar al carrito </span>
+            <span class="atc-button--icon">
+                <svg aria-hidden="true" focusable="false" role="presentation" width="26" height="26" viewBox="0 0 26 26"
+                 xmlns="http://www.w3.org/2000/svg">
+                  <g fill-rule="nonzero" fill="currentColor">
+                    <path
+                      d="M13 26C5.82 26 0 20.18 0 13S5.82 0 13 0s13 5.82 13 13-5.82 13-13 13zm0-3.852a9.148 9.148 0 1 0 0-18.296 9.148 9.148 0 0 0 0 18.296z"
+                      opacity=".29"></path>
+                    <path
+                    d="M13 26c7.18 0 13-5.82 13-13a1.926 1.926 0 0 0-3.852 0A9.148 9.148 0 0 1 13 22.148 1.926 1.926 0 0 0 13 26z"></path>
+                </g></svg>
+            </span>
+          </button>
+  </span>
+        </div>
+      </div>
+    </div>
+  </li>
+      {{ } }}
+</ul>
+
+]]>
+</section>
+    </div>
+</script>
+{% endraw %}
+<!-- END TEMPLATE PRODUCT doT.JS -->
+
+
+<!-- TEMPLATE CART doT.JS -->
+{% raw %}
+<script type="text/html" id="cart-tmpl">
+<div class="emarsys-category">
+<section class="featured-collection--container" style="text-align:left;">
+    <h2 class="subtitulo s-desktop">
+        Complementa tu compra
+      </h2>
+      <h4 class="subtitulo s-movil">
+           Complementa tu compra
+          </h4> 
+<![CDATA[
+  {% endraw %}
+<ul  
+  class="home-section--content featured-collection--content"
+  data-content
+  data-layout="{{ layout }}"
+>
+  {% raw %} 
+      {{ for (var i=0; i < SC.page.products.length; i++) { }}
+          {{ var p = SC.page.products[i]; }}
+          {{ 
+          var priceText = String(p.price).replace('.', ',');
+          var decimals = priceText.split(',')[1];
+          
+          if (decimals && decimals.length === 1) {
+              priceText += '0';
+          }          
+
+            if (priceText.indexOf(",")==-1){
+              priceText += ",00";
+          }
+        }}
+
+      {% endraw %}
+
+  <li
+    class="{{ classes | strip_newlines }}"
+    data-product-item
+  >
+    <div class="productitem" data-product-item-content>
+      {% raw %}
+        <span data-scarabitem="{{= p.id }}">
+          <a  href="{{=p.link}}" class="productitem--image-link">
+            <div class="productitem--image" data-product-item-image>
+              <div class="image-container">
+              {{ if (p.c_tags !== null) { }}
+                {{ if (p.c_tags.includes("UNETE")) { }}
+              {% endraw %}     
+                  <div class="text-overlay">
+                    {% if settings.assetStickerPromo %}
+                      <img src={{ settings.assetStickerPromo }}
+                            srcset={{ settings.assetStickerPromo }}
+                      alt="sticker unete" width="50" height="50" class="productitem--image-primary">
+                    {% endif %}
+                  </div>
+                   {% raw %}
+                {{ } else if (p.c_tags.includes("Stickers")) { }}
+                   {% endraw %}
+                  <div class="text-overlay">
+                    {% if settings.imagen_sticker %}
+                      <img src="{{ settings.imagen_sticker }}"
+                            srcset="{{ settings.imagen_sticker }}" 
+                      alt="sticker" width="50" height="50" class="productitem--image-primary">
+                    {% endif %}
+                  </div>
+                   {% raw %}
+                {{ } }}
+              {{ } }}
+              <img  class="productitem--image-primary" style="width:100%;height:auto;" src="{{=p.image}}" loading="lazy">
+              {{ if (p.msrp !=0) { }}
+                <span class="productitem--badge badge--sale" data-badge-sales="">
+                  Ahorra <span data-price-percent-saved="">
+                  {{= Math.round(((p.msrp - p.price) / p.msrp) * 100) }}
+                </span>%
+                </span>
+              {{ } }}
+              </div>
+            </div>
+          </a>
+            <div class="productitem--info">
+                {{ if(p.msrp ==0) { }}
+                    <div class="productitem--price" >
+                  <div class="price--main" >
+                    <span class="money">
+                      Bs{{= priceText  }} </span>
+                    </span>
+                    </div>
+                  </div>
+                {{ } }}
+  
+                {{ if(p.msrp !=0) { }}
+                    <div class="productitem--price ">
+                    <div class="price--compare-at visible">                      
+                        <span class="money">
+                         Antes Bs{{= String(p.msrp).replace('.', ',') }}
+                        </span>
+                    </div>
+                  <div class="price--main productitem--emphasis" >
+                    <span class="money" style="color: #de0101;">Ahora Bs{{= priceText  }} </span>
+                    </div>
+                  </div>
+                {{ } }}
+                <h2 class="productitem--title">
+                    <a href="{{=p.link}}">{{= p.title }}</a>
+                </h2>
+
+              </div>
+  </span>
+
+      <div class="productitem--actions" data-product-actions="">
+        <div class="productitem--action  quickshop-button">
+         <span data-scarabitem="{{= p.id }}">
+          <button
+            id="emarsys"
+            class="productitem--action-trigger productitem--action-atc button-primary productitem--action-trigger button-secondary"
+            type="button"
+            aria-label="Agregar al carrito"
+            data-variant-id="{{= p.c_id_shopify }}"
+            onclick = "goToProduct('{{= p.link }}')"            
+            >
+            <span class="atc-button--text"> Agregar al carrito </span>
+            <span class="atc-button--icon">
+                <svg aria-hidden="true" focusable="false" role="presentation" width="26" height="26" viewBox="0 0 26 26"
+                 xmlns="http://www.w3.org/2000/svg">
+                  <g fill-rule="nonzero" fill="currentColor">
+                    <path
+                      d="M13 26C5.82 26 0 20.18 0 13S5.82 0 13 0s13 5.82 13 13-5.82 13-13 13zm0-3.852a9.148 9.148 0 1 0 0-18.296 9.148 9.148 0 0 0 0 18.296z"
+                      opacity=".29"></path>
+                    <path
+                    d="M13 26c7.18 0 13-5.82 13-13a1.926 1.926 0 0 0-3.852 0A9.148 9.148 0 0 1 13 22.148 1.926 1.926 0 0 0 13 26z"></path>
+                </g></svg>
+            </span>
+          </button>
+  </span>
+        </div>
+      </div>
+    </div>
+  </li>
+      {{ } }}
+</ul>
+
+]]>
+</section>
+    </div>
+</script>
+{% endraw %}
+<!-- END TEMPLATE CART doT.JS -->
+
+
+{% comment %}
+  Web push functions
+{% endcomment %}
+
+<script>  
+
+function eliminarHandleID(){
+  sessionStorage.removeItem('emarsysID');
+}
+
+function generalSubscribe() {
+                 return WebEmarsysSdk.subscribe();
+         }
+  
+function loginEmarsys(){
+  let handleId = 'emarsysID';
+  if(sessionStorage.getItem(handleId)){return;}
+  let field_id = 6601;
+  let contactInfo = {
+        fieldId: field_id,
+        fieldValue: {{ customer.id | default:'000' }},
+  };         
+  return WebEmarsysSdk.login(contactInfo).then(function(success) {
+                if (success) {
+                    console.log("ÉXITO");
+                    sessionStorage.setItem(handleId,'{{ customer.id }}');
+                } else {
+                    console.error("ERROR");
+                }
+  });
+}
+  
+         document.addEventListener('submit', function(e) {
+                 generalSubscribe();
+         });
+
+        function handleClick(e){
+            generalSubscribe();
+           {% if customer.id %}
+             loginEmarsys();
+           {% endif %}
+          
+        } 
+  
+ document.addEventListener('click', handleClick);
+
+
+  {%  if customer.id %}
+        document.querySelector('a[href="/account/logout"]').addEventListener('click',function(event){
+    event.preventDefault();
+     WebEmarsysSdk.logout().then((success) => {
+          console.log('Logout result:', success);
+          sessionStorage.removeItem('emarsysID');
+         document.cookie = `isSocialLogin=no; path=/; max-age=0;`;
+        }).catch(err => {
+          console.log('Error during logout', err);
+        });   
+    window.location.href = this.href;
+  });
+    {% endif %}
+
+
+function procesarTexto(texto) {
+  texto = texto.toLowerCase();
+  texto = texto.replace(/[, ]+/g, '-');
+  texto = texto.replace(/ñ/g, 'n');
+  texto = texto.normalize("NFD").replace(/[\u0300-\u036f]/g, '');
+
+  return texto;
+}
+
+</script>
+
+{% comment %}
+  End Web push functions
+{% endcomment %}

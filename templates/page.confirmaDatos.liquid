@@ -1,0 +1,116 @@
+
+
+<article class="account-page-content">
+  <header class="page-masthead">
+    <h1 class="page-title">
+      {{ page.title }}
+    </h1>
+  </header>
+
+  <div class="container">
+  <div class="row justify-content-center">
+    <div class="col-4">
+  <div class="form-fields">
+        <div class="form-field form-field--half">
+          <input
+            type="text"
+            class="form-field-input form-field-text"
+            id="register_first_name"
+            name="customer[first_name]"
+            autocapitalize="words"
+            autofocus
+            value="{{ customer.first_name }}">
+
+          <label
+            class="form-field-title"
+            for="register_first_name">
+            {{ 'customers.forms.first_name' | t }}
+          </label>
+        </div>
+        <div class="form-field form-field--half">
+          <input
+            type="text"
+            class="form-field-input form-field-text"
+            id="register_last_name"
+            name="customer[last_name]"
+            autocapitalize="words"
+            value="{{ customer.last_name }}">
+
+          <label
+            class="form-field-title"
+            for="register_last_name">
+            {{ 'customers.forms.last_name' | t }}
+          </label>
+        </div>
+        
+        <div class="form-field form-field--half">
+          <input
+            type="text"
+            class="form-field-input form-field-text"
+            id="register_email"
+            name="customer[email]"
+            autocorrect="off"
+            autocapitalize="off"
+            value="{{ customer.metafields.farmacorp.emailAlterno }}">
+
+          <label
+            class="form-field-title"
+            for="register_email">
+            {{ 'customers.forms.email' | t }}
+          </label>
+        </div>
+        <div class="form-field form-field--hal">
+          <input
+            type="phone"
+            class="form-field-input form-field-text"
+            id="register_phone"
+            name="customer[phone]"
+            value="{{ customer.metafields.farmacorp.telefono }}">
+
+          <label
+            class="form-field-title"
+            for="register_phone">
+            {{ 'customers.forms.phone' | t }}
+          </label>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <button class="button-primary form-action--submit" type="submit"  onclick="updateInfo();">
+          Guardar datos
+        </button>
+        
+      </div>
+         </div>
+       </div>
+       </div>
+</article>
+
+<script type="text/javascript">
+  
+    if (window.jQuery) {
+        jquery = window.jQuery;
+    } else if (window.Checkout && window.Checkout.$) {
+        jquery = window.Checkout.$;
+    }
+  
+
+   function updateInfo(){
+      
+       let customer_nombre_edit = jquery('#register_first_name').val();
+      let customer_apellido_edit = jquery('#register_last_name').val();
+      let customer_telefono_edit = jquery('#register_phone').val();
+      let customer_correo_edit = jquery('#register_email').val();
+
+         updateCustomer(customer_nombre_edit, customer_apellido_edit, customer_telefono_edit, customer_correo_edit)
+          .then(function(data) { 
+           if(data.ok){
+                 window.location.href = `{{ shop.url }}/account`;
+           }
+          }).catch(function(err) {
+           
+            
+           
+          });
+    	}
+
+</script>

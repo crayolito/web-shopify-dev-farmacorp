@@ -1,0 +1,39 @@
+{% schema %}
+{
+  "name": "APP MOVIL-Emarsys cate",
+  "settings": [ {
+    "type": "paragraph",
+    "content": "APP MOVIL - Seccion para definir el comportamiento de emarsys en las categorias"
+  },
+      {
+      "type": "checkbox",
+      "id": "emarsys_enable",
+      "label": "Mostrar seccion de emarsys en la pantalla de Related product",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "emarsys_heading",
+      "label": "Titulo de la seccion (Titulo del carusel de emarsys)",
+      "default": "Sugerencias para ti de {categoria}",
+      "info":"{categoria} hace referencia al titutlo de la categoria que devuelve shopify"
+    },
+   {
+        "type": "range",
+        "id": "emarsys_count",
+        "min": 1,
+        "max": 100,
+        "step": 1,
+        "label": "Cantidad Mínima",
+        "default": 15
+      },
+    {
+      "type": "text",
+      "id": "emarsys_heading2",
+      "label": "Titulo inicio categoria",
+      "default": "Mas de {categoria}",
+      "info":"{categoria} hace referencia al titutlo de la categoria que devuelve shopify"
+    }
+  ]
+}
+{% endschema %}

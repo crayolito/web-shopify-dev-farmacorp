@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmacorp</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            background-image: url('https://cloudstorage.embluemail.com/clientes/Farmacorp/2024/05/landing/bg_farmacorp.jpg');
+            background-position: center;
+            background-size: cover;
+        }
+
+        .img--landing {
+            width: 100%;
+            text-align: center;
+        }
+
+        .img--landing>img {
+            width: 80%;
+        }
+
+        .img--landing>a>img {
+            width: 100%;
+        }
+
+        button {
+            background-color: transparent;
+            border: 0;
+            cursor: pointer;
+        }
+
+        button>img {
+            width: 250px;
+        }
+
+        .button--wrapper {
+            text-align: center;
+        }
+
+        input {
+            padding: 10px;
+            width: 100%;
+            font-size: 16px;
+            outline: none;
+            border-radius: 10px;
+            border: 1px solid grey;
+            max-width: 300px;
+        }
+
+        #myForm {
+            margin-top: 30px;
+        }
+
+        .padd>img {
+            width: 70%;
+        }
+
+
+        .footer {
+            display: flex;
+            flex-direction: row;
+            padding: 40px 20px 20px;
+            align-items: center;
+        }
+
+        .Aj {
+            width: 15%;
+        }
+
+        .Aj>img {
+            width: 100%;
+        }
+
+        .Aj_Terminos {
+            width: 85%;
+        }
+
+        .footer>.Aj_Terminost>p {
+            font-size: 13px;
+            font-family: Arial, Helvetica, sans-serif;
+            padding: 0px 10px;
+            text-align: justify;
+        }*/
+
+        @media screen and (max-width: 900px) {
+            .img--landing>img {
+                width: 100%;
+            }
+
+            input {
+                max-width: 200px;
+            }
+
+            .footer {
+                flex-direction: column;
+            }
+
+            .Aj{
+                width: 50%;
+            }*/
+        }
+    </style>
+</head>
+
+<body>
+    <section class="img--landing">
+        <a href="https://farmacorp.com/collections/hot-cold"> 
+          <img src="https://cloudstorage.embluemail.com/clientes/Farmacorp/2024/05/landing/banner_landing_farmacorop.png">
+        </a>
+    </section>
+
+    <section class="img--landing ">
+        <img src="https://cloudstorage.embluemail.com/clientes/Farmacorp/2024/05/landing/img_02.png">
+    </section>
+
+    <section class="img--landing ">
+        <img src="https://cloudstorage.embluemail.com/clientes/Farmacorp/2024/05/landing/img_05.png">
+    </section>
+
+    <section class="img--landing padd">
+        <img src="https://cloudstorage.embluemail.com/clientes/Farmacorp/2024/05/landing/img_08.png">
+    </section>
+  
+    <section>
+        <form id="myForm" method="POST" target="emBlueResponse" action="https://php.embluemail.com/Integraciones/form_events/emblue_events.php" onsubmit="enviarForm()">
+            <div class="button--wrapper">
+                <input type="email" required name="email" placeholder="Correo electrónico">
+            </div>
+
+            <div class="button--wrapper">
+                <button type="submit" id="boton_enviar">
+                    <img src="https://cloudstorage.embluemail.com/clientes/Farmacorp/2024/05/landing/img_11.png">
+                </button>
+            </div>
+          
+            <div>
+                <!--EN EL VALUE SE COLOCA EL NOMBRE DEL EVENTO CREADO EN LA PLATAFORMA  -->
+                <input type="hidden" placeholder="Evento" value="hotandcold" name="evento" />
+
+                <!--SE AGREGA EL TOKEN DE LA CUENTA -->
+                <input type="hidden" name="token" value="40f93d835a274beaa81a007360eb383e" />
+            </div>
+            <iframe name="emBlueResponse" style="display:none" src="" frameborder="0"></iframe>
+        </form>
+    </section>
+    <!--<footer>-->
+    <section class="footer">
+        <div class="Aj">
+            <img src="https://cloudstorage.embluemail.com/clientes/Farmacorp/2024/05/landing/img_15.png">
+        </div>
+        <div class="Aj_Terminos">
+            <p>Terminos y condiciones: Promoción exclusiva para clientes FARMACLUB y funcionarios de Farmacorp que
+                realicen
+                sus compras en las sucursales de Farmacorp o Amarket. Por cada Bs 50 de compra el cliente recibe 1
+                sticker.
+                Por cada Bs 10 de compra de productos auspiciantes recibe 1 sticker adicional. Si el cliente tiene
+                seguro
+                alianza por cada Bs 10 de pago coaseguro recibe 2 stickers. Por cada Bs 10 de compras de productos
+                auspiciantes por la Web y APP de Farmacorp recibe 2 Stickers. Por cada Bs 50 de compra con la tarjeta
+                del
+                Banco Ganadero recibira 2 stickers. Por cada Bs 50 de compra con la tarjeta de Credito Co-Brands
+                (Tarjeta
+                Farmacorp - Banco Ganadero) recibira 3 stikers adicionales. Por la compra de cada Bs 10 en las Tiendas
+                de la
+                Cadena Pizza Hut, o realizar su pedido por whatsapp o Web recibe 1 sticker extra. El periodo de duración
+                de
+                la promoción empresarial es desde la Notificación de la Resolución Administrativa de Autorización hasta
+                el
+                31 de agosto del 2024 o HASTA AGOTAR STOCK. Para mayor información ingresar a www.farmacorp.com
+            </p>
+        </div>
+    <!--</footer>-->
+    </section>
+    
+    <script>
+        document.querySelector('form').onsubmit = e => {
+            e.target.submit();
+            document.getElementById("boton_enviar").disabled = false;
+            alert("El formulario se envió correctamente");
+            e.target.reset();
+            return false;
+        };
+    </script>
+</body>
+
+</html>

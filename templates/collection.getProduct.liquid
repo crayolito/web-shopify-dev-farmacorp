@@ -1,0 +1,57 @@
+
+<collection_farmacorp>
+  {
+
+    {% paginate collection.products by param_page_size %}
+   
+   	"current_page": "{{paginate.current_page}}",
+    "page_size" : "{{paginate.page_size}}",
+    "page_total" : "{{paginate.pages}}",
+    "count_element_total": "{{paginate.items}}",
+ 
+  	{% if paginate.next != null and paginate.next != "" %}
+     	"next" : true,
+  	{% else %}
+  		"next" : false,
+  	{% endif%}
+  
+  	{% if paginate.previous != null and paginate.previous != "" %}
+     	"previous" : true,
+  	{% else %}
+  		"previous" : false,
+  	{% endif%}
+  
+  	"items" : [
+      {% for product in collection.products %}
+  		{
+            "id": "{{product.id }}",
+            "variantId": "{{product.variants.first.id }}",
+            "handle": "{{product.handle}}",
+            "tags": {{product.tags | json}},
+            "imageUrl": "https:{{ product | img_url: '300x300' }}",
+            "title": "{{product.title | replace: '"', '\"' }}",
+            "description": "{{product.description | strip_html  | strip_newlines | replace: '"', '\"'  }}",
+            "available":{{product.available}},
+            "price": "{{product.price| money | replace: "Bs", "" |replace: ".", "" | replace: ",", "." }}",
+            "compareAtPrice": "{{product.compare_at_price | money | replace: "Bs", "" |replace: ".", "" | replace: ",", "."}}"
+          },
+      {% endfor %}
+  {% endpaginate %}
+  ]
+  }
+  
+</collection_farmacorp>
+
+<style>
+header {
+  display:none;
+}
+body{ 
+	font-family: Lucida Console,Lucida Sans Typewriter,monaco,Bitstream Vera Sans Mono,monospace; 
+  	font-size : 10px;
+}
+
+footer {
+  display:none;
+}
+</style>

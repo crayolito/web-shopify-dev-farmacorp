@@ -1,0 +1,115 @@
+{% assign mostrar = 'true' %}
+{% if section.settings.title contains 'mobile' %}
+{% assign mostrar = 'false' %}
+{% endif %}
+
+{% if content_for_header contains "previewBarInjector.init();" or content_for_header contains "Shopify.designMode" %}
+{% assign mostrar = 'true' %}
+{% endif %}
+
+{% if mostrar == 'true' %}
+<section class="collection-list--container">
+  {% if section.settings.title != blank %}
+    <h2 class="home-section--title">
+      {{ section.settings.title | escape }}
+    </h2>
+  {% endif %}
+
+  {% if section.blocks.size > 0 %}
+    <ul class="home-section--content collection-list--inner">
+      {% for block in section.blocks %}
+        {% assign collection = collections[block.settings.collection] %}
+        {% assign collection_title = collection.title %}
+        {% assign collection_url = collection.url %}
+
+        {% assign featured_image = false %}
+        {% assign featured_image_alt = '' %}
+
+        {% if block.settings.image %}
+          {% assign featured_image = block.settings.image %}
+          {% assign featured_image_alt = block.settings.image.alt | escape %}
+        {% endif %}
+
+        {%
+          include 'collection-list-item',
+          block: block,
+          collection_image: featured_image,
+          collection_image_alt: featured_image_alt
+        %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+</section>
+{% endif %}
+{% schema %}
+{
+  "name": "Collection list",
+  "class": "collection-list--section",
+  "max_blocks": 20,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Collection list"
+    },
+    {
+      "type": "header",
+      "content": "Aplicación Móvil Nativa (Andorid - iOS)"
+    },
+     {
+      "type": "checkbox",
+      "id": "is_scroll_horizontal",
+      "label": "¿Se presentara en una sola fila scrolleable?",
+      "info": "Marque si la sección móvil aparecera como una sola fila scrolleable",
+      "default": false
+    },
+    {
+        "type": "number",
+        "id": "item_per_section",
+        "label": "Cantidad de item que se mostraran",
+ 		"info": "Este campo recibe como parametros la cantidad de elementos que se pintaran en la sección del Home en el dispositivo móvil.",
+        "default": 6
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "id": "collection",
+          "type": "collection",
+          "label": "Collection"
+        },
+        {
+          "id": "image",
+          "type": "image_picker",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection list",
+      "category": "Collection",
+      "blocks": [
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        }
+      ]
+    }
+  ]
+}
+
+{% endschema %}

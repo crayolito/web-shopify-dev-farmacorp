@@ -1,0 +1,89 @@
+{%- capture contentForQuerystring -%}{{ content_for_header }}{%- endcapture -%}
+{%- assign page_url = contentForQuerystring | split:'"pageurl":"' | last | split:'"' | first | split:'.myshopify.com' | last |   replace:'\/','/' |    replace:'%20',' ' |    replace:'\u0026','&'  -%}
+{%- assign param_page = '' -%}
+{%- for i in (1..1) -%}
+	{%- unless page_url contains "?" -%}{% break %}{%- endunless -%}
+	{%- assign query_string = page_url | split:'?' | last -%}
+	{%- assign qry_parts= query_string | split:'&' -%}
+	{%- for part in qry_parts -%}
+		{%- assign key_and_value = part | split:'=' -%}
+		{%- if key_and_value.size > 1 -%}
+			{% if key_and_value[0] == 'handle' %}
+				{%- assign param_page = key_and_value[1] -%}
+			{% endif%}
+		{%- endif -%}
+	{%- endfor -%}
+{%- endfor -%}
+
+{% assign handle = param_page %}
+{% if handle == '' %}
+	{% assign handle = "menu-2-0" %}
+{% endif %}
+  
+<menu_farmacorp>
+{% assign imagenes = shop.metafields.service.images_menu %}
+
+{	
+	menu :[
+    {% for link in linklists[handle].links %}
+		{% if link.title != 'Ir a Farmacorp' %}
+  
+            {
+              titulo: '{{ link.title }}',
+  			  {% assign icono = imagenes[link.title] %}
+  			  {% if icono %}
+  			  	 icono :'{{icono}}',
+   			  {% else %}
+  				  icono :'{{imagenes['Generico']}}',
+              {% endif %}
+  			  {% assign element = link.url| split: "/" %}
+  
+  			  {% if element.size == 3 %}
+                  url : '{{ link.url | append: "/" }}',
+  			  {% else %}
+  				  url : '{{link.url}}',
+              {% endif %}
+  
+			  id : '{{link.object.id}}',
+			  handle : '{{link.object.handle}}',
+			  type : '{{link.type}}',
+              submenu : [
+                {% for sub_link in link.links %}
+					{% if sub_link.type == 'collection_link' %}
+                        {
+                            titulo:'{{ sub_link.title }}',
+  
+							{% assign element2 = sub_link.url| split: "/" %}
+                            {% if element2.size == 3 %}
+  								{% assign url_new = sub_link.url | append: "/" %}
+                            	url : '{{ url_new }}',
+                            {% else %}
+                            	url : '{{sub_link.url}}',
+                            {% endif %}
+  
+                            id : '{{sub_link.object.id}}',
+                            handle : '{{sub_link.object.handle}}',
+                        },
+                    {% endif %}
+                {% endfor %}
+                ]
+            },
+   		{% endif %}
+    {% endfor %}
+	]
+}
+</menu_farmacorp>
+
+<style>
+header {
+  display:none;
+}
+body{ 
+	font-family: Lucida Console,Lucida Sans Typewriter,monaco,Bitstream Vera Sans Mono,monospace; 
+  	font-size : 10px;
+}
+
+footer {
+  display:none;
+}
+</style>

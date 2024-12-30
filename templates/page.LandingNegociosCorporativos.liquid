@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Farmacorp B2B</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    >
+    <style>
+      @font-face {
+        font-family: 'Cabin';
+        src: url('{{ ' CabinFont.ttf' | asset_url }}') format('truetype');
+      }
+
+      body {
+        font-family: 'Cabin', sans-serif;
+        background-color: #fff;
+        color: #212529;
+        margin: 0;
+        padding: 0;
+      }
+
+      .btn-primary {
+        background-color: #000000;
+        border: none;
+      }
+
+      .btn-primary:hover {
+        background-color: #003366;
+        border-color: #003366;
+      }
+
+      .sctn-carousel {
+        background-color: #025BA4;
+        padding: 0;
+      }
+
+      .sctn-carousel h1,
+      .sctn-carousel p {
+        color: #fff;
+      }
+
+      .carousel-caption h1 {
+        font-size: 2rem;
+        font-weight: 700;
+      }
+
+      .carousel-caption p {
+        font-size: 1.5rem;
+        font-weight: 400;
+      }
+
+      .carousel-text {
+        flex: 1;
+        padding: 2vw 4vw;
+      }
+
+      .sctn {
+        margin: 2vw 0;
+      }
+
+      .sctn:nth-child(odd) {
+        background-color: #f8f8f8;
+      }
+
+      .sctn:nth-child(even) {
+        background-color: #fff;
+      }
+
+      .d-flex {
+        display: flex;
+      }
+
+      .flex-column {
+        flex-direction: column;
+      }
+
+      .half {
+        flex: 1;
+      }
+
+      .carousel-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+      }
+
+      .carousel-text {
+        margin-left: 2vw;
+        flex: 0.8;
+      }
+
+      .carousel-image {
+        flex: 1;
+      }
+
+      .colorWhite {
+        color: #fff;
+      }
+
+      .colorBlack {
+        color: #000;
+      }
+
+      .backColorBlue1 {
+        background-color: #025BA4;
+      }
+
+      .noBorder {
+        border: none;
+      }
+
+      .circlePadding {
+        padding: 0;
+      }
+
+      .circle {
+        width: 14vw;
+        height: 14vw;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        font-weight: bold;
+        font-size: 2.1vw;
+        text-align: center;
+        background-color: #DDEBF4;
+        color: #025BA4;
+      }
+
+      .circleContainer p {
+        margin: 0 1vw;
+        padding-top: 1.2vw;
+        text-align: center;
+        color: #025BA4;
+      }
+
+      .form-label {
+        font-size: 1vw;
+      }
+
+      label {
+        color: #004d99;
+        font-weight: 600;
+      }
+
+      #carouselExampleIndicators .carousel-item img {
+        height: 29vw;
+        object-fit: fill;
+      }
+
+      #infocontact {
+        background-color: #000;
+        color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+      }
+
+      #infocontact a {
+        color: #fff;
+      }
+
+      .bi-whatsapp,
+      .bi-envelope,
+      .bi-geo-alt {
+        font-size: 1.5em;
+        margin-right: 10px;
+      }
+
+      .btn {
+        width: 11vw;
+        height: 4vw;
+        font-size: 1.4vw;
+      }
+
+      .btn2 {
+        width: 7vw;
+        height: 3vw;
+        font-size: 1.2vw;
+        color: #fff;
+      }
+
+      /* Tamaños de los titulos */
+      .title-vw-small {
+        font-size: 1.2vw;
+      }
+
+      .title-vw-medium {
+        font-size: 1.4vw;
+      }
+
+      .title-vw-large {
+        font-size: 2.4vw;
+      }
+
+      /* Titulo usado en secciones */
+      .section-vw-title {
+        font-size: 2vw;
+      }
+
+      /* Tamaño de los textos */
+      .text-vw-small {
+        font-size: 1vw;
+      }
+
+      .text-vw-medium {
+        font-size: 1.6vw;
+      }
+
+      .text-vw-large {
+        font-size: 2vw;
+      }
+
+      .text-contact {
+        font-size: 0.8vw;
+      }
+
+      @media (max-width: 1380px) {
+        .text-vw-small {
+          font-size: 1.2vw;
+        }
+
+        .text-vw-medium {
+          font-size: 1.7vw;
+        }
+
+        .text-vw-large {
+          font-size: 2.8vw;
+        }
+
+        .section-vw-title {
+          font-size: 2.6vw;
+        }
+
+        .title-vw-small {
+          font-size: 1.4vw;
+        }
+
+        .title-vw-medium {
+          font-size: 2vw;
+        }
+
+        .title-vw-large {
+          font-size: 2.4vw;
+        }
+
+        .text-contact {
+          font-size: 1.2vw;
+        }
+      }
+
+      @media (max-width: 992px) {
+        .text-vw-small {
+          font-size: 1.6vw;
+        }
+
+        .text-vw-medium {
+          font-size: 1.8vw;
+        }
+
+        .text-vw-large {
+          font-size: 2.8vw;
+        }
+
+        .section-vw-title {
+          font-size: 2.8vw;
+        }
+
+        .title-vw-small {
+          font-size: 1.8vw;
+        }
+
+        .title-vw-medium {
+          font-size: 1.8vw;
+        }
+
+        .title-vw-large {
+          font-size: 2.4vw;
+        }
+
+        .text-contact {
+          font-size: 0.8em;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .text-vw-small {
+          font-size: 1em;
+        }
+
+        .text-vw-medium {
+          font-size: 3.2vw;
+        }
+
+        .text-vw-large {
+          font-size: 2.6vw;
+        }
+
+        .section-vw-title {
+          font-size: 3vw;
+        }
+
+        .title-vw-small {
+          font-size: 2vw;
+        }
+
+        .text-vw-contact {
+          font-size: 0.9em;
+        }
+
+        .title-vw-medium {
+          font-size: 1.8vw;
+        }
+
+        .title-vw-large {
+          font-size: 2.6vw;
+        }
+
+        .circle {
+          width: 30vw;
+          height: 30vw;
+        }
+
+        .circleContainer {
+          margin: 1vw 0;
+        }
+
+        .circleContainer p {
+          padding: 1vw 5vw;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <section class="sctn-carousel">
+      <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="500000">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <div class="carousel-content">
+              <div class="carousel-text">
+                <h1 class="title-vw-large" style=" width: 60%;">Conoce nuestras ofertas corporativas</h1>
+                <p class="title-vw-medium" style="margin-bottom: 2vw;">
+                  Hagamos una alianza entre tu empresa y nosotros
+                </p>
+                <button class="btn btn-primary btn-lg btn-sm" onclick="scrollToContact()">¡Hablemos!</button>
+              </div>
+              <div class="carousel-image">
+                <img
+                  src="{{ 'Imagen_banner.png' | asset_url }}"
+                  class="d-block w-100"
+                  alt="Imagen Carrusel B2B Farmacorp"
+                >
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="carousel-content">
+              <div class="carousel-text">
+                <h1 class="title-vw-large" style=" width: 60%;">Conoce nuestras ofertas corporativas</h1>
+                <p class="title-vw-medium" style="margin-bottom: 2vw;">
+                  Hagamos una alianza entre tu empresa y nosotros
+                </p>
+                <a href="#contacto"><button class="btn btn-primary">¡Hablemos!</button></a>
+              </div>
+              <div class="carousel-image">
+                <img
+                  src="{{ 'Imagen_banner.png' | asset_url }}"
+                  class="d-block w-100"
+                  alt="Imagen Carrusel B2B Farmacorp"
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why Farmacorp Section -->
+    <section class="container-fluid py-5 sctn" id="aboutUs">
+      <div class="containerCircle">
+        <h3 class="section-vw-title" style="font-weight: bold; text-align: center;">¿Por qué comprar en Farmacorp?</h3>
+        <div class="row" style="width: 100%; margin: 0; padding-top: 2.5vw; justify-content: space-around;">
+          <div class="col-md-2 circleContainer circlePadding">
+            <div class="circle custom-circle">
+              <h1 class="text-vw-medium" style="font-weight: bold; text-align: center; margin: 0;">
+                Todo lo que necesitas en un solo lugar
+              </h1>
+            </div>
+            <p class="text-vw-small">Desde medicamentos recetados hasta productos de cuidado personal y suplementos.</p>
+          </div>
+          <div class="col-md-2 circleContainer circlePadding">
+            <div class="circle custom-circle">
+              <h1 class="text-vw-medium" style="font-weight: bold; text-align: center; margin: 0;">
+                Atención al Cliente de Primera Clase
+              </h1>
+            </div>
+            <p class="text-vw-small">
+              Nuestro equipo de profesionales está siempre disponible para brindarte asesoría personalizada.
+            </p>
+          </div>
+          <div class="col-md-2 circleContainer circlePadding">
+            <div class="circle custom-circle">
+              <h1 class="text-vw-medium" style="font-weight: bold; text-align: center; margin: 0;">
+                Envío Rápido y Seguro
+              </h1>
+            </div>
+            <p class="text-vw-small">
+              Recibe tus productos directamente en la puerta de tu empresa o negocio con nuestro servicio de envío
+              eficiente y confiable.
+            </p>
+          </div>
+          <div class="col-md-2 circleContainer circlePadding">
+            <div class="circle custom-circle">
+              <h1 class="text-vw-medium" style="font-weight: bold ; text-align: center; margin: 0;">
+                Condiciones de Pago Flexibles
+              </h1>
+            </div>
+            <p class="text-vw-small">
+              Ofrecemos condiciones de pago personalizadas y flexibles para adaptarnos a las necesidades de tu negocio.
+            </p>
+          </div>
+          <div class="col-md-2 circleContainer circlePadding">
+            <div class="circle custom-circle">
+              <h1 class="text-vw-medium" style="font-weight: bold ; text-align: center; margin: 0;">
+                Descuentos por Compras al por Mayor
+              </h1>
+            </div>
+            <p class="text-vw-small">
+              Farmacorp te ayuda a optimizar tus costos y maximizar tus márgenes de beneficio.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Us Section -->
+    <section class="container-fluid sctn" style="padding: 3.5vw 0;">
+      <div id="contactanos" class="headContacto" style="text-align: center; margin-bottom: 2vw;">
+        <h1 class="section-vw-title" style="margin-bottom: 1vw; font-weight: bold;">
+          Contáctanos para más información
+        </h1>
+        <p class="text-vw-small" style="margin: 0.1vw;">
+          Envíanos tu mensaje y un agente te responderá en menos de 24hs.
+        </p>
+        <p class="text-vw-small" style="margin: 0.1vw;">O también puedes llamarnos o escribirnos por Whatsapp.</p>
+      </div>
+      <div class="container shadow p-4 bg-white rounded">
+        <div class="row" style="border-radius: 25px; justify-content: space-around;">
+          <div class="col-md-4 text-white rounded" id="infocontact" style="padding: 2.8vw;">
+            <h2 class="title-vw-medium">Información de contacto</h2>
+            <hr style="margin-bottom: 3vw;">
+            <div class="mb-5">
+              <h3 class="title-vw-small" style="margin: 0.1vw 0;">Amira Eid</h3>
+              <p class="text-vw-small">Ejecutiva</p>
+              <div>
+                <i class="bi bi-whatsapp"></i>
+                <a class="text-contact" href="https://wa.me/+59161396982" style="color: white;">+591 61396982</a>
+              </div>
+              <div>
+                <i class="bi bi-envelope"></i>
+                <a class="text-contact" href="mailto:aeid@farmacorp.com" style="color: white;">aeid@farmacorp.com</a>
+              </div>
+            </div>
+            <div class="mb-5">
+              <h3 class="title-vw-small" style="margin: 0.1vw 0;">Karen Sanchez</h3>
+              <p class="text-vw-small">Ejecutiva</p>
+              <div>
+                <i class="bi bi-whatsapp"></i>
+                <a class="text-contact" href="https://wa.me/+59178567653" style="color: white;">+591 78567653</a>
+              </div>
+              <div>
+                <i class="bi bi-envelope"></i>
+                <a
+                  class="text-contact"
+                  href="mailto:sanchezka@farmacorp.com"
+                  style="color: white;"
+                  >sanchezka@farmacorp.com</a
+                >
+              </div>
+            </div>
+            <!--
+              <div class="mb-5">
+                  <h3 class="title-vw-small" style="margin: 0.1vw 0;">Luciano Borja</h3>
+                  <p class="text-vw-small"">Luciano</p>
+                  <div>
+                      <i class="bi bi-whatsapp"></i> <a class="text-contact" href="https://wa.me/+59178500271" style="color: white;">+591 78500271</a>
+                  </div>
+                  <div>
+                      <i class="bi bi-envelope"></i> <a class="text-contact" href="mailto:luciano@farmacorp.com" style="color: white;">luciano@farmacorp.com</a>
+                  </div>
+              </div>
+              <div class="mb-5">
+                  <h3 class="title-vw-small" style="margin: 0.1vw 0;">Betsy Jimenez</h3>
+                  <p class="text-vw-small"">Doctora</p>
+                  <div>
+                      <i class="bi bi-whatsapp"></i> <a class="text-contact" href="https://wa.me/+59178500271" style="color: white;">+591 78500271</a>
+                  </div>
+                  <div>
+                      <i class="bi bi-envelope"></i> <a class="text-contact" href="mailto:betsy@farmacorp.com" style="color: white;">Betsy@farmacorp.com</a>
+                  </div>
+              </div>
+            -->
+            <hr>
+            <div>
+              <i class="bi bi-geo-alt"></i>
+              <a
+                class="text-contact"
+                href="https://www.google.com/maps/place/Urub%C3%B3+Open+Mall/@-17.7492802,-63.2155972,19.51z/data=!3m1!5s0x93f1dd6f85d82495:0x8a7f4c90e6e0ab1f!4m6!3m5!1s0x93f1dd6f8653d889:0x5413a0523df5895c!8m2!3d-17.7493023!4d-63.215206!16s%2Fg%2F1hc48s_1_?entry=ttu"
+                style="color: white;"
+                >Urubo Open Mall, Santa Cruz, Bolivia</a
+              >
+            </div>
+          </div>
+          <div class="col-md-7" style="align-content: center;">
+            <form id="contactForm">
+              <div class="row">
+                <div class="col-md-6 mb-2">
+                  <label for="name" class="form-label colorBlack text-vw-small">Nombres y apellidos</label>
+                  <input type="text" class="form-control" id="name" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="email" class="form-label colorBlack text-vw-small">Correo electrónico</label>
+                  <input type="email" class="form-control" id="email" required placeholder="empresa@gmail.com">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="phone" class="form-label colorBlack text-vw-small">Teléfono o celular</label>
+                  <input type="text" class="form-control" id="phone" required placeholder="12345678">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="company" class="form-label colorBlack text-vw-small">Nombre de la empresa</label>
+                  <input type="text" class="form-control" id="company" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="nit" class="form-label colorBlack text-vw-small">NIT de la empresa</label>
+                  <input type="text" class="form-control" id="nit" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="city" class="form-label colorBlack text-vw-small">Ciudad o regional</label>
+                  <select class="form-select" id="city" required>
+                    <option selected disabled value="">Selecciona...</option>
+                    <option value="1">La Paz</option>
+                    <option value="2">Oruro</option>
+                    <option value="3">Potosí</option>
+                    <option value="4">Chuquisaca</option>
+                    <option value="5">Cochabamba</option>
+                    <option value="6">Tarija</option>
+                    <option value="7">Santa Cruz</option>
+                    <option value="8">Beni</option>
+                    <option value="9">Pando</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="interest" class="form-label colorBlack text-vw-small">Selecciona datos de interés</label
+                ><br>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="interest1" value="institucion">
+                  <label class="form-check-label colorBlack text-vw-small" for="interest1">Institución</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="interest2" value="farmacias">
+                  <label class="form-check-label colorBlack text-vw-small" for="interest2">Farmacias</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="interest3" value="clinicashospitales">
+                  <label class="form-check-label colorBlack text-vw-small" for="interest3">Clínicas y Hospitales</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="interest4" value="industrias">
+                  <label class="form-check-label colorBlack text-vw-small" for="interest4">Industrias</label>
+                </div>
+              </div>
+              <div class="mb-5">
+                <label for="message" class="form-label colorBlack text-vw-small">Escribe tu mensaje</label>
+                <textarea
+                  class="form-control"
+                  id="message"
+                  rows="3"
+                  maxlength="250"
+                  required
+                  placeholder="Describe sobre qué productos o servicios deseas consultar."
+                  style="resize: none;"
+                ></textarea>
+                <small id="charCount" class="form-text text-muted">0/250</small>
+              </div>
+              <div style="display: flex; flex-flow: row nowrap; justify-content: flex-end;">
+                <button type="submit" class="btn2 btn-primary" style="background-color: #025BA4; border-radius: 5px;">
+                  Enviar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="container-fluid py-5 sctn" id="QA">
+      <div class="row d-flex align-items-center">
+        <div class="col-md-5" style="display: flex; justify-content: center;">
+          <img src="{{ 'b2b-preguntas.png' | asset_url }}" class="img-fluid" alt="FAQ Image" style="width: 25vw;">
+        </div>
+        <div class="col-md-6 d-flex flex-column justify-content-center" style="gap: 2vw;">
+          <h2 class="section-vw-title" style="font-weight: bold;">Preguntas frecuentes</h2>
+          <div class="accordion" id="faqAccordion">
+            <div class="accordion-item border-0">
+              <h2 class="accordion-header" id="headingOne">
+                <button
+                  class="accordion-button"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseOne"
+                  aria-expanded="true"
+                  aria-controls="collapseOne"
+                  style="background-color: #fff;"
+                >
+                  <p class="title-vw-small" style="font-weight: bold; margin: 0;">
+                    ¿Cuáles son los requisitos para acceder a descuentos?
+                  </p>
+                </button>
+              </h2>
+              <div
+                id="collapseOne"
+                class="accordion-collapse collapse show"
+                aria-labelledby="headingOne"
+                data-bs-parent="#faqAccordion"
+              >
+                <div class="accordion-body">
+                  <ol style="list-style: disc;">
+                    <li style="color: #707070;">Para compras al contado necesita: NIT.</li>
+                    <li style="color: #707070;">
+                      Para compras al credito necesita: NIT, Matricula Seprepago, Poder, Ci de representante legal.
+                    </li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script>
+    // Función para crear la solicitud SOAP
+    function createSOAPRequest(formData, token) {
+        console.log('Creando solicitud SOAP con los siguientes datos:', formData, 'y token:', token);
+        return `
+            <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://soap.sforce.com/schemas/class/WSNegociosCorporativos">
+                <soapenv:Header>
+                    <web:SessionHeader>
+                        <web:sessionId>${token}</web:sessionId>
+                    </web:SessionHeader>
+                </soapenv:Header>
+                <soapenv:Body>
+                    <web:recibirNegociosCorporativos>
+                        <web:negocios>
+                            <web:nombresApellidos>${formData.nombresApellidos}</web:nombresApellidos>
+                            <web:ciudadRegional>${formData.ciudadRegional}</web:ciudadRegional>
+                            <web:correoElectronico>${formData.correoElectronico}</web:correoElectronico>
+                            <web:datosInteres>${formData.datosInteres}</web:datosInteres>
+                            <web:mensaje>${formData.mensaje}</web:mensaje>
+                            <web:nitEmpresa>${formData.nitEmpresa}</web:nitEmpresa>
+                            <web:nombreEmpresa>${formData.nombreEmpresa}</web:nombreEmpresa>
+                            <web:telefonoCelular>${formData.telefonoCelular}</web:telefonoCelular>
+                        </web:negocios>
+                    </web:recibirNegociosCorporativos>
+                </soapenv:Body>
+            </soapenv:Envelope>
+        `;
+    }
+
+    // Función para obtener el token de acceso
+    function getAccessToken() {
+        console.log('Iniciando la obtención del token de acceso...');
+        return "00DO3000000fC3d!AQEAQHBk6NZW0TKYeNww0TyX5829cAW8Sj9bdToRk7XO_kD5J3xQ.qXxkB.2VE9qx9Z0OF7S4ODe.hwOp5mDONEuHZGJH3Y7"
+          /*fetch('https://test.salesforce.com/services/oauth2/token', {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                'grant_type': 'password',
+                'client_id': '3MVG9SnjeJhUwbWETVN2Ppsrimr1iwiW3suathkPspkCrYblE1QQZlMRrBsAq3.9J.RKAi0YbUG0ZW_yhUxAT',
+                'client_secret': '7B7B12C1EF91B4ACF72B29F94050393235DA226F883B7B417F78508AC13F8789',
+                'username': 'djustinianoy@farmacorp.com.sandboxtes',
+                'password': 'Ventasfarma20202dNUAAQuBq9QZsJt8SaRRrMzk'
+            })
+        })
+        .then(response => {
+            console.log('Respuesta al obtener el token:', response);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Token obtenido:', data.access_token);
+            return data.access_token;
+        })
+        .catch(error => {
+            console.error('Error al obtener el token:', error);
+            throw error;
+        });*/
+    }
+
+    // Evento que se ejecuta cuando el DOM ha cargado
+    document.addEventListener('DOMContentLoaded', () => {
+        const contactForm = document.getElementById('contactForm');
+        const messageInput = document.getElementById('message');
+        const charCount = document.getElementById('charCount');
+
+        // Contador de caracteres
+        messageInput.addEventListener('input', () => {
+            const currentLength = messageInput.value.length;
+            charCount.textContent = `${currentLength}/250`;
+            console.log(`Caracteres en el mensaje: ${currentLength}`);
+        });
+
+        // Envío del formulario
+        contactForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            console.log('Formulario enviado. Recogiendo datos...');
+            // Recoger los datos del formulario
+            const formData = {
+                nombresApellidos: String(document.getElementById('name').value),
+                correoElectronico: String(document.getElementById('email').value),
+                telefonoCelular: String(document.getElementById('phone').value),
+                nombreEmpresa: String(document.getElementById('company').value),
+                nitEmpresa: String(document.getElementById('nit').value),
+                ciudadRegional: String(document.getElementById('city').value),
+                datosInteres: String(Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value)),
+                mensaje: String(document.getElementById('message').value)
+            };
+
+            console.log('Datos del formulario recogidos:', formData);
+
+            // Llamada para obtener el token de acceso
+            getAccessToken().then(token => {
+                console.log('Token recibido, creando solicitud SOAP...');
+                const soapRequest = createSOAPRequest(formData, token);
+                console.log('Solicitud SOAP creada:', soapRequest);
+
+                // Enviar la solicitud SOAP
+                return fetch('https://usa258s.sfdc-yfeipo.salesforce.com/services/Soap/class/WSNegociosCorporativos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/xml',
+                        'SOAPAction': 'recibirNegociosCorporativos'
+                    },
+                    body: soapRequest
+                });
+            })
+            .then(response => {
+                console.log('Respuesta de la solicitud SOAP:', response);
+                if (!response.ok) {
+                    throw new Error(`Error en la solicitud SOAP: ${response.statusText}`);
+                }
+                return response.text();
+            })
+            .then(data => {
+                console.log('Éxito:', data);
+                // Manejo de la respuesta exitosa
+            })
+            .catch((error) => {
+                console.error('Error en la solicitud SOAP:', error.message || error);
+            });
+        });
+    });
+    </script>
+
+   <!-- <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>-->
+  </body>
+</html>

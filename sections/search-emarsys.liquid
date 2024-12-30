@@ -1,0 +1,31 @@
+{% schema %}
+{
+  "name": "APP MOVIL-Emarsys search",
+  "settings": [ {
+    "type": "paragraph",
+    "content": "APP MOVIL - Seccion para definir el comportamiento de emarsys en la busqueda."
+  },
+      {
+      "type": "checkbox",
+      "id": "emarsys_enable",
+      "label": "Mostrar seccion de emarsys en la pantalla de busqueda",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "emarsys_heading",
+      "label": "Titulo de la seccion",
+      "default": "Sugerencias para ti"
+    },
+   {
+        "type": "range",
+        "id": "emarsys_count",
+        "min": 1,
+        "max": 100,
+        "step": 1,
+        "label": "Cantidad Mínima",
+        "default": 15
+      }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,855 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sucursales</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous">
+    <style>
+      @font-face {
+        font-family: 'Cabin';
+        src: url('{{ 'CabinFont.ttf' | asset_url }}') format('truetype');
+      }
+
+      .firstContainer {
+        font-family: "Cabin"
+        , sans-serif;
+      }
+      #map {
+        height: 450px;
+        width: 100%;
+      }
+      .sidebar {
+        height: 450px;
+        overflow-y: auto;
+        transition: transform 0.3s ease;
+        position: relative;
+      }
+      .custom-btn {
+        background-color: #fff;
+        color: #000;
+        border-color: #E5EAD2;
+        box-shadow: none;
+      }
+      .custom-btn:hover,
+      .custom-btn:focus {
+        border-color: #E6F2E4;
+      }
+      .custom-dropdown-toggle::after {
+        margin-left: auto;
+        display: flex;
+        flex-direction: column;
+        align-self: center;
+      }
+      .custom-dropdown-menu {
+        width: 100%;
+      }
+      .list-itemBorder {
+        padding-top: 1vw;
+        margin: 0 10px;
+        background-color: #F1F3F4;
+      }
+      .list-itemBorder:first-child {
+        padding-top: 0;
+      }
+      .labelDistance {
+        color: #DD1111;
+      }
+      .listItem {
+        height: 160px;
+      }
+      .sidebar::-webkit-scrollbar {
+        width: 6px;
+      }
+      .sidebar::-webkit-scrollbar-thumb {
+        background-color: #025BA4;
+        border-radius: 100px;
+      }
+      .sidebar::-webkit-scrollbar-track {
+        background: none;
+      }
+      .btnStyle {
+        padding: 0.5vw;
+        background-color: #EDF3FD;
+        color: #025BA4;
+        border: none;
+        border-radius: 5px;
+      }
+      .btnSucursales {
+        background-color: #000;
+        color: #fff;
+        display: none;
+        width: 40vw;
+        align-self: center;
+      }
+      .mostrarMas,
+      .mostrarMenos {
+        color: #299139;
+        cursor: pointer;
+      }
+      .mostrarMas:hover,
+      .mostrarMenos:hover,
+      .mostrarMas:focus,
+      .mostrarMenos:focus,
+      .mostrarMas:active,
+      .mostrarMenos:active {
+        color: #207a2e;
+      }
+      .infoSucursal {
+        overflow: hidden;
+        height: 30px;
+        /* altura por defecto cuando está colapsado */
+        transition: height 0.3s ease;
+      }
+      .expandido {
+        height: auto;
+        /* altura automática cuando está expandido */
+      }
+      .mostrarMenos {
+        display: none;
+      }
+      .sucursalesBtn {
+        display: none;
+      }
+      /* Estilo para el botón de "Sucursales" en vista móvil */
+      @media (max-width: 769px) {
+        .sucursalBtn {
+          font-size: 0.5em;
+        }
+        .selectOptions{
+          gap: 10px;  
+        }
+        
+        .sidebar.hidden {
+          transform: translateX(-100%);
+        }
+        .sidebar {
+          position: fixed;
+          display: block;
+          bottom: 0;
+          left: 0;
+          height: 82vh;
+          width: 85%;
+          background: white;
+          z-index: 99;
+          overflow-y: auto;
+        }
+        .btnSucursales {
+          display: block;
+          padding: 10px;
+        }
+        .sidebarBtn {
+          width: 100%;
+          text-align: left;
+          padding: 10px 3vw;
+          font-size: 1em;
+        }
+      }
+      @media (max-width: 450px) {
+        .sucursalBtn {
+          padding: 0.5vw;
+          font-size: 3.2vw;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="firstContainer container px-3 pb-4">
+      <div class="container secondContainer">
+        <header class="my-5">
+          <h3 class="text-center" style="color:#4D4D4D; margin:0;">Sucursales</h3>
+        </header>
+
+        <div class="row mb-4 selectOptions">
+          <div class="col-md-8">
+            <select class="form-select custom-btn" id="departamento">
+              <option
+                value=""
+                disabled
+                selected>Departamento</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <div class="dropdown w-100">
+              <button
+                class="btn custom-btn dropdown-toggle custom-dropdown-toggle w-100"
+                type="button"
+                id="dropdownMenuButton"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                style="display: flex;">
+                Filtrar
+              </button>
+              <ul
+                class="dropdown-menu custom-dropdown-menu p-3"
+                id="selectFiltro"
+                aria-labelledby="dropdownMenuButton">
+                <!-- Mostrar los servicios -->
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex flex-column justify-content-center" style="margin-bottom:10px;">
+          <button onclick="toggleMobileSidebar()" class="btnStyle btnSucursales" id="toggleSidebarBtn"> Ver lista de sucursales </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-5">
+          <div class="list-group sidebar hidden">
+            <button onclick="toggleMobileSidebar()" class="btnStyle btnSucursales sidebarBtn" id="toggleSidebarBtn" style="border-radius: none;">« Lista de sucursales</button>
+            <div id="sidePanel">
+              <p style="margin: 10px;">Espere mientras se termine de cargar el mapa. Esto puede llevar un momento...</p>
+            <!-- Contenido de sucursales -->
+            </div>
+          </div>
+        </div>
+        <div class="col-md-7" style="padding-left: 0;">
+          <div id="map"></div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+    // Función para cambiar el centro del mapa
+    function cambiarCentroMapa(latitud, longitud) {
+        map.setCenter({ lat: parseFloat(latitud), lng: parseFloat(longitud) });
+        map.setZoom(13);
+    }
+        // Función para alternar la visibilidad de la barra lateral
+        function toggleMobileSidebar() {
+            sidebar.classList.toggle("hidden");
+        }
+
+    function shareLocation(lat, lng) {
+        if (navigator.share) {
+            navigator.share({
+            title: 'Ubicación de la sucursal',
+            text: 'Encuentra la sucursal en Google Maps:',
+            url: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`
+            });
+        } else {
+            alert('La función de compartir no está soportada en este navegador.');
+        }
+    }
+
+    // Función para crear marcadores en el mapa
+    function createMarker_map(markerOptions, sucursal) {
+        const marker = new google.maps.Marker(markerOptions);
+        markers.push({ m: marker, s: sucursal.servicios });
+        return marker;
+    }
+
+    // Funcion para manipular los marcadores
+    function setMapOnAll(map) {
+        markers.forEach(marker => marker.m.setMap(map));
+    }
+
+    // Funcion para limpiar los marcadores del mapa
+    function clearMarkers() {
+        setMapOnAll(null);
+    }
+
+    //Funcion para borrar los marcadores
+    function deleteMarkers() {
+        clearMarkers();
+        markers = [];
+    }
+
+    // Función para obtener la ubicación actual del usuario
+    function getUserLocation() {
+      return new Promise((resolve, reject) => {
+          if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(
+                  position => {
+                      const userLocation = {
+                          lat: position.coords.latitude,
+                          lng: position.coords.longitude
+                      };
+  
+                      // Crear marcador en la ubicación del usuario
+                      const userMarker = new google.maps.Marker({
+                          position: userLocation,
+                          map: map,
+                          icon: {
+                              path: google.maps.SymbolPath.CIRCLE,
+                              scale: 8,
+                              fillColor: "#025BA4",
+                              fillOpacity: 0.8,
+                              strokeColor: "#025BA4",
+                              strokeOpacity: 1,
+                              strokeWeight: 1
+                          }
+                      });
+  
+                      resolve(userLocation);
+                  },
+                  error => {
+                      reject(error);
+                  }
+              );
+          } else {
+              reject(new Error('Geolocation is not supported by this browser.'));
+          }
+      });
+    }
+
+    // Función para calcular la distancia usando DirectionsService
+    function calculateDistance(origin, destination) {
+        return new Promise((resolve, reject) => {
+            const directionsService = new google.maps.DirectionsService();
+            directionsService.route({
+                origin: origin,
+                destination: destination,
+                travelMode: google.maps.TravelMode.DRIVING
+            }, (response, status) => {
+                if (status === 'OK') {
+                    const distance = response.routes[0].legs[0].distance.text;
+                    resolve(distance);
+                } else {
+                    reject(status);
+                }
+            });
+        });
+    }
+
+    // Cargar los datos de los departamentos
+    const depConfig = {{settings.citysConfig}};
+
+    // Obtener los elementos del DOM
+    const selectFiltro = document.getElementById('selectFiltro');
+    const sidePanel = document.getElementById("sidePanel");
+    const selectDepartamento = document.getElementById("departamento");
+    const sidebar = document.querySelector(".sidebar"); 
+
+    // Declaracion de iconos de botones
+    const shareIcon = { url: `{{ 'share.svg' | asset_url }}` };
+    const signIcon = { url: `{{ 'sign-turn-right.svg' | asset_url }}` };
+    const phoneIcon = { url: `{{ 'telephone.svg' | asset_url }}` };
+    const smallMarker = { url: `{{ 'smallMarker.svg' | asset_url }}` };
+      
+    // Declaración del mapa
+    let map, iw_map;
+    let markers = [];
+    let asideSucursales = [];
+    let selectedMarker = null;
+    let userLocation = null;
+
+    //Inicializacion del mapa ---------------------------------------------------
+    loadGoogleMapsScript()
+    .then(() => loadMap())
+    .then(() => loadServicios())
+    .then(() => loadGeolocation())
+    .then(() => obtenerSucursales('001'))
+    .catch(error => {
+        console.error("Hubo un error mientras se cargaba la página: ",error);
+    });
+
+    // Carga del script de Google Maps y ejecución del resto del código una vez cargado
+    function loadGoogleMapsScript() {
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key={{settings.keyGoogleMap}}`;
+            script.async = true;
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    }   
+
+    function loadMap() {
+        return new Promise((resolve, reject) => {
+            try {
+                initMap();
+                google.maps.event.addListenerOnce(map, 'tilesloaded', resolve);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    function initMap() {
+        let myOptions = {
+            zoom: 14,
+            center: { lat: -17.783318, lng: -63.182126 },
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            fullscreenControl: false,
+            streetViewControl: false
+        };
+        map = new google.maps.Map(document.getElementById("map"), myOptions);
+        iw_map = new google.maps.InfoWindow();
+
+        // Crear botón de centrar en mi ubicación
+        const locationButton = document.createElement("div");
+        locationButton.style.backgroundColor = "#025BA4";
+        locationButton.style.border = "none";
+        locationButton.style.borderRadius = "50%";
+        locationButton.style.cursor = "pointer";
+        locationButton.style.marginRight = "7px";
+        locationButton.style.padding = "10px";
+        locationButton.style.position = "absolute";
+        locationButton.style.right = "10px";
+        locationButton.style.bottom = "30px";
+        
+        const icon = document.createElement("img");
+        icon.src = "{{ 'myLocation.svg' | asset_url }}";
+        icon.alt = "My location Icon";
+        icon.style.width = "24px";
+        icon.style.height = "24px";
+        
+        locationButton.appendChild(icon);
+        map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(locationButton);
+
+        // Evento para centrar el mapa en la ubicación del usuario
+        locationButton.addEventListener("click", function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const userLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                    };
+                    map.setCenter(userLocation);
+                    map.setZoom(14);
+                });
+            } else {
+                console.log("Geolocation is not supported by this browser.");
+            }
+        });
+    }
+
+    async function loadGeolocation() {
+        try {
+            if (navigator.geolocation) {
+                userLocation = await getUserLocation();
+            }
+        } catch (error) {
+            console.error("Ocurrio un error obteniendo la geolocalizacion: ", error);
+        }
+    }
+
+
+    async function loadServicios() {
+        try {
+            const data = await getServicios();
+            let bigMarker = {
+                url: `{{ 'bigMarker.svg' | asset_url }}`,
+                anchor: new google.maps.Point(40, 100)
+            };
+            
+            if (data.data.elements) {
+                // Crear y agregar el checkbox de "Todas las sucursales"
+                let todasSucursalesLi = document.createElement('li');
+                let todasSucursalesDiv = document.createElement('div');
+                todasSucursalesDiv.classList.add('form-check');
+
+                //Crear checkbox 'todas las sucursales'
+                let todasSucursalesInput = document.createElement('input');
+                let todasSucursalesLabel = document.createElement('label');
+                todasSucursalesInput.classList.add('form-check-input');
+                todasSucursalesInput.type = 'checkbox';
+                todasSucursalesInput.value = "Todas las sucursales";
+                todasSucursalesInput.id = 'check_todasSucursales';
+                todasSucursalesInput.checked = true;
+                todasSucursalesLabel.classList.add('form-check-label');
+                todasSucursalesLabel.setAttribute('for', 'check_todasSucursales');
+                todasSucursalesLabel.textContent = "Todas las sucursales";
+
+                //Append de los elementos creados
+                todasSucursalesDiv.appendChild(todasSucursalesInput);
+                todasSucursalesDiv.appendChild(todasSucursalesLabel);
+                todasSucursalesLi.appendChild(todasSucursalesDiv);
+                selectFiltro.appendChild(todasSucursalesLi);
+
+                //Cargar todos los filtros y agregarlos a la página
+                data.data.elements.forEach((word) => {
+                    let li = document.createElement('li');
+                    let div = document.createElement('div');
+                    div.classList.add('form-check');
+                    
+                    let input = document.createElement('input');
+                    input.classList.add('form-check-input');
+                    input.type = 'checkbox';
+                    input.value = word.descripcion;
+                    input.id = `check_${word.id}`;
+                    input.checked = true;
+                    
+                    let label = document.createElement('label');
+                    label.classList.add('form-check-label');
+                    label.setAttribute('for', `check_${word.id}`);
+                    label.textContent = word.descripcion;
+                    
+                    // Agregar los elementos creados al DOM
+                    div.appendChild(input);
+                    div.appendChild(label);
+                    li.appendChild(div);
+                    selectFiltro.appendChild(li);
+                });
+
+                //Una vez creados se guardan los filtros en una variable excepto 'todas las sucursales'
+                const checkboxes = document.querySelectorAll('.form-check-input:not(#check_todasSucursales)');
+
+                // Mostrar/ocultar marcadores en el mapa
+                function actualizarMarcadores() {
+                    var filtrosSeleccionados = [];
+                    document.querySelectorAll("input[type='checkbox']:checked").forEach((checkedBox) => {
+                        filtrosSeleccionados.push(checkedBox.value);
+                    });
+
+                    markers.forEach((m) => {
+                        m.m.setVisible(false);
+                    });
+
+                    filtrosSeleccionados.forEach((f) => {
+                        var ser_includes = markers.filter(ms => ms.s !== null && ms.s.includes(f));
+                        ser_includes.forEach((mar) => {
+                            mar.m.setVisible(true);
+                        });
+                    });
+
+                    // Actualizar el contenido del aside
+                    updateAsideContent(filtrosSeleccionados);
+                }
+
+                // Actualizar el contenido del aside según los servicios seleccionados
+                async function updateAsideContent(filSeleccionados) {
+                    // Obtener ubicación del usuario
+
+                    // Calcular distancia y ordenar sucursales
+                    const sucursalesConDistancia = await Promise.all(asideSucursales.map(async (sucursal) => {
+                        const sucursalLocation = new google.maps.LatLng(sucursal.latitud, sucursal.longitud);
+                        const distance = userLocation ? await calculateDistance(userLocation, sucursalLocation) : '';
+                        return { sucursal, distance };
+                    }));
+
+                    // Ordenar sucursales por distancia (las que tienen distancia numérica primero)
+                    sucursalesConDistancia.sort((a, b) => {
+                        const distA = a.distance === '' ? Infinity : parseFloat(a.distance.replace(/[^0-9.]/g, ''));
+                        const distB = b.distance === '' ? Infinity : parseFloat(b.distance.replace(/[^0-9.]/g, ''));
+                        return distA - distB;
+                    });
+
+                    sidePanel.innerHTML = ''; // Limpiar el aside
+                    sucursalesConDistancia.forEach(({ sucursal, distance }) => {
+                        if (typeof sucursal.servicios === 'string') {
+                            const sucursalServicios = sucursal.servicios.split(', ').map(servicio => servicio.trim());
+                            if (filSeleccionados.some(f => sucursalServicios.includes(f))) {
+                                // Crear el contenedor principal para la sucursal
+                                const itemBorder = document.createElement("div");
+                                itemBorder.classList.add("list-itemBorder");
+
+                                const listItem = document.createElement("a");
+                                listItem.classList.add("listItem", "list-group-item", "list-group-item-action", "border-0", "p-2", "d-flex", "flex-column", "justify-content-around");
+                                listItem.dataset.id = sucursal.id;
+                                listItem.innerHTML = `
+                                    <div id="pointerSucursal" style="cursor: pointer;">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h6 class="mb-1" id="desSucursal" style="font-weight: bold;">${sucursal.descripcion}</h6>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-1" style="color: rgb(255,0,0); width:6em; text-align: right;">
+                                                    ${distance !== '' ? `A ${distance}` : ''}
+                                                </h6>
+                                            </div>
+                                        </div>
+                                        <div class="infoSucursal">
+                                            <small>${sucursal.direccion}</small><br>
+                                            <small>Horario: ${sucursal.horario}</small><br>
+                                            <small>Servicios: ${sucursal.servicios}</small><br>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <a class="mostrarMas" href="#">Mostrar más</a>
+                                        <a class="mostrarMenos" href="#" style="display: none;">Mostrar menos</a>
+                                    </div>
+                                    <div class="d-flex" style="gap: 10px;">
+                                        <a href="https://www.google.com/maps/dir/?api=1&destination=${sucursal.latitud},${sucursal.longitud}" target="_blank">
+                                            <button type="button" class="sucursalBtn btnStyle d-flex align-items-center">
+                                                <img src="{{ 'sign-turn-right.svg' | asset_url }}" alt="Sign Icon" class="icon mr-2"/>
+                                                Cómo llegar
+                                            </button>
+                                        </a>
+                                        <a href="tel:+591 ${sucursal.celular}">
+                                            <button type="button" class="sucursalBtn btnStyle d-flex align-items-center">
+                                                <img src="{{ 'telephone.svg' | asset_url }}" alt="Phone Icon" class="icon mr-2"/>
+                                                Llamar
+                                            </button>
+                                        </a>
+                                        <button type="button" class="btnStyle d-flex align-items-center" onclick="shareLocation('${sucursal.latitud}', '${sucursal.longitud}')">
+                                            <img src="{{ 'share.svg' | asset_url }}" alt="Share Icon" class="icon"/>
+                                        </button>
+                                    </div>
+                                `;
+                                itemBorder.appendChild(listItem);
+                                sidePanel.appendChild(itemBorder);
+
+                                // Vincular el marcador correspondiente
+                                const marker = markers.find(m => m.m.getPosition().lat() === parseFloat(sucursal.latitud) && m.m.getPosition().lng() === parseFloat(sucursal.longitud)).m;
+
+                                // Evento para abrir el marcador al hacer clic en el aside
+                                listItem.querySelector('#pointerSucursal').addEventListener("click", function(e) {
+                                    e.preventDefault();
+                                    if (selectedMarker) {
+                                        selectedMarker.setIcon(smallMarker);
+                                    }
+                                    marker.setIcon(bigMarker);
+                                    selectedMarker = marker;
+                                    sidebar.classList.toggle("hidden");
+                                    map.setCenter(marker.getPosition());
+                                    iw_map.setContent(marker.get("content"));
+                                    iw_map.open(map, marker);
+                                });
+
+                                // Evento de mostrar más/menos
+                                document.querySelectorAll('.mostrarMas').forEach(button => {
+                                    button.addEventListener('click', function (event) {
+                                        event.preventDefault();
+                                        const listItem = this.closest('.listItem');
+                                        listItem.classList.add('expandido');
+                                        const infoDiv = this.closest('.listItem').querySelector('.infoSucursal');
+                                        infoDiv.classList.add('expandido');
+                                        this.style.display = 'none';
+                                        this.nextElementSibling.style.display = 'inline';
+                                    });
+                                });
+
+                                document.querySelectorAll('.mostrarMenos').forEach(button => {
+                                    button.addEventListener('click', function (event) {
+                                        event.preventDefault();
+                                        const listItem = this.closest('.listItem');
+                                        listItem.classList.remove('expandido');
+                                        const infoDiv = this.closest('.listItem').querySelector('.infoSucursal');
+                                        infoDiv.classList.remove('expandido');
+                                        this.style.display = 'none';
+                                        this.previousElementSibling.style.display = 'inline';
+                                    });
+                                });
+                            }
+                        }
+                    });
+                }
+
+                // Event listener para seleccionar/deseleccionar todas las sucursales
+                todasSucursalesInput.addEventListener('change', function() {
+                    checkboxes.forEach(checkbox => {
+                        checkbox.checked = this.checked;
+                    });
+                    actualizarMarcadores();
+                });
+
+                // Sincronizar estado del checkbox de todas las sucursales con los otros checkboxes
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', function() {
+                        if (!this.checked) {
+                            todasSucursalesInput.checked = false;
+                        } else if (Array.from(checkboxes).every(cb => cb.checked)) {
+                            todasSucursalesInput.checked = true;
+                        }
+                        actualizarMarcadores();
+                    });
+                });
+            }
+            const primerDepartamento = depConfig[0];
+            selectDepartamento.value = primerDepartamento.city;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function obtenerSucursales(keyRegion) {
+        try {
+            const data = await getSucursales(keyRegion);
+            const bigMarker = {
+                url: `{{ 'bigMarker.svg' | asset_url }}`,
+                anchor: new google.maps.Point(40, 100)
+            };
+            sidePanel.innerHTML = '';
+
+            if (markers.length) {
+                markers.forEach(marker => marker.m.setMap(null));
+            }
+            markers = [];
+            asideSucursales = [];
+
+            if (data.data.elements) {
+                const sucursalesConDistancia = await Promise.all(data.data.elements.map(async (sucursal) => {
+                    const sucursalLocation = new google.maps.LatLng(sucursal.latitud, sucursal.longitud);
+                    const distance = userLocation ? await calculateDistance(userLocation, sucursalLocation): '';
+                    return {sucursal, distance};
+                }));
+
+                // Ordenar sucursales por distancia (las que tienen distancia numérica primero)
+                sucursalesConDistancia.sort((a, b) => {
+                    const distA = a.distance === '' ? Infinity : parseFloat(a.distance.replace(/[^0-9.]/g, ''));
+                    const distB = b.distance === '' ? Infinity : parseFloat(b.distance.replace(/[^0-9.]/g, ''));
+                    return distA - distB;
+                });
+
+                sucursalesConDistancia.forEach(({ sucursal, distance }) => {
+                    // Crear el contenedor principal para la sucursal
+                    asideSucursales.push(sucursal); // Guardar la sucursal en el array asideSucursales
+                    const itemBorder = document.createElement("div");
+                    itemBorder.classList.add("list-itemBorder");
+
+                    const listItem = document.createElement("a");
+                    listItem.classList.add("listItem", "list-group-item", "list-group-item-action", "border-0", "p-2", "d-flex", "flex-column", "justify-content-around");
+                    listItem.dataset.id = sucursal.id;
+                    listItem.innerHTML = `
+                    <div id="pointerSucursal" style=" cursor: pointer;">
+                        <div class="d-flex flex-row justify-content-between" style="gap: 1.2vw;">
+                            <h6 class="mb-1" id="desSucursal" style="font-weight: bold;">${sucursal.descripcion}</h6>
+                            <h6 class="mb-1" style="color: rgb(255,0,0); width:6em; text-align: right;">
+                            ${distance !== '' ? `A ${distance}` : ''}
+                            </h6>
+                        </div>
+                        <div class="infoSucursal">
+                        <small>${sucursal.direccion}</small><br>
+                        <small>Horario: ${sucursal.horario}</small><br>
+                        <small>Servicios: ${sucursal.servicios}</small><br>
+                        </div>
+                    </div>
+                    <div>
+                        <a class="mostrarMas" href="#">Mostrar más</a>
+                        <a class="mostrarMenos" href="#" style="display: none;">Mostrar menos</a>
+                    </div>
+                    <div class="d-flex" style="gap: 10px;">
+                        <a href="https://www.google.com/maps/dir/?api=1&destination=${sucursal.latitud},${sucursal.longitud}" target="_blank">
+                        <button type="button" class="sucursalBtn btnStyle d-flex align-items-center">
+                            <img src="{{ 'sign-turn-right.svg' | asset_url }}" alt="Sign Icon" class="icon mr-2"/>
+                            Cómo llegar
+                        </button>
+                        </a>
+                        <a href="tel:+591 ${sucursal.celular}">
+                        <button type="button" class="sucursalBtn btnStyle d-flex align-items-center">
+                            <img src="{{ 'telephone.svg' | asset_url }}" alt="Phone Icon" class="icon mr-2"/>
+                            Llamar
+                        </button>
+                        </a>
+                        <button type="button" class="btnStyle d-flex align-items-center" onclick="shareLocation('${sucursal.latitud}', '${sucursal.longitud}')">
+                        <img src="{{ 'share.svg' | asset_url }}" alt="Share Icon" class="icon"/>
+                        </button>
+                    </div>
+                    `;
+
+                    itemBorder.appendChild(listItem);
+                    sidePanel.appendChild(itemBorder);
+
+                    // Crear marcador de Google Maps
+                    const myLatlng = new google.maps.LatLng(sucursal.latitud, sucursal.longitud);
+                    const markerOptions = {
+                        map: map,
+                        position: myLatlng,
+                        icon: smallMarker
+                    };
+                    const marker = createMarker_map(markerOptions, sucursal);
+
+                    // Configurar el contenido del marcador
+                    marker.set("content", `
+                    <h6 style="font-weight: bold;">${sucursal.descripcion}</h6>
+                    <p>${sucursal.direccion}</p>
+                    <p>Todos los días: ${sucursal.horario}</p>
+                    <p>Servicios: ${sucursal.servicios}</p>
+                    <div class="d-flex" style="gap: 10px;">
+                        <a href="https://www.google.com/maps/dir/?api=1&destination=${sucursal.latitud},${sucursal.longitud}" target="_blank">
+                        <button type="button" class="btnStyle d-flex align-items-center">
+                            <img src="{{ 'sign-turn-right.svg' | asset_url }}" alt="Sign Icon" class="icon mr-2"/>
+                            Cómo llegar
+                        </button>
+                        </a>
+                        <a href="tel:+591 ${sucursal.celular}">
+                        <button type="button" class="btnStyle d-flex align-items-center">
+                            <img src="{{ 'telephone.svg' | asset_url }}" alt="Phone Icon" class="icon mr-2"/>
+                            Llamar
+                        </button>
+                        </a>
+                        <button type="button" class="btnStyle d-flex align-items-center" onclick="shareLocation('${sucursal.latitud}', '${sucursal.longitud}')">
+                        <img src="{{ 'share.svg' | asset_url }}" alt="Share Icon" class="icon"/>
+                        </button>
+                    </div>
+                    `);
+
+                    // Evento para abrir el marcador al hacer clic en el mapa
+                    google.maps.event.addListener(marker, "click", function (event) {
+                        if (selectedMarker) {
+                            selectedMarker.setIcon(smallMarker);
+                        }
+                        marker.setIcon(bigMarker);
+                        selectedMarker = marker;
+
+                        iw_map.setContent(this.get("content"));
+                        iw_map.open(map, this);
+                    });
+
+                    // Evento de mostrar más/menos
+                    document.querySelectorAll('.mostrarMas').forEach(button => {
+                        button.addEventListener('click', function (event) {
+                            event.preventDefault();
+                            const listItem = this.closest('.listItem');
+                            listItem.classList.add('expandido');
+                            const infoDiv = this.closest('.listItem').querySelector('.infoSucursal');
+                            infoDiv.classList.add('expandido');
+                            this.style.display = 'none';
+                            this.nextElementSibling.style.display = 'inline';
+                        });
+                    });
+
+                    document.querySelectorAll('.mostrarMenos').forEach(button => {
+                        button.addEventListener('click', function (event) {
+                            event.preventDefault();
+                            const listItem = this.closest('.listItem');
+                            listItem.classList.remove('expandido');
+                            const infoDiv = this.closest('.listItem').querySelector('.infoSucursal');
+                            infoDiv.classList.remove('expandido');
+                            this.style.display = 'none';
+                            this.previousElementSibling.style.display = 'inline';
+                        });
+                    });
+
+                    // Evento para abrir el marcador al hacer clic en el aside
+                    listItem.querySelector('#pointerSucursal').addEventListener("click", function (e) {
+                        e.preventDefault();
+                        if (selectedMarker) {
+                            selectedMarker.setIcon(smallMarker);
+                        }
+                        marker.setIcon(bigMarker);
+                        selectedMarker = marker;
+                        sidebar.classList.toggle("hidden");
+                        map.setCenter(marker.getPosition());
+                        iw_map.setContent(marker.get("content"));
+                        iw_map.open(map, marker);
+                    });
+                });
+            }
+        } catch (error) {
+            console.error('Hubo un error al obtener las sucursales. Por favor intentelo de nuevo.',error);
+        }
+    }
+
+    // Población del selector de departamentos
+    depConfig.forEach(departamento => {
+        const option = document.createElement("option");
+        option.value = departamento.city;
+        option.textContent = departamento.city;
+        option.dataset.keyRegion = departamento.keyRegion;
+        selectDepartamento.appendChild(option);
+    });
+
+    selectDepartamento.addEventListener("change", function () {
+        const selectedCity = this.value;
+        const selectedCityData = depConfig.find(city => city.city === selectedCity);
+        if (selectedCityData) {
+            cambiarCentroMapa(selectedCityData.latitud, selectedCityData.longitud);
+            obtenerSucursales(selectedCityData.keyRegion);
+        }
+        var checkboxes = document.querySelectorAll('#selectFiltro .form-check-input');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = true;
+        });
+    });
+</script>
+  </body>
+</html>

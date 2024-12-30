@@ -1,0 +1,46 @@
+{% assign tag_limit = filter_limit | times: 1 %}
+{% assign filtros_agrupados = settings.filtros_agrupados| split: ',' %} 
+{% comment %}
+  Collection filters
+{% endcomment %}
+
+{%  if   shop.metafields.farmacorp.sinFiltro  contains  collection.id  %}
+
+{% else %}
+{% if collection.all_tags.size > 0 and filter_style != 'none' %}
+  {% include 'advanced-tag-loop' %}
+  <div class="productgrid--sidebar-section" data-productgrid-filters-content>
+    <h2 class="productgrid--sidebar-title">
+      {{ 'product_grid.filters.title_count' | t: count: 0 }}
+    </h2>
+    <nav
+      aria-label="Collection filters"
+    >
+      {% if current_tags.size > 0 %}
+        <div class="productgrid--sidebar-item productgrid--sidebar-filters--current">
+          {%- include 'product-grid-tags-active' -%}
+        </div>
+      {% endif %}
+      {% if filtros_agrupados contains collection.title %}
+      	{% assign agrupado = 'si' %}
+      {% else %}
+      	{% assign agrupado = 'no' %}	
+      {% endif %}
+      
+      {% if filter_style == 'groups' or  agrupado == 'si'%}
+        {%
+          include 'product-grid-tag-groups',
+          tag_limit: tag_limit
+        %}
+      {% endif %}
+
+      {% if filter_style == 'tags' and agrupado == 'no' %}
+        {%
+          include 'product-grid-tags',
+          tag_limit: tag_limit
+        %}
+      {% endif %}
+    </nav>
+  </div>
+{% endif %}
+{% endif %}

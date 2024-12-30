@@ -1,0 +1,389 @@
+<style>
+  .map {
+    height: 200px;
+    width: 100%;
+  }
+
+  .map_parent {
+    width: 400px;
+    width: 100%;
+    position: relative;
+    margin: 10px auto;
+  }
+
+
+  #pin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
+</style>
+{% assign total = 0 %}
+{% assign pagoEstado = 'shopify.notices.order.financial_status.paid' | t %}
+{% assign pedidoEstado = 'shopify.notices.order.fulfillment_status.fulfilled' | t %}
+{% assign estados = shop.metafields.global.estados %}
+<section
+  class="account-page account-page-order"
+  data-template-account>
+  <header class="account-page-masthead">
+    <h1 class="account-page-title">
+      {{ 'customers.order.title' | t: order_number: order.name }}
+    </h1>
+  </header>
+  <article class="account-page-content">
+    <div class="account-page--two-column">
+      {% comment %}
+        Order information 
+      {% endcomment %}
+      
+      <div class="account-page--column-large">
+        <table class="account-table account-order">
+          <thead>
+            <tr>
+              <th class="order-item">
+                {{ 'customers.order.item' | t }}
+              </th>
+              <th class="order-item-price">
+                {{ 'customers.order.price' | t }}
+              </th>
+              <th class="order-item-quantity">
+                {{ 'customers.order.quantity' | t }}
+              </th>
+              <th class="order-item-total">
+                {{ 'customers.order.total' | t }}
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            
+            {%if order.fulfillment_status == 'fulfilled' -%}           
+           		 {% assign first_fulfillment = order.line_items | where: "fulfillment" | first %}  
+            	 {% assign line_fulfillment = first_fulfillment.fulfillment.line_items %}  
+            {%- else -%}
+                 {% assign line_fulfillment = order.line_items %}
+            {%- endif -%}
+            
+            {% for line_item in line_fulfillment %}
+            
+              		{% assign line_item_original = order.line_items | where: "id",line_item.id  | first %}  
+              		<tr {% if order.cancelled %}class="cancelled_order"{% endif %}>
+                      <td class="order-item">
+                        <a class="order-image" href="{{ line_item_original.product.url }}">
+                          {% if line_item_original.image %}
+                            {%
+                              include 'rimg',
+                              img: line_item_original.image,
+                              alt: line_item_original.title,
+                              size: '75x'
+                            %}
+                          {%- else -%}
+                            {{ 'product-1' | placeholder_svg_tag: 'placeholder--image order-item-placeholder' }}
+                          {%- endif -%}
+                        </a>
+                        <div class="order-item-content">
+                          <div class="order-item-title">
+                            <a href="{{ line_item_original.url }}">
+                              {%- if line_item_original.gift_card -%}
+                                {{ line_item_original.title }}
+                              {%- else -%}
+                                {{ line_item_original.product.title }}
+                              {%- endif -%}
+                            </a>
+                            {%- unless line_item_original.variant.title == 'Default Title' or line_item_original.gift_card -%}
+                              <span class="order-item-options">
+                                {{ line_item_original.variant.title }}
+                              </span>
+                            {%- endunless -%}
+                          </div>
+                          {%- if line_item_original.line_level_discount_allocations.size > 0 -%}
+                            <ul class="discount-list" aria-label="{{ 'product.general.discounts' | t }}">
+                              {% for discount_allocation in line_item_original.line_level_discount_allocations %}
+                                <li class="discount-list-item">
+                                  {% include 'icon-library', id: 'icon-sale-tag' %}
+                                  {{ discount_allocation.discount_application.title }}
+                                  (-<span class="money">{{ discount_allocation.amount | money }}</span>)
+                                </li>
+                              {% endfor %}
+                            </ul>
+                          {%- endif -%}
+                        </div>
+                      </td>
+                      <td class="order-item-price">
+                        <p class="order-item--cell-label">{{ 'customers.order.price' | t }}</p>
+                        {%- if line_item_original.line_level_discount_allocations.size > 0  -%}
+                          <span class="visually-hidden">{{ 'product.item.price.original' | t }}</span>
+                          <s class="money order-item-original-price">
+                            {{ line_item_original.original_price | money }}
+                          </s>
+                          <span class="visually-hidden">{{ 'product.item.price.current' | t }}</span>
+                          <span class="money order-item-discount-price">
+                        {%- else -%}
+                          <span class="money">
+                        {%- endif -%}
+                          {{ line_item_original.final_price | money }}
+                        </span>
+                      </td>
+                      <td class="order-item-quantity">
+                        <p class="order-item--cell-label">{{ 'customers.order.quantity' | t }}</p>
+                        <p class="order-quantity-value">{{ line_item_original.quantity }}</p>
+                      </td>
+                      <td class="order-item-total">
+                        <p class="order-item--cell-label">{{ 'customers.order.total' | t }}</p>
+                        {%- if line_item_original.line_level_discount_allocations.size > 0 -%}
+                          <span class="visually-hidden">{{ 'product.item.price.original' | t }}</span>
+                          <s class="money order-item-original-price">
+                            {{ line_item_original.original_line_price | money }}
+                          </s>
+                          <span class="visually-hidden">{{ 'product.item.price.current' | t }}</span>
+                          <span class="money order-item-discount-price">
+                        {%- else -%}
+                          <span class="money">
+                        {%- endif -%}
+                          {{ line_item_original.final_line_price | money }}
+                        </span>
+                      </td>
+              		</tr>
+            {% endfor %}
+          </tbody>
+
+        </table>
+        <div class="account-table order-footer">
+            <div class="order-footer-item">
+              <span class="order-footer-label">
+                {{ 'customers.order.subtotal' | t }}
+              </span>
+              <span class="order-footer-value">
+                <span class="money">
+                  {{ order.line_items_subtotal_price | money }}
+                </span>
+              </span>
+            </div>
+
+            {%- for discount_application in order.cart_level_discount_applications -%}
+              <div class="order-footer-item discount-list-item">
+                <span class="order-footer-label cart-discount-title">
+                  {% include 'icon-library', id: 'icon-sale-tag' %}
+                  {{- discount_application.title -}}
+                </span>
+                <span class="order-footer-value cart-discount-price">-<span class="money">{{ discount_application.total_allocated_amount | money }}</span></span>
+              </div>
+            {%- endfor -%}
+
+            {% for shipping_method in order.shipping_methods %}
+              <div class="order-footer-item">
+                <span class="order-footer-label">
+                  {{ 'customers.order.shipping' | t: shipping_method: shipping_method.title }}
+                </span>
+                <span class="order-footer-value">
+                  <span class="money">
+                    {{ shipping_method.price | money }}
+                  </span>
+                </span>
+              </div>
+            {% endfor %}
+
+            {% for tax_line in order.tax_lines %}
+              <div class="order-footer-item">
+                <span class="order-footer-label">
+                  {% assign tax_rate = tax_line.rate | times: 100 %}
+                  {{ 'customers.order.tax' | t: title: tax_line.title, rate: tax_rate }}
+                </span>
+                <span class="order-footer-value">
+                  <span class="money">
+                    {{ tax_line.price | money }}
+                  </span>
+                </span>
+              </div>
+            {% endfor %}
+
+            <div class="order-footer-total">
+              <span class="order-footer-label">
+                {{ 'customers.order.total' | t }}
+              </span>
+              <span class="order-footer-value">
+                <span class="money">
+                  {{ order.total_price | money }}
+                </span>
+              </span>
+            </div>
+          </div>
+
+        {% if order.note != blank %}
+          <h2 class="account-page-subtitle">
+            {{ 'customers.order.order_notes' | t }}
+          </h2>
+
+          <div class="account-order-note">
+            <p>{{ order.note }}</p>
+          </div>
+        {% endif %}
+
+      
+      </div>
+
+      {% comment %}
+        Billing & Shipping information
+      {% endcomment %}
+      <div class="account-page--column-small account-info">
+        {% if order.shipping_address %}
+          <div class="account-info-block">
+            <h2 class="account-page-subtitle">
+              {{ 'customers.order.shipping_address' | t }}
+            </h2>
+            {%
+              include 'account-address-list',
+              address: order.shipping_address
+            %}
+          </div>
+        {% endif %}
+         <div class="account-info-block">
+            <h2 class="account-page-subtitle">
+              {{ 'customers.account.fulfillment' | t }}
+            </h2>
+            {% comment %}
+           		{{order.fulfillment_status_label}}
+             {% endcomment %}
+           
+           
+           {% if order.attributes.EstadoEntrega  %}                  
+           		{{ order.attributes.EstadoEntrega }}
+           {% else %}
+               {% assign estado = order.financial_status  | append: '_'  | append: fulfillment_status%}
+                {{ estados[estado] | split: "|" | first}}
+           {% endif %}
+        </div>
+        {% if order.attributes.EstadoEntrega  == settings.estado_tracking %}          
+         	<div class="account-info-block">
+            	<h2 class="account-page-subtitle">
+              		{{ 'farmacorp.tracking.titulo' |t }}
+            	</h2>
+                     
+           			<a  href="#"  onclick="showOrder();"> {{ 'farmacorp.tracking.link_ver_on_line' |t }}</a>
+        	</div>
+        {% endif %}
+        
+        {% comment %}
+        
+        <div class="account-info-block">
+            <h2 class="account-page-subtitle">
+              {{ 'shopify.checkout.review.blocks.billing_address_title' | t }}
+            </h2>
+            {% if order.metafields.facturacion.factura  and  order.financial_status_label == pagoEstado and order.fulfillment_status_label == pedidoEstado %}                  
+              <a href="{{ order.metafields.facturacion.factura }}" target="_top "> {{ 'farmacorp.facturacion.descargar' |t }} </a>
+  		    {% else %}
+               {{ 'farmacorp.facturacion.noRealizada' |t }} 
+            {% endif %}
+        </div>
+        {% endcomment %}
+        
+        
+        
+        
+          {% if order.attributes.size > 0 %}
+         <div class="account-info-block">
+          <h2 class="account-page-subtitle">
+            {{ 'customers.order.additional_notes' | t }}
+          </h2>
+
+          <ul class="account-order-attributes">
+            {% for attribute in order.attributes %}           
+          	{% if attribute[0] == 'Complemento' or attribute[0] == 'Documento' or attribute[0] == 'TipoDocumentoDescripcion' or attribute[0] == 'Nombre'  %}
+              <li>
+                <span class="account-order-attribute-title">
+                  {{ attribute | first | replace: 'TipoDocumentoDescripcion', 'Tipo de documento'}}:
+                </span>
+                <span class="account-order-attribute-content">
+                  {{ attribute | last }}
+                </span>
+              </li>
+            {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+        
+        {% comment %}
+        <div class="account-info-block">
+         	<div class="map_parent">    
+              <div id="map" class="map">
+              </div>
+      		</div>
+        </div>
+         {% endcomment %}
+      </div>
+    </div>
+  </article>
+</section>
+
+    
+ <script>    if (window.jQuery) {
+        jquery = window.jQuery;
+    } else if (window.Checkout && window.Checkout.$) {
+        jquery = window.Checkout.$;
+    }
+  
+    jquery(function() {
+   		initMap();
+    });
+     	var map, infoWindow;
+        var longitude, latitude;
+        var geocoder;
+
+        function initMap() {
+            var latLng = '{{order.shipping_address.last_name}}';  
+     		
+            var coordinatesLat = parseFloat(latLng.split(";")[0]);
+         	var coordinatesLong = parseFloat(latLng.split(";")[1]);
+     	 	var zoom = parseFloat(latLng.split(";")[2]);
+            var pos = {lat: coordinatesLat, lng: coordinatesLong};
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: pos,
+                zoom: zoom,
+                disableDefaultUI: true
+            });
+          
+            marker = new google.maps.Marker({
+              map: map,
+              draggable: false,
+              animation: google.maps.Animation.DROP,
+              position: {lat: coordinatesLat, lng: coordinatesLong}
+            });
+          
+            infoWindow = new google.maps.InfoWindow;
+            geocoder = new google.maps.Geocoder;
+			
+
+        }
+  
+
+        // GEOLOCATION Error
+        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+            infoWindow.setPosition(pos);
+            infoWindow.setContent(browserHasGeolocation ?
+                                'Error: The Geolocation service failed.' :
+                                'Error: Your browser doesn\'t support geolocation.');
+            infoWindow.open(map);
+        }
+   
+    	function geocodeLatLng(latitude, longitude, geocoder, map) {
+            var latlng = {lat: latitude, lng: longitude};
+            var address = document.getElementById('AddressLastNameNew');
+
+            geocoder.geocode({'location': latlng}, function(results, status) {
+                if (status === 'OK') {
+                    if (results[0]) {
+                        address.innerText = results[0].formatted_address;
+                    } else {
+                        address.innerText = 'No results found';
+                    }
+                } else {
+                    window.alert('Geocoder failed due to: ' + status);
+                }
+            });
+        }
+   
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{settings.keyGoogleMap}}">
+</script>
+

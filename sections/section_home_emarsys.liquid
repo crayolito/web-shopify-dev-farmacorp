@@ -1,0 +1,88 @@
+{% assign mostrar = 'false' %}
+
+{% if content_for_header contains 'previewBarInjector.init();' or content_for_header contains 'Shopify.designMode' %}
+  {% assign mostrar = 'true' %}
+{% endif %}
+
+{% if mostrar == 'true' %}
+  <section class="welcome">
+    <div class="container">
+      <div class="welcome-outter">
+        <h2 class="section-heading">Aqui se va definir una coleccion dinamica de sugerencias de emarsys</h2>
+        <p>Title : {{ section.settings.title }}</p>
+        <p>tipo : {{ section.settings.Home_emarsys_type_home }}</p>
+        <p>Cantidad de elementos a mostrar : {{ section.settings.Home_emarsys_count }}</p>
+      </div>
+    </div>
+  </section>
+{% endif %}
+<!-- Welcome section ends -->
+{% schema %}
+{
+"name": "APP MOVIL-Emarsys",
+"settings": [ {
+    "type": "paragraph",
+    "content": "APP MOVIL - Seccion para definir el comportamiento de emarsys en el homme"
+  },
+  {
+  "type": "select",
+  "id": "Home_emarsys_type_home",
+  "label": "Sizes",
+  "options": [
+    {
+      "value": "HOME_1",
+      "label": "HOME_1"
+    }, {
+      "value": "HOME_2",
+      "label": "HOME_2"
+    }, {
+      "value": "HOME_3",
+      "label": "HOME_3"
+    }, {
+      "value": "HOME_4",
+      "label": "HOME_4"
+    }, {
+      "value": "HOME_5",
+      "label": "HOME_5"
+    }, {
+      "value": "HOME_6",
+      "label": "HOME_6"
+    }, {
+      "value": "HOME_7",
+      "label": "HOME_7"
+    }, {
+      "value": "HOME_8",
+      "label": "HOME_8"
+    }, {
+      "value": "HOME_9",
+      "label": "HOME_9"
+    }, {
+      "value": "HOME_10",
+      "label": "HOME_10"
+    }
+  ],
+  "default": "HOME_1"
+},
+  {
+  "type": "text",
+  "id": "title",
+  "label": "Titlo para la seccion, si esta vacio tomara el de emarsys"
+} ,
+   {
+        "type": "range",
+        "id": "Home_emarsys_count",
+        "min": 1,
+        "max": 100,
+        "step": 1,
+        "label": "Cantidad Mínima",
+        "default": 15
+      }
+  ],
+"presets": [
+{
+"name": "APP MOVIL-Emarsys",
+"category": "Collection"
+}
+]
+}
+{% endschema %}

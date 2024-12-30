@@ -1,0 +1,82 @@
+{%- capture contentForQuerystring -%}{{ content_for_header }}{%- endcapture -%}
+{%- assign page_url = contentForQuerystring | split:'"pageurl":"' | last | split:'"' | first | split:'.myshopify.com' | last |   replace:'\/','/' |    replace:'%20',' ' |    replace:'\u0026','&'  -%}
+{%- assign param_page = '' -%}
+{%- assign param_page_2 = '' -%}
+{%- for i in (1..1) -%}
+	{%- unless page_url contains "?" -%}{% break %}{%- endunless -%}
+	{%- assign query_string = page_url | split:'?' | last -%}
+	{%- assign qry_parts= query_string | split:'&' -%}
+	{%- for part in qry_parts -%}
+		{%- assign key_and_value = part | split:'=' -%}
+		{%- if key_and_value.size > 1 -%}
+			{% if key_and_value[0] == 'handle' %}
+				{%- assign param_handle = key_and_value[1] -%}
+			{% endif%}
+			{% if key_and_value[0] == 'size' %}
+				{%- assign param_page_size = key_and_value[1] -%}
+			{% endif%}
+		{%- endif -%}
+	{%- endfor -%}
+{%- endfor -%}
+
+{% assign handle = param_handle %}
+<collection_farmacorp>
+  {
+  	"collection_handle" : "{{collection.handle}}",
+   	"tags": 
+  [
+    
+   {%- assign custom_ordered_tags = section.settings.custom_ordered_tags | split: ',' -%}
+  {%- assign custom_tags = blank -%}
+
+  {%- for custom_ordered_tag in custom_ordered_tags -%}
+
+        {%- assign custom_tag = custom_ordered_tag | strip -%}
+    
+        {%- unless collection.all_tags contains custom_tag -%}
+          {%- continue -%}
+        {%- endunless -%}
+    
+        {%-
+          assign custom_tags = custom_tags
+          | append: '|'
+          | append: custom_tag
+        -%}
+  
+  {%- endfor -%}
+
+  {% assign sorted_tags = custom_tags | remove_first: '|' | split:  '|' | concat: collection.all_tags | uniq %}
+
+  {% for tag in sorted_tags %}
+    {%  if  shop.metafields.farmacorp.quitarTagListaFiltro contains tag %}
+        {% comment %}
+        	 No debe pintar
+      	{% endcomment %}
+    {% else %}
+        {
+      		"title" : "{{tag}}",
+            "handle" : "{{tag | replace: " ", "-"}}",
+        },
+     {% endif %}
+ {% endfor %}
+  ]
+  }
+
+</collection_farmacorp>
+
+<style>
+header {
+  display:none;
+}
+body{ 
+	font-family: Lucida Console,Lucida Sans Typewriter,monaco,Bitstream Vera Sans Mono,monospace; 
+  	font-size : 10px;
+}
+
+footer {
+  display:none;
+}
+</style>
+
+
+

@@ -1,0 +1,83 @@
+
+<style>
+
+header {
+  display:none;
+}
+
+footer {
+  display:none;
+}
+  
+body
+{
+	display:flex;
+	justify-content : center;
+	min-height:100vh;
+	overflow:hidden;
+}
+  
+button
+  {
+ border: 0;
+ background: #2569B0;
+ box-shadow: none;
+ border-radius: 5px;
+    color : white;
+    width: 100%;
+    height : 70px;
+    
+}
+  
+.announcement-bar
+{
+	display:none;
+}
+  
+  .chatMinimizedIconImage
+  {
+    display:none;
+  }
+  
+
+</style>
+
+
+{%- capture contentForQuerystring -%}{{ content_for_header }}{%- endcapture -%}
+{%- assign page_url = contentForQuerystring | split:'"pageurl":"' | last | split:'"' | first | split:'.myshopify.com' | last |   replace:'\/','/' |    replace:'%20',' ' |    replace:'\u0026','&'  -%}
+{%- assign param_page = '' -%}
+{%- for i in (1..1) -%}
+	{%- unless page_url contains "?" -%}{% break %}{%- endunless -%}
+	{%- assign query_string = page_url | split:'?' | last -%}
+	{%- assign qry_parts= query_string | split:'&' -%}
+	{%- for part in qry_parts -%}
+		{%- assign key_and_value = part | split:'=' -%}
+		{%- if key_and_value.size > 1 -%}
+			{% if key_and_value[0] == 'result' %}
+				{%- assign param_page = key_and_value[1] -%}
+			{% endif%}
+		{%- endif -%}
+	{%- endfor -%}
+{%- endfor -%}
+<article class="site-page" data-template-page>
+  <header class="page-masthead">
+
+  </header>
+
+  
+  
+    {% if page.content != blank %}
+      <div class="page-content rte">
+        {{ page.content }}
+        
+         {% if param_page !="" %}
+            <center> <h5>Su pedido es el #{{param_page}}</h5></center>
+            <button  onclick="location.href='https://farmacorp.com/pages/gracias'">Ver el pedido</button>
+
+         {% endif %}
+      </div>
+    {% endif %}
+  
+</article>
+
+

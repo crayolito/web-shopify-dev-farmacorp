@@ -1,0 +1,258 @@
+
+<article class="site-page" data-template-page>
+  <header class="page-masthead">
+    <h1 id="title" class="page-title">
+    </h1>
+  </header>
+
+  
+   <article class="account-page-content">
+    <div class="account-page--two-column">
+      {% comment %}
+        Order information 
+      {% endcomment %}
+
+     <div class="orders"></div>
+
+    </div>
+  </article>
+
+</article>
+
+<script type="text/javascript">
+    if (window.jQuery) {
+        jquery = window.jQuery;
+    } else if (window.Checkout && window.Checkout.$) {
+        jquery = window.Checkout.$;
+    }
+
+    jquery(function() {   
+      const queryString = window.location.href;
+      const id = queryString.split("/").pop();
+  
+        	loadOrders(id);
+    });
+
+      function loadOrders(id){
+          var order = JSON.parse(localStorage["orders"]);
+          var item = order.find(c => c.id.toString() ===id );
+
+          var title = document.getElementById("title");
+          title.innerHTML = `Pedido ${item.name}`;
+
+          LoadDetails(item);
+         
+         
+      }
+
+  function LoadDetails(data){
+
+    var tracking = '';
+   if (data.fulfillmentStatus == '{{settings.estado_tracking }}')                 
+   {
+         tracking = `<div class="account-info-block">
+            	<h2 class="account-page-subtitle">
+              		{{ 'farmacorp.tracking.titulo' |t }}
+            	</h2>
+                     
+           			<a  href="#"  onclick="showOrder();"> {{ 'farmacorp.tracking.link_ver_on_line' |t }}</a>
+        	</div>`;
+   }
+
+      var nota =''
+    if(data.note){
+    nota = `
+         <h2 class="account-page-subtitle">
+            {{ 'customers.order.order_notes' | t }}
+          </h2>
+
+          <div class="account-order-note">
+            <p>${data.note}</p>
+          </div>`;
+    
+    }
+
+    var codigoActivacionFilmity =''
+
+    if(data.codigoActivacionFilmity){
+    codigoActivacionFilmity = `
+         <h2 class="account-page-subtitle">
+              {{ 'customers.order.code_filmity' | t }}
+            </h2>
+                 <ul class="account-address-list">
+                <li><b>${ data.codigoActivacionFilmity }</b></li>
+            </ul>`;
+    
+    }
+
+      var delivery = data.detail.find(c => c.productHandle ==='DELIVERY GRL' );
+      var filas = '';
+      var orders =  jquery('.orders');
+      data.detail.filter(item => item.productHandle !== 'DELIVERY GRL').forEach(element => {
+
+         filas +=`	<tr>
+                    	  <td class="order-item">
+                    		<a class="order-image" href="#">
+                    		 <img src="${element.productImageUrl}">
+                    		</a>
+                    		<div class="order-item-content">
+                    		  <div class="order-item-title">
+                    			<a href="#">
+                    			 ${element.productTitle}
+                    			</a>
+                    		  </div>
+                    		</div>
+                    	  </td>
+                    	  <td class="order-item-price">
+                    		<p class="order-item--cell-label">${element.price}</p>
+                            <span class="money">
+                            ${element.price}
+                            </span>
+                    	  </td>
+                    	  <td class="order-item-quantity">
+                    		<p class="order-quantity-value">${element.cantidad}</p>
+                    	  </td>
+                    	  <td class="order-item-total">
+                    		<p class="order-item--cell-label">${element.totalAmount}</p>
+                    		  <span class="money">
+                                ${element.totalAmount}
+                            </span>
+                    	  </td>
+                    	</tr>`;
+                });
+
+      
+         orders.append(`
+         <div class="account-page--column-large">
+             <table class="account-table account-order">
+                <thead>
+                  <tr>
+                    <th class="order-item">
+                      {{ 'customers.order.item' | t }}
+                    </th>
+                    <th class="order-item-price">
+                      {{ 'customers.order.price' | t }}
+                    </th>
+                    <th class="order-item-quantity">
+                      {{ 'customers.order.quantity' | t }}
+                    </th>
+                    <th class="order-item-total">
+                      {{ 'customers.order.total' | t }}
+                    </th>
+                  </tr>
+                </thead>
+      
+                <tbody>
+                  ${filas}	
+
+                </tbody>
+              </table>   
+
+       <div class="account-table order-footer">
+            <div class="order-footer-item">
+              <span class="order-footer-label">
+              Subtotal
+              </span>
+              <span class="order-footer-value">
+                <span class="money">
+                  ${data.subTotalPrice}
+                </span>
+              </span>
+            </div>
+
+              <div class="order-footer-item">
+                <span class="order-footer-label">
+                  Envío (Costo del delivery) 
+                </span>
+                <span class="order-footer-value">
+                  <span class="money">
+                   ${delivery.totalAmount}
+                  </span>
+                </span>
+              </div>
+            <div class="order-footer-total">
+              <span class="order-footer-label">
+               Total
+              </span>
+              <span class="order-footer-value">
+                <span class="money">
+                 ${data.totalPrice}
+                </span>
+              </span>
+            </div>
+          </div>
+              ${nota}            
+        </div>
+
+
+ <div class="account-page--column-small account-info">
+      
+          <div class="account-info-block">
+              ${codigoActivacionFilmity}
+            <h2 class="account-page-subtitle">
+              {{ 'customers.order.shipping_address' | t }}
+            </h2>
+                 <ul class="account-address-list">
+                <li><b>${ data.shippingAddress.last_name }</b></li>
+                <li>${ data.shippingAddress.address1 }</li>
+                <li>${ data.shippingAddress.city }</li>
+                <li>${ data.shippingAddress.phone }</li>
+            </ul>
+          </div>
+         <div class="account-info-block">
+            <h2 class="account-page-subtitle">
+              {{ 'customers.account.fulfillment' | t }}
+            </h2>
+            ${data.fulfillmentStatusDesc}
+        </div>
+        ${tracking}
+               
+         <div class="account-info-block">
+          <h2 class="account-page-subtitle">
+            {{ 'customers.order.additional_notes' | t }}
+          </h2>
+
+          <ul class="account-order-attributes">
+                <li>
+                <span class="account-order-attribute-title">
+                 Tipo de documento:
+                </span>
+                <span class="account-order-attribute-content">
+                   ${data.invoiceDocumentDescript}
+                </span>
+                <li>
+                </li>
+                 <span class="account-order-attribute-title">
+                 Documento: 
+                </span>
+                <span class="account-order-attribute-content">
+                   ${data.invoiceDocument}
+                </span>
+                <li>
+                </li>
+                 <span class="account-order-attribute-title">
+                 Complemento:  
+                </span>
+                <span class="account-order-attribute-content">
+                   ${data.invoiceComplement}
+                </span>
+                <li>
+                </li>
+                 <span class="account-order-attribute-title">
+                 Nombre:  
+                </span>
+                <span class="account-order-attribute-content">
+                   ${data.invoiceName}
+                </span>
+              </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+        
+          `);
+    
+  }
+
+</script>
+      

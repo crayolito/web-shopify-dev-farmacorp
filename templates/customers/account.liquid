@@ -1,0 +1,2108 @@
+{% assign pagoEstado = 'shopify.notices.order.financial_status.paid' | t %}
+{% assign pedidoEstado = 'shopify.notices.order.fulfillment_status.fulfilled' | t %}
+{% assign estados = shop.metafields.global.estados %}
+
+<!-- Modals -->
+<div class="account-page account-page-details">
+  <div class="account-page-content">
+    <div id="editCustomer" class="modalCustomer" data-template-account>
+      <div class="modalCustomer-content">
+        <div class="modalCustomer-header">
+          <h3>{{ 'customers.account.title' | t }}</h3>
+        </div>
+        <form onsubmit="updateInfo();">
+          <div id="updateCustomer" class="modalCustomer-body">
+            <div class="form-field">
+              <input
+                class="form-field-input form-field-text"
+                id="customer_nombre_edit"
+                type="text"
+                required
+                value="{{ customer.first_name }}"
+              >
+
+              <label class="form-field-title" for="customer_nombre">
+                {{ 'customers.forms.first_name' | t }}
+              </label>
+            </div>
+            <div class="form-field">
+              <input
+                class="form-field-input form-field-text"
+                id="customer_apellido_edit"
+                type="text"
+                required
+                value="{{ customer.last_name }}"
+              >
+
+              <label class="form-field-title" for="customer_apellido">
+                {{ 'customers.forms.last_name' | t }}
+              </label>
+            </div>
+            <div class="form-field">
+              <input
+                class="form-field-input form-field-text"
+                id="customer_telefono_edit"
+                type="phone"
+                required
+                minlength="8"
+                maxlength="8"
+                
+                value="{% if customer.metafields.farmacorp.telefono %}{{ customer.metafields.farmacorp.telefono| replace: "+591", "" }}{% else %}{{ customer.phone | replace: "+591", ""}}{% endif %}"
+              >
+
+              <label class="form-field-title" for="customer_telefono">
+                {{ 'customers.forms.phone' | t }}
+              </label>
+            </div>
+            <div class="form-field">
+              <input
+                class="form-field-input form-field-text"
+                id="customer_correo_edit"
+                type="text"
+                disabled
+                value="{% if customer.metafields.farmacorp.emailAlterno %}{{ customer.metafields.farmacorp.emailAlterno }}{% else %}{{ customer.email }}{% endif %}"
+              >
+
+              <label class="form-field-title" for="customer_correo">
+                {{ 'customers.forms.email' | t }}
+              </label>
+            </div>
+          </div>
+          <div class="modalCustomer-footer">
+            <button
+              id="cancelUpdateCustomer"
+              type="button"
+              class="btn btn-light"
+              onclick="CloseModalCustomer('editCustomer');"
+            >
+              Cancelar
+            </button>
+            <button id="executeUpdateCustomer" type="submit" class="btn btn-light">Actualizar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="passwordCustomer" class="modalCustomer">
+      <div class="modalCustomer-content">
+        <div class="modalCustomer-header">
+          <h3>{{ 'farmacorp.perfil.cambiarContrasena' | t }}</h3>
+        </div>
+
+        <form onsubmit="changePasswordMethod();">
+          <div id="changePassword" class="modalCustomer-body">
+            <div class="form-field">
+              <input
+                class="form-field-input form-field-text"
+                id="contrasenaActual"
+                type="password"
+                minlength="6"
+                required
+              >
+
+              <label class="form-field-title" for="customer_nombre">
+                {{ 'farmacorp.perfil.contrasenaActual' | t }}
+              </label>
+            </div>
+            <div class="form-field">
+              <input
+                class="form-field-input form-field-text"
+                id="contrasenaNueva"
+                type="password"
+                minlength="6"
+                required
+              >
+
+              <label class="form-field-title" for="customer_apellido">
+                {{ 'farmacorp.perfil.contrasenaNueva' | t }}
+              </label>
+            </div>
+            <div class="form-field">
+              <input
+                class="form-field-input form-field-text"
+                id="contrasenaNuevaRepetir"
+                type="password"
+                required
+                minlength="6"
+              >
+
+              <label class="form-field-title" for="customer_telefono">
+                {{ 'farmacorp.perfil.contrasenaNuevaRepetir' | t }}
+              </label>
+            </div>
+          </div>
+          <div class="modalCustomer-footer">
+            <button
+              id="cancelChangePass"
+              type="button"
+              class="btn btn-light"
+              onclick="CloseModalCustomer('passwordCustomer');"
+            >
+              Cancelar
+            </button>
+            <button id="executeChangePass" type="submit" class="btn btn-ligh">Ok</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Modals -->
+
+<section id="new_view">
+  <div class="main">
+    <div class="menu">
+      <div class="navbar">
+        <span>Hola {{ customer.first_name }}</span>
+        <ul>
+          <li>
+            <a href="#" onclick="showModalCustomer('editCustomer');">{{ 'farmacorp.perfil.verPerfil' | t }}</a>
+          </li>
+          <li id="liCambiarContrasena">
+            <a href="#" onclick="showModalCustomer('passwordCustomer');">
+              {{- 'farmacorp.perfil.cambiarContrasena' | t -}}
+            </a>
+          </li>
+          <li>
+            <a href="#" onclick="showOrderHistoryt();"> {{ 'customers.account.order_history' | t }}</a>
+          </li>
+          {% if customer.metafields.farmacorp.idFarmacorp == null or customer.metafields.farmacorp.idFarmacorp == '' %}
+            <li>
+              <a href="#" onclick="associateFarmaclubMethodNew();">{{ 'farmacorp.perfil.farmaclub' | t }}</a>
+            </li>
+          {% else %}
+            <li>
+              <a href="#" onclick="showPointExtract();">{{ 'farmacorp.perfil.verExtractoPunto' | t }}</a>
+            </li>
+          {% endif %}
+          <li><a href="{{ routes.account_addresses_url }}">Mis direcciones</a></li>
+          <li>
+            <a href="#" onclick="window.location.href='/account/logout'">{{ 'customers.account.logout' | t }}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="profile">
+      <div id="profile-title">
+        <span>Mi cuenta</span>
+      </div>
+      <div class="profile-body">
+        <div class="profile-name">
+          <svg
+            class="svgName"
+            height="44.28"
+            width="44.28"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="#FFF"
+            viewBox="0 0 32 32"
+            role="img"
+            aria-hidden="true"
+          >
+            <image xlink:href="{{ 'user-icon.svg' | asset_url }}" width="32" height="32"/>
+          </svg>
+          <span id="profile-name-text"><a href="#" onclick="showModalCustomer('editCustomer');" class="inner-link">{{ customer.name }}</a></span>
+        </div>
+        <div class="contact">
+          <div class="profile-email" id="profileEmail">
+            <span class="title-common">Correo electronico</span>
+            <span class="text-common"
+              ><a href="#" onclick="showModalCustomer('editCustomer');" class="inner-link">
+                <!-- {{ customer.email }} -->
+                {% if customer.metafields.farmacorp.emailAlterno %}{{ customer.metafields.farmacorp.emailAlterno }}{% else %}{{ customer.email }}{% endif %}
+              </a></span
+            >
+          </div>
+          <div class="border-phone"></div>
+          <div class="profile-phone" id="profilePhone">
+            <span class="title-common">Numero telefonico</span>
+            <span class="text-common"
+              ><a href="#" onclick="showModalCustomer('editCustomer');" class="inner-link">
+                {% if customer.metafields.farmacorp.telefono %}{{ customer.metafields.farmacorp.telefono| replace: "+591", "" }}{% else %}{{ customer.phone | replace: "+591", ""}}{% endif %}
+              </a></span
+            >
+          </div>
+        </div>
+        <div class="profile-address">
+          <div id="profile-location">
+            <span class="title-common">Direccion de envio</span>
+            <span class="text-common">
+              {% if customer.default_address != null %}
+                {{
+                  customer.default_address.street
+                  | append: ' '
+                  | append: customer.default_address.city
+                  | append: ' '
+                  | append: customer.default_address.phone
+                }}
+              {% else %}
+                {{ 'Es nulo' }}
+              {% endif %}
+            </span>
+          </div>
+          <div id="profile-button">
+            <a class="btn  btn-text" href="{{ routes.account_addresses_url }}">Ver direcciones</a>
+          </div>
+        </div>
+      </div>
+      <div class="profile-footer">
+        <a href="#" onclick="showOrderHistoryt();">
+          <div class="profile-order">
+            <div class="profile-option">
+              <svg
+                class="svgName"
+                height="44.28"
+                width="44.28"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="#FFF"
+                viewBox="0 0 32 32"
+                role="img"
+                aria-hidden="true"
+              >
+                <image xlink:href="{{ 'order-icon.svg' | asset_url }}" width="32" height="32"/>
+              </svg>
+              <span class="profile-footer-text">Ver mis pedidos</span>
+            </div>
+            <div class="arrow">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="25">
+                <path
+                    d="M7.293 4.707 14.586 12l-7.293 7.293 1.414 1.414L17.414 12 8.707 3.293 7.293 4.707z" />
+              </svg>
+            </div>
+          </div>
+        </a>
+        <a href="#" onclick="showPointExtract();">
+          <div class="profile-point">
+            <div class="profile-option">
+              <svg
+                class="svgName"
+                height="44.28"
+                width="44.28"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="#FFF"
+                viewBox="0 0 32 32"
+                role="img"
+                aria-hidden="true"
+              >
+                <image xlink:href="{{ 'point-icon.svg' | asset_url }}" width="32" height="32"/>
+              </svg>
+              <span class="profile-footer-text">Ver extractos de puntos</span>
+            </div>
+
+            <div class="arrow">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="25">
+                <path
+                    d="M7.293 4.707 14.586 12l-7.293 7.293 1.414 1.414L17.414 12 8.707 3.293 7.293 4.707z" />
+              </svg>
+            </div>
+          </div>
+        </a>
+        <div class="profile-footer-mobile">
+          <a href="#" onclick="showModalCustomer('passwordCustomer');">
+            <div class="profile-password">
+              <div class="profile-option">
+                <svg
+                  class="svgName"
+                  height="44.28"
+                  width="44.28"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="#FFF"
+                  viewBox="0 0 32 32"
+                  role="img"
+                  aria-hidden="true"
+                >
+                  <image xlink:href="{{ 'lock-icon.svg' | asset_url }}" width="32" height="32"/>
+                </svg>
+                <span class="profile-footer-text">Cambiar contraseña</span>
+              </div>
+              <div class="arrow">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="25">
+                  <path
+                      d="M7.293 4.707 14.586 12l-7.293 7.293 1.414 1.414L17.414 12 8.707 3.293 7.293 4.707z" />
+                </svg>
+              </div>
+            </div>
+          </a>
+          <a href="#" onclick="window.location.href='/account/logout'">
+            <div class="profile-logout">
+              <div class="profile-option">
+                <svg
+                  class="svgName"
+                  height="30.67"
+                  width="32.58"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="#FFF"
+                  viewBox="0 0 32 32"
+                  role="img"
+                  aria-hidden="true"
+                >
+                  <image xlink:href="{{ 'logout-icon.svg' | asset_url }}" width="32" height="32"/>
+                </svg>
+                <span class="profile-footer-text">Cerrar sesion</span>
+              </div>
+              <div class="arrow">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="25">
+                  <path
+                      d="M7.293 4.707 14.586 12l-7.293 7.293 1.414 1.414L17.414 12 8.707 3.293 7.293 4.707z" />
+                </svg>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="old_view">
+  <section
+    class="account-page account-page-details"
+    data-template-account
+  >
+    <div class="account-page-content">
+      <div class="account-page--two-column">
+        {% comment %}
+          Customer order summary
+        {% endcomment %}
+        <div id="orderHistory" class="account-page--column-large account-order-history ">
+          <h2 class="account-page-subtitle">
+            {{ 'customers.account.order_history' | t }}
+          </h2>
+
+          <div class="orders"><i class="fa fa-refresh fa-spin"></i> Cargando ordenes...</div>
+        </div>
+        <div id="pointExtract" class="ocultar account-page--column-large account-order-history ">
+          <h2 class="account-page-subtitle">
+            {{ 'farmacorp.perfil.verExtractoPunto' | t }}
+          </h2>
+
+          <div class="puntos"></div>
+        </div>
+        {% comment %}
+          Customer address summary
+        {% endcomment %}
+        <div class="account-page--column-small account-info">
+          <div class="account-info-block">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="account-wall accountchooser">
+                  <h1 class="title" >
+                    {{ 'customers.account.title' | t }}
+                  </h1>
+                  <ol class="accounts">
+                    <li>
+                      <button
+                        type="submit"
+                        name="Email"
+                        value="{{ customer.email }}"
+                        onclick="showModalCustomer('editCustomer');"
+                      >
+                        <img class="account-image" alt="" src="{{'account.png' | asset_url }}">
+
+                        {% if customer.metafields.farmacorp.emailAlterno %}
+                          <span class="account-name">{{ customer.name }}</span>
+                          <span class="account-email">{{ customer.metafields.farmacorp.emailAlterno }}</span>
+                        {% else %}
+                          <span class="account-name">{{ customer.name }}</span>
+                          <span class="account-email">{{ customer.email }}</span>
+                        {% endif %}
+                      </button>
+                    </li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="account-wall accountchooser action">
+                  <ul>
+                    {% comment %}
+                      <li><a href="#" onclick="showModalCustomer('vincularCustomer');">{{ 'farmacorp.perfil.farmaclub' | t }}</a></li>
+                               <li><a href="#" onclick="showPointExtract();">{{ 'farmacorp.perfil.verExtractoPunto' | t }}</a></li>
+                    {% endcomment %}
+
+                    {% if customer.metafields.farmacorp.idFarmacorp == null
+                      or customer.metafields.farmacorp.idFarmacorp == ''
+                    %}
+                      <li>
+                        <a href="#" onclick="associateFarmaclubMethodNew();">{{ 'farmacorp.perfil.farmaclub' | t }}</a>
+                      </li>
+                    {% else %}
+                      <li>
+                        <a href="#" onclick="showPointExtract();">{{ 'farmacorp.perfil.verExtractoPunto' | t }}</a>
+                      </li>
+                    {% endif %}
+
+                    <li>
+                      <a href="#" onclick="showOrderHistoryt();"> {{ 'customers.account.order_history' | t }}</a>
+                    </li>
+                    <li>
+                      <a href="#" onclick="showModalCustomer('passwordCustomer');">
+                        {{- 'farmacorp.perfil.cambiarContrasena' | t -}}
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" onclick="showModalCustomer('editCustomer');">
+                        {{- 'farmacorp.perfil.verPerfil' | t -}}
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" onclick="window.location.href='/account/logout'">
+                        {{- 'customers.account.logout' | t -}}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="account-wall accountchooser">
+                  {% if customer.default_address != null %}
+                    <h1 class="title">
+                      {{ 'customers.account.default_address' | t }}
+                    </h1>
+
+                    {% include 'account-address-list', address: customer.default_address %}
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="account-wall accountchooser action">
+                  <ul>
+                    <li>
+                      {% if customer.addresses_count == 0 %}
+                        <a href="{{ routes.account_addresses_url }}">
+                          {{ 'customers.account.new_address_link' | t }}
+                        </a>
+                      {% else %}
+                        <a href="{{ routes.account_addresses_url }}">
+                          {{ 'customers.account.view_addresses' | t, count: customer.addresses_count }}
+                        </a>
+                      {% endif %}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="vincularCustomer" class="modalCustomer">
+        <div class="modalCustomer-content">
+          <div class="modalCustomer-header">
+            <h3>{{ 'farmacorp.vinculacion.titulo' | t }}</h3>
+          </div>
+
+          <form id="regForm" onsubmit="associateFarmaclub();">
+            <div class="tab">
+              {{ 'farmacorp.vinculacion.cuenta_subtitulo' | t }}
+              <div class="form-field">
+                <input
+                  class="form-field-input form-field-text"
+                  id="customer_nombre"
+                  type="text"
+
+                  required
+                >
+
+                <label class="form-field-title" for="customer_nombre">
+                  {{ 'customers.forms.first_name' | t }}
+                </label>
+              </div>
+              <div class="form-field">
+                <input
+                  class="form-field-input form-field-text"
+                  id="customer_apellido"
+                  type="text"
+
+                  required
+                >
+
+                <label class="form-field-title" for="customer_apellido">
+                  {{ 'customers.forms.last_name' | t }}
+                </label>
+              </div>
+              <div class="form-field">
+                <input
+                  class="form-field-input form-field-text"
+                  id="customer_telefono"
+                  type="phone"
+                  required
+                  minlength="8"
+                  maxlength="8"
+                >
+
+                <label class="form-field-title" for="customer_telefono">
+                  {{ 'customers.forms.phone' | t }}
+                  
+                </label>
+              </div>
+              <div class="form-field">
+                <input
+                  class="form-field-input form-field-text"
+                  id="customer_correo"
+                  type="text"
+                >
+
+                <label class="form-field-title" for="customer_correo">
+                  {{ 'customers.forms.email' | t }}
+                </label>
+              </div>
+            </div>
+            <div class="tab">
+              {{ 'farmacorp.vinculacion.vinculacion_subtitulo' | t }}
+              <div class="form-field">
+                <input
+                  class="form-field-input form-field-text"
+                  id="customer_ci"
+                  type="text"
+                >
+
+                <label class="form-field-title" for="customer_ci">
+                  {{ 'farmacorp.vinculacion.documento_identidad' | t }}
+                </label>
+              </div>
+
+              <div class="form-field">
+                <input
+                  class="form-field-input form-field-text"
+                  id="customer_fecha"
+                  type="date"
+                  value="{{ "now" | date: "%Y-%m-%d" }}"
+                >
+
+                <label class="form-field-title" for="customer_fecha">
+                  {{ 'farmacorp.vinculacion.fecha_nacimiento' | t }}
+                </label>
+              </div>
+            </div>
+            <div class="tab">
+              {{ 'farmacorp.vinculacion.finalizar_subtitulo' | t }}
+              <div class="form-field">
+                <input
+                  class="form-field-input form-field-text"
+                  id="customer_nombre_final"
+                  type="text"
+                  disabled
+                  required
+                  value="."
+                >
+
+                <label class="form-field-title" for="customer_nombre">
+                  {{ 'customers.forms.first_name' | t }}
+                </label>
+              </div>
+              <div class="form-field">
+                <input
+                  class="form-field-input form-field-text"
+                  id="customer_apellido_final"
+                  type="text"
+                  disabled
+                  required
+                  value="."
+                >
+
+                <label class="form-field-title" for="customer_apellido">
+                  {{ 'customers.forms.last_name' | t }}
+                </label>
+              </div>
+              <div class="form-field">
+                <input
+                  class="form-field-input form-field-text"
+                  id="customer_telefono_final"
+                  type="phone"
+                  disabled
+                  required
+                  minlength="8"
+                  maxlength="8"
+                  value="."
+                >
+
+                <label class="form-field-title" for="customer_telefono">
+                  {{ 'customers.forms.phone' | t }}
+                </label>
+              </div>
+              <div class="form-field">
+                <input
+                  class="form-field-input form-field-text"
+                  id="customer_correo_final"
+                  type="text"
+                  disabled
+                  value="."
+                >
+
+                <label class="form-field-title" for="customer_correo">
+                  {{ 'customers.forms.email' | t }}
+                </label>
+              </div>
+              <div class="form-field">
+                <input
+                  class="form-field-input form-field-text"
+                  id="customer_ci_final"
+                  disabled
+                  type="text"
+                  value="."
+                >
+
+                <label class="form-field-title" for="customer_ci">
+                  {{ 'farmacorp.vinculacion.documento_identidad' | t }}
+                </label>
+              </div>
+
+              <div class="form-field">
+                <input
+                  class="form-field-input form-field-text"
+                  id="customer_fecha_final"
+                  type="date"
+                  disabled
+                  value="{{ "now" | date: "%Y-%m-%d" }}"
+                >
+
+                <label class="form-field-title" for="customer_fecha">
+                  {{ 'farmacorp.vinculacion.fecha_nacimiento' | t }}
+                </label>
+              </div>
+            </div>
+
+            <div style="overflow:auto;">
+              <div style="float:right;">
+                <button type="button" class="btn btn-light" id="prevBtn" onclick="nextPrev(-1)">
+                  {{ 'farmacorp.vinculacion.anterior' | t }}
+                </button>
+                <button type="button" class="btn btn-light" id="nextBtn" onclick="nextPrev(1)">
+                  {{ 'farmacorp.vinculacion.siguiente' | t }}
+                </button>
+              </div>
+            </div>
+
+            <div style="text-align:center;margin-top:1px;">
+              <span class="step"></span>
+              <span class="step"></span>
+              <span class="step"></span>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% comment %}
+    <script type="text/javascript" src="{{ 'bs-stepper.min.js' | asset_url  }}"> </script>
+    <link rel="stylesheet" href="{{ 'font-awesome.min.css' | asset_url  }}">
+  {% endcomment %}
+
+  <script type="text/javascript">
+    // esconder mensaje eliminar contrasena
+    function getCookie (name) {
+      let value = `; ${document.cookie}`;
+      let parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+    const isSocialLogin = getCookie('isSocialLogin') == 'yes' ? true : false;
+    if (isSocialLogin) {
+        let passwordElement = document.getElementById('liCambiarContrasena');
+        console.log(passwordElement)
+        passwordElement.style.display = 'none';
+    }
+    
+    var isMobile = window.innerWidth < 768;
+    if (isMobile) {
+        function clickOnPhoneMobile() {
+            let innerLink = divLink.querySelector('.inner-link');
+            let linkUrl = innerLink.getAttribute('href');
+            window.location.href = linkUrl;
+            // alert('Click Phone');
+        }
+
+        function clickOnEmailMobile() {
+            let innerLinkSecond = divLinkSecond.querySelector('.inner-link');
+            let linkUrl = innerLinkSecond.getAttribute('href');
+            window.location.ref = linkUrl;
+            // alert('Click Email');
+        };
+
+    }
+    var divLink = document.getElementById('profileEmail');
+    var divLinkSecond = document.getElementById('profilePhone');
+    divLink.addEventListener('click', clickOnEmailMobile);
+    divLinkSecond.addEventListener('click', clickOnPhoneMobile);
+  </script>
+
+  <script type="text/javascript">
+    console.log({{customer.metafields.farmacorp.telefono}});
+    
+    
+    
+    
+    
+    
+    
+  
+    if (window.jQuery) {
+        jquery = window.jQuery;
+    } else if (window.Checkout && window.Checkout.$) {
+        jquery = window.Checkout.$;
+    }
+  
+  
+  jquery(function() {
+    
+   {% if customer.metafields.farmacorp.emailAlterno == blank %}
+      if(getCookie('isSocialLogin') == 'yes'){
+        window.location.href = `{{ shop.url }}/pages/confirma-datos`;
+      }
+    {% endif %}
+    
+jquery('#create_customer').submit(function(event) {
+  event.preventDefault();
+  var data = jQuery(this).serialize();
+
+ //create new account
+  jquery.post('/account', data)
+    .done(function(data){
+    var logErrors = jQuery(data).find('.errors').text();
+
+    //if there are errors show them in the html form
+    if (logErrors != "" && logErrors != 'undefined'){
+        jQuery('#create_customer .errors').html(logErrors);
+        jQuery('#create_customer .errors').show();
+
+    //if account creation is successful show checkout page
+    }else{
+       console.log('success');
+      document.location.href = '/checkout';
+    }
+    }).fail(function(){console.log('error');});
+   return false;
+}); 
+});
+  
+    
+
+    function noVolverAPreguntar(is) {
+      if (is.checked){
+      	  localStorage["persiste"] = false;
+      }else{
+      	  localStorage.removeItem('persiste');
+      }
+    }
+  
+    jquery(function() {   
+      
+      	if(localStorage.persiste === undefined){
+      		{% if customer.metafields.farmacorp.idFarmacorp == nil  or customer.metafields.farmacorp.idFarmacorp == '' %}
+  				associateFarmaclubMethodNew();
+			{% endif %}  
+      	}
+      
+		verifySesion();
+  
+    	loadOrders('', true);
+      	loadAwards();
+    });
+  
+   function showOrder(val){
+     if(document.getElementById('modal_order'+val)){
+      document.getElementById('modal_order'+val).style.display = 'block'; 
+     }     
+   }
+  
+    function closeOrder(val){
+      if(document.getElementById('modal_order'+val)){
+       document.getElementById('modal_order'+val).style.display = 'none'; 
+      }     
+   }
+  
+  
+    function verifySesion(){
+      var now = new Date();
+      var finish = new Date(localStorage["next"]);
+      if (now.getTime() > finish.getTime()) {
+        window.location.href = '/account/logout';
+      }
+    }
+  
+    function changePasswordMethod(){
+      
+      if(jquery('#executeChangePass').html() === 'Ok'){
+          jquery('#executeChangePass').html(`<i class="fa fa-spinner fa-spin"></i>&nbsp;&nbsp; Procesando`);
+          jquery('#cancelChangePass').addClass('ocultar');       
+
+         changePassword(contrasenaActual.value, contrasenaNueva.value, contrasenaNuevaRepetir.value)
+          .then(function(data) { 
+           if(data.ok){
+             	alert(`{{ 'farmacorp.perfil.mensaje_exito_cambiar_password' | t}}`);
+                window.location.href='/account/logout';
+           }
+          }).catch(function(err) {
+  			
+           	console.log(err);           
+          
+            var error_Message = "error";
+           	try {
+              jquery('#executeChangePass').html(`Ok`);
+           	  jquery('#cancelChangePass').removeClass('ocultar'); 
+              error_Message = err.responseJSON.message;
+            	
+            } catch (error) {
+              error_Message = `intentelo nuevamente`;
+            }
+
+            var changePassword = jquery('#changePassword');
+            changePassword.append(
+                     `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Ocurrio un error!</strong> ${error_Message}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                      </div>`); 
+
+           
+          });
+    	}
+    }
+  
+    function updateInfo(){
+      
+      if(jquery('#executeUpdateCustomer').html() === 'Actualizar'){
+          jquery('#executeUpdateCustomer').html(`<i class="fa fa-spinner fa-spin"></i>&nbsp;&nbsp; Actualizando`);
+          jquery('#cancelUpdateCustomer').addClass('ocultar');       
+
+         updateCustomer(customer_nombre_edit.value, customer_apellido_edit.value, customer_telefono_edit.value, null)
+          .then(function(data) { 
+           if(data.ok){
+                alert(`{{ 'farmacorp.perfil.mensaje_exito_modificar_perfil' | t}}`);
+                location.reload();
+           }
+          }).catch(function(err) {
+           
+              var error_Message = "error";
+              try {
+
+                  jquery('#executeUpdateCustomer').html(`Actualizar`);
+                  jquery('#cancelUpdateCustomer').removeClass('ocultar');     
+                  error_Message = err.responseJSON.message;
+
+              } catch (error) {
+                error_Message = `intentelo nuevamente`;
+              }
+
+              var changePassword = jquery('#updateCustomer');
+              changePassword.append(
+                      `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Ocurrio un error!</strong> ${error_Message}
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                       </div>`);
+           
+          });
+    	}
+    }
+
+  
+   function associateFarmaclubMethod(){
+      
+      if(jquery('#nextBtn').html() === `{{ 'farmacorp.vinculacion.finalizar' | t}}`){
+          jquery('#nextBtn').html(`<i class="fa fa-spinner fa-spin"></i>&nbsp;&nbsp; Vinculando`);    
+         associateFarmaclub(customer_nombre_final.value,
+                            customer_apellido_final.value, 
+                            customer_correo_final.value, 
+                            customer_telefono_final.value,
+                            customer_fecha_final.value, 
+                            customer_ci_final.value, 
+                            `{{ customer.id | json }}`,
+                            `{{ customer.email }}`)
+          .then(function(data) { 
+           if(data.idFarmacorp){
+                alert(`{{ 'farmacorp.vinculacion.mensaje_exito' | t}}`);
+                location.reload();
+           }
+          }).catch(function(err) {
+                alert(err.responseJSON.message);
+                location.reload();
+          });
+    	}
+    }
+
+  function loadOrders(pageInfo, next){
+      
+      let id = `{{customer.id}}`;
+      
+      if(id)
+      {
+
+           var orders =  jquery('.orders');
+          orders.empty();
+          orders.append(`<i class="fa fa-refresh fa-spin"></i>  Cargando ordenes...`);
+         
+          getOrdenes(id, 5, 'any', 'any', 'any',next?pageInfo:'', !next?pageInfo:'')
+          .then(function(response) { 
+      
+               orders.empty();
+
+              if(response.data.length  > 0){
+
+                localStorage["orders"] = JSON.stringify(response.data);
+
+                var filas = '';
+                response.data.forEach(element => {
+
+                   var tracking = '';
+                   if (element.fulfillmentStatus == '{{settings.estado_tracking }}')                 
+                   {
+                         tracking = `<a  href="https://farmacorp.com/pages/detalle-de-orden/"  onclick="showOrder('${element.id}');"> {{ 'farmacorp.tracking.link_ver_on_line' |t }}</a>`
+                   }                   
+                   var orderDetail = `<a  href="https://farmacorp.com/pages/order-detail/${element.id}" >${element.name}, ${element.createDate.split('T')[0]}</a>`;
+                   var fulfillmentStatus = element.fulfillmentStatusDesc;
+                   if(element.financialStatus=='pending' &&  element.formaPago == 'Pago QR')
+                   {
+                      fulfillmentStatus = `<a  href="${element?.orderPayment?.orderStatusUrl}" style="color: red;text-decoration: underline;"> Pago pendiente</a>`;
+                   }
+                  
+                   filas +=`<tr>
+                              <td class="account-order-number">
+                                  ${orderDetail}
+                              </td>
+
+                              <td class="fulfillment-status--${ element.fulfillmentStatus }">
+                                ${fulfillmentStatus}
+                              </td>
+                              <td class="payment-status--${ element.financialStatus }">
+                                ${tracking}
+                              </td>
+                              <td class="account-order-list-total">
+                                ${element.totalPrice}
+                              </td>
+                          </tr>`;
+                });
+
+
+                var disabledBack = '';
+                var disabledNext = '';
+                if(response.prevPageInfo=='')
+                {
+                  disabledBack='disabled';
+                }
+
+                if(response.nextPageInfo=='')
+                {
+                  disabledNext='disabled';
+                }
+                
+               orders.append(`
+					
+                    <table class="account-table account-order-list">
+                      <thead>
+                        <tr>
+                          <th>{{ 'customers.account.order' | t }}</th>
+                          <th>{{ 'customers.account.fulfillment' | t }}</th>
+                          <th>{{ 'farmacorp.tracking.titulo' |t }}</th>
+                          <th>{{ 'customers.account.total' | t }}</th>
+                        </tr>
+                      </thead>
+                        ${filas}	
+                      <tbody>
+
+                      </tbody>
+                    </table>
+                    <br />
+                   <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-end">
+                          <li class="page-item ${disabledBack }" >
+                            <a class="page-link" onclick="loadOrders('${response.prevPageInfo }', false);">Anterior</a>
+                          </li>
+                          <li class="page-item ${disabledNext }" >
+                            <a class="page-link" onclick="loadOrders('${response.nextPageInfo}', true);">Siguiente</a>
+                          </li>
+                        </ul>
+                      </nav>
+
+                `);
+              }else{
+               orders.append(`<p class="empty">{{ 'customers.account.empty' | t }}</p>`);
+              } 
+          }).catch(function(err) {  
+           console.log(err);
+          });
+      }
+  	}
+  
+  	function loadAwards(){
+      
+      let id = `{{customer.metafields.farmacorp.idFarmacorp}}`;
+      
+      if(id)
+      {
+      
+      getPointsFarmaclub(`{{customer.metafields.farmacorp.idFarmacorp}}`,`{{customer.metafields.farmacorp.idFarmacorp}}`.substring(2),`{{customer.metafields.farmacorp.idFarmacorp}}`.substring(0,2))
+          .then(function(data) { 
+      
+               var puntos =  jquery('.puntos');
+
+              if(data.detalle.length  > 0){
+
+                var filas = '';
+                data.detalle.forEach(element => {
+                   filas +=`<tr>
+                              <td>
+                                  ${element.fecha.substring(0, 10)}
+                              </td>
+
+                              <td>
+                                ${element.sucursal}
+                              </td>
+                              <td>
+                                ${element.puntosGanados}
+                              </td>
+                              <td>
+                                ${element.puntosCobrados}
+                              </td>
+                          </tr>`;
+                });
+
+               puntos.append(`
+					<h5>
+						{{ 'farmacorp.puntos.total_html' | t }} ${data.total}
+        			</h5>
+					</br>
+                    <table class="account-table account-order-list">
+                      <thead>
+                        <tr>
+                          <th>{{ 'farmacorp.puntos.fecha' | t }}</th>
+                          <th>{{ 'farmacorp.puntos.sucursal' | t }}</th>
+                          <th>{{ 'farmacorp.puntos.ganados' | t }}</th>
+                          <th>{{ 'farmacorp.puntos.cobrados' | t }}</th>
+                        </tr>
+                      </thead>
+                        ${filas}	
+                      <tbody>
+
+                      </tbody>
+                    </table>
+
+                `);
+              }else{
+               puntos.append(`<p class="empty">{{ 'farmacorp.puntos.emptyPunto' | t }}</p>`);
+              } 
+          }).catch(function(err) {  
+           console.log(err);
+          });
+      }
+  	}
+  
+
+    function showModalCustomer(modalId){
+      var modal = document.getElementById(modalId);
+      modal.style.display = "block";   
+    }
+
+
+  function showOrderDetail(orderId){
+      alert(orderId);
+    }
+  
+  	function showPointExtract(){
+      document.getElementById('new_view').style.display = "none";
+      document.getElementById('old_view').style.display = "block";      
+      document.getElementById('pointExtract').style.display = "block"; 
+      document.getElementById('orderHistory').style.display = "none"; 
+      //window.location.href =  '?pointExtract=true';
+    }
+
+    function showOrderHistoryt(){
+       document.getElementById('new_view').style.display = "none";
+      document.getElementById('old_view').style.display = "block";
+      document.getElementById('pointExtract').style.display = "none"; 
+      document.getElementById('orderHistory').style.display = "block"; 
+      //window.location.href = '?orderHistory=true';
+    }  
+
+    function CloseModalCustomer(modalId){
+      var modal = document.getElementById(modalId);
+      modal.style.display = "none"; 
+    }  
+  
+    var currentTab = 0;
+    showTab(currentTab); 
+
+    function showTab(n) {
+      var x = document.getElementsByClassName("tab");
+      x[n].style.display = "block";
+      if (n === 0) {
+        document.getElementById("prevBtn").style.display = "none";
+      } else {
+        document.getElementById("prevBtn").style.display = "inline";
+      }
+      if (n === (x.length - 1)) {
+        
+        document.getElementById("customer_nombre_final").value = document.getElementById("customer_nombre").value;
+        document.getElementById("customer_apellido_final").value = document.getElementById("customer_apellido").value;
+        document.getElementById("customer_telefono_final").value = document.getElementById("customer_telefono").value;
+        document.getElementById("customer_correo_final").value = document.getElementById("customer_correo").value;
+        document.getElementById("customer_ci_final").value = document.getElementById("customer_ci").value;
+        document.getElementById("customer_fecha_final").value = document.getElementById("customer_fecha").value;
+        
+        document.getElementById("nextBtn").innerHTML = "{{ 'farmacorp.vinculacion.finalizar' | t}}";
+        document.getElementById("prevBtn").style.display = "none";
+      } else {
+        document.getElementById("nextBtn").innerHTML = "{{ 'farmacorp.vinculacion.siguiente' | t}}";
+      }
+      fixStepIndicator(n)
+    }
+
+    function nextPrev(n) {
+      var x = document.getElementsByClassName("tab");
+      if (n == 1 && !validateForm()){
+        return false;
+      }
+      x[currentTab].style.display = "none";
+      currentTab = currentTab + n;
+      if (currentTab >= x.length) {
+        //document.getElementById("regForm").submit();
+        showTab(currentTab - 1);
+        associateFarmaclubMethod();
+        
+        
+        return false;
+      }else
+      {
+      	showTab(currentTab);
+      }
+    }
+
+    function validateForm() {
+      var x, y, i, valid = true;
+      x = document.getElementsByClassName("tab");
+      y = x[currentTab].getElementsByTagName("input");
+      for (i = 0; i < y.length; i++) {
+        if (y[i].value == "") {
+          y[i].className += " invalid";
+          valid = false;
+        }
+      }
+      if (valid) {
+        document.getElementsByClassName("step")[currentTab].className += " finish";
+      }
+      return valid;
+    }
+
+    function fixStepIndicator(n) {
+      var i, x = document.getElementsByClassName("step");
+      for (i = 0; i < x.length; i++) {
+        x[i].className = x[i].className.replace(" active", "");
+      }
+      x[n].className += " active";
+    }
+  
+  
+   function associateFarmaclubMethodNew(){
+       
+       var respuesta = {};
+       
+        Swal.fire({
+                /*title: `{{ 'farmacorp.vinculacion.titulo' | t}}`,*/
+                /*text: `{{ 'farmacorp.vinculacion.cuenta_subtitulo' | t}}`,*/
+          		text: `{{ 'farmacorp.vinculacion.titulo' | t}}`,
+                imageUrl: 'https://cdn.shopify.com/s/files/1/0368/1363/5716/files/FARMACLUB-320x120.png?v=1636551373',
+                imageWidth: 300,
+                imageHeight: 100,
+                input: `text`,
+                inputAttributes: {
+                  autocapitalize: `off`,
+          		  placeholder:`{{ 'farmacorp.vinculacion.documento_identidad' | t}}`,
+                  required: true
+                },
+                showCancelButton: true,
+                confirmButtonText: `{{ 'farmacorp.vinculacion.siguiente' | t}}`,
+                confirmButtonColor: '#fc2116',
+                cancelButtonText: `{{ 'farmacorp.vinculacion.anterior' | t}}`,
+                showCloseButton: true,
+                showLoaderOnConfirm: true,
+                footer: `<input type="checkbox"  class="footerAlert" id="chbNo" oninput="noVolverAPreguntar(this)"> <label  class="footerAlert2" for="chbNo">No volver a preguntar.</label>`,
+ 				preConfirm: (documento) => {
+			
+                  
+          			 return associateFarmaclubV2(
+                       		`{{ customer.first_name }}`,
+                            `{{ customer.last_name }}`, 
+                            `{{ customer.email }}`, 
+                            `{{ customer.phone }}`,
+                            ``,//fecha de nacimiento 
+                            documento, 
+                            `{{ customer.id | json }}`,
+                            `{{ customer.email }}`)
+                    .then(function(response) { 
+                       
+                     
+                          if(response.errors.length>0)
+                          {
+                                let e1 = JSON.parse(response.errors[0].message);
+                            	if(e1.length>= 1){
+                                	Swal.showValidationMessage(e1[0].Message);
+                                }else
+                                {
+                            		Swal.showValidationMessage(response.errors[0].message);
+                                }
+                          }else
+                          {
+                            	respuesta = {
+                                  nombre : response.data.nombres, 
+                                  apellido : response.data.apellidos, 
+                                  correo : response.data.email, 
+                                  telefono:response.data.celular,
+                                  cedula:response.data.cedula ,
+                                  idFarmacorp:response.data.idFarmacorp 
+                                };
+                            	return respuesta;
+                          }  
+                    })
+                    .catch(function(err) {
+                          Swal.showValidationMessage( err.responseJSON.message);
+                    });
+
+  				},
+  				allowOutsideClick: () => !Swal.isLoading()
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                   		 Swal.fire({
+                              title: '<strong>Valida tu identidad</strong>',
+                              icon: 'question',
+                              html:
+                           		`
+								<div class="align-left">	
+									<b>Nombre : </b>${ respuesta.nombre===null?``:respuesta.nombre}<br/>
+									<b>Apellido : </b>${ respuesta.apellido===null?``:respuesta.apellido}<br/>
+									<b>Correo : </b>${ respuesta.correo===null || respuesta.correo=== ``?`{{ customer.email }}`:respuesta.correo}<br/>
+									<b>Teléfono : </b>${ respuesta.telefono===null || respuesta.telefono=== ``?`{{ customer.phone }}`:respuesta.telefono}<br/>
+								</div><br/>
+								¿Estos datos te pertenecen?
+								`,
+                              showCloseButton: true,
+                              showCancelButton: true,
+                              focusConfirm: true,
+                              confirmButtonText:'Si, soy yo',
+                              cancelButtonText:'Cancelar',
+                              confirmButtonColor: '#fc2116',
+                              showLoaderOnConfirm: true,
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                  
+                                  
+                                     return attachFarmaclub(
+                                            respuesta.cedula,
+                                            respuesta.idFarmacorp)
+                                    .then(function(response) { 
+
+                                          if(response.errors.length>0)
+                                          {
+                                              Swal.fire('Ocurrio un error!', response.errors[0].message, 'error');
+                                            
+                                          }else
+                                          {
+                                                Swal.fire('Cuenta vinculada de manera exitosa!', '', 'success')
+                                                .then((result) => {
+                  									if (result.isConfirmed) {
+                                                		location.reload();
+                                                    }
+                                                });
+                                          }  
+                                    })
+                                    .catch(function(err) {
+                                          Swal.showValidationMessage( err.responseJSON.message);
+                                    });
+                                  
+                                  
+                                  
+                                 
+                                } else
+                                  Swal.fire('No se vinculo tu cuenta', '', 'info')
+                                }
+                              )
+                  }
+                });
+ 
+    
+    }
+
+
+
+
+
+
+
+
+
+
+  </script>
+
+  <style>
+    .ocultar{
+      display : none;
+    }
+
+    /* Style the form */
+    #regForm {
+      padding: 20px;
+      width: 100%;
+      min-width: 300px;
+    }
+
+    /* Style the input fields */
+    input {
+      padding: 10px;
+      width: 100%;
+      font-size: 17px;
+      font-family: Raleway;
+      border: 1px solid #aaaaaa;
+    }
+
+    /* Mark input boxes that gets an error on validation: */
+    input.invalid {
+      	box-shadow : 0px 0px  5px red;
+    }
+
+    /* Hide all steps by default: */
+    .tab {
+      display: none;
+    }
+
+    /* Make circles that indicate the steps of the form: */
+    .step {
+      height: 15px;
+      width: 15px;
+      margin: 0 2px;
+      background-color: #bbbbbb;
+      border: none;
+      border-radius: 50%;
+      display: inline-block;
+      opacity: 0.5;
+    }
+
+    /* Mark the active step: */
+    .step.active {
+      opacity: 1;
+    }
+
+    /* Mark the steps that are finished and valid: */
+    .step.finish {
+      background-color: #7aafcc;
+    }
+
+    .modalCustomer {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 9999; /* Sit on top */
+        padding-top: 150px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+
+    [class*="modalCustomer-content"] {
+      width: 300px;
+    }
+
+    @media only screen and (min-width: 768px) {
+      /* For desktop: */
+      .modalCustomer-content { width: 500px;}
+    }
+
+    /* Modal Content */
+    .modalCustomer-content {
+        position: relative;
+        background-color: #f7f7f7;
+        margin: auto;
+        padding: 0;
+        border: 1px solid #888;
+
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+        -webkit-animation-name: animatetop;
+        -webkit-animation-duration: 0.4s;
+        animation-name: animatetop;
+        animation-duration: 0.4s;
+        color: black;
+       /* border-radius: 10px;*/
+    }
+
+    /* Add Animation */
+    @-webkit-keyframes animatetop {
+        from {top:-300px; opacity:0}
+        to {top:0; opacity:1}
+    }
+
+    @keyframes animatetop {
+        from {top:-300px; opacity:0}
+        to {top:0; opacity:1}
+    }
+
+
+    .modalCustomer-header {
+
+        padding-top: 20px;
+        text-align: center;
+        color: gray;
+    }
+
+    .modalCustomer-body {
+      	padding: 20px 20px;
+    	color: white;
+      	background-color : #f7f7f7;
+    }
+
+    .modalCustomer-footer {
+        padding: 2px 16px;
+        background-color: white;
+        color: black;
+        border-bottom-right-radius: 10px;
+        border-bottom-left-radius: 10px;
+        text-align: right;
+    }
+
+    .form-signin {
+        max-width: 330px;
+        padding: 15px;
+        margin: 0 auto;
+        padding-top: 5px;
+    }
+
+    .account-wall {
+        margin-top: 20px;
+        padding: 20px 25px 30px;
+        background-color: #f7f7f7;
+        -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+        -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+        box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    }
+    .logo {
+        margin: 25px auto 20px;
+        float: none;
+        display: block;
+        height: 38px;
+        width: 116px;
+    }
+
+    .title {
+        font-size: 20px;
+        color: #262626;
+        margin: 0 0 15px;
+        font-weight: normal;
+    }
+
+    .accountchooser ol {
+        width: 100%;
+        margin: 0;
+        list-style: none;
+        padding: 0;
+    }
+
+    .accountchooser ol li {
+        height: 76px;
+        border-top: 1px solid #d5d5d5;
+    }
+
+
+    .accountchooser ol li button {
+        padding: 15px 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        outline: none;
+        border: 0;
+        cursor: pointer;
+        text-align: left;
+        background: url(//ssl.gstatic.com/accounts/ui/arrow_right_1x.png) right center no-repeat;
+        background-size: 21px 21px;
+    }
+
+    .accountchooser ol li button img {
+        float: left;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        border-radius: 50%;
+        height: 46px;
+        width: 46px;
+    }
+
+    .accountchooser ol li button span.account-name {
+        font-weight: bold;
+        font-size: 16px;
+        padding-top: 3px;
+        color: #427fed;
+    }
+
+    .accountchooser ol li button span {
+        display: block;
+        margin-left: 58px;
+        padding-right: 20px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .action {
+        padding: 5px;
+    }
+
+    .action ul {
+        width: 100%;
+        margin: 0;
+        list-style: none;
+        padding: 0;
+    }
+
+    .action ul li:last-child {
+        border-bottom: none;
+    }
+
+    .action ul li {
+        width: 100%;
+        display: inline-block;
+        border-bottom: 1px solid #d5d5d5;
+    }
+
+    .action ul li a {
+        color: #427fed;
+        cursor: pointer;
+        text-decoration: none;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        width: 100%;
+        display: inline-block;
+        background: none;
+        text-align: center;
+        padding: 12px 0;
+        outline: none;
+        text-decoration: none;
+        border: 0;
+    }
+
+      /* Seccion style for new view account */
+
+
+      .menu .navbar a{
+        text-decoration:none;
+        color:inherit;
+      }
+          #old_view{
+            display:none;
+          }
+
+            .main {
+                display: flex;
+                padding-left: 64px;
+                padding-right: 246px;
+                width: 100%;
+                height: 810px;
+
+            }
+
+            .menu {
+                flex: 0 0 29%;
+            }
+
+            .navbar {
+                margin-top: 90px;
+                display: flex;
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .navbar ul {
+                list-style: none;
+            }
+
+            .navbar li {
+                margin-bottom: 15px;
+                font-size: 20px;
+            }
+
+            .navbar span {
+                font-size: 21px;
+                font-weight: 600;
+                margin-bottom: 36px;
+                color: #205495;
+            }
+
+            .contact .profile-email .text-common,
+            .contact .profile-phone .text-common {
+                text-decoration: underline;
+            }
+
+
+            .profile {
+                flex: 0 0 71%;
+                height: 100%;
+            }
+
+            .profile-body {
+                border-radius: 4px;
+                box-shadow: 0px 3px 6px #00000014;
+                flex: 0 0 100%;
+                height: 363px;
+            }
+
+            .contact {
+                display: flex;
+                height: 117.5px;
+                border-bottom: 1px solid rgba(112, 112, 112, 0.3);
+            }
+
+            .profile-email,
+            .profile-phone {
+                display: flex;
+                flex-direction: column;
+                flex: 0 0 50%;
+                justify-content: center;
+                align-items: flex-start;
+                padding-left: 67px;
+                height: 100%;
+            }
+
+            .profile-email {
+                border-right: 1px solid rgba(112, 112, 112, 0.3);
+            }
+
+
+
+            .profile-address {
+                flex: 0 0 100%;
+                height: 129.5px;
+                justify-content: center;
+                display: flex;
+            }
+
+            #profile-location {
+                flex: 0 0 66.18%;
+                display: flex;
+                justify-content: center;
+                flex-direction: column;
+                align-items: flex-start;
+                padding-left: 67px;
+            }
+
+
+            #profile-button {
+                display: flex;
+                flex: 0 0 33.82%;
+                height: 100%;
+                color: rgba(56, 105, 171, 1);
+                align-items: center;
+                justify-content: center;
+
+            }
+
+            .profile-address #profile-location .text-common {
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 2;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 100%;
+            }
+
+            .btn {
+                border: 1px solid rgba(56, 105, 171, 1);
+                border-radius: 4px;
+                padding: 16px 44px 12px 29px;
+            }
+
+            .btn-text {
+                font-size: 20px;
+                font-weight: 600;
+            }
+
+            .profile-order {
+                display: flex;
+                flex: 0 0 100%;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 52px;
+                margin-bottom: 35px;
+                padding-right: 35.86px;
+                padding-left: 55px;
+                background-color: rgba(237, 242, 248, 1);
+                height: 70px;
+                border-radius: 4px;
+                box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.08);
+            }
+
+
+            .profile-point,
+            .profile-password,
+            .profile-logout {
+                display: flex;
+                flex: 0 0 100%;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                padding-right: 35.86px;
+                padding-left: 55px;
+
+                background-color: rgba(237, 242, 248, 1);
+                height: 70px;
+                border-radius: 4px;
+                box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.08);
+            }
+
+
+            .profile-footer-text {
+                margin-left: 23px;
+                font-size: 20px;
+                font-weight: 600;
+            }
+
+            .arrow {
+                color: #0000;
+            }
+
+            @media (min-width: 992px) {
+                .profile-footer-mobile {
+                    display: none;
+                }
+
+                #profile-button {
+                    padding-right: 46px;
+                }
+            }
+
+
+
+
+            .title-common {
+                color: #434345;
+                font-size: 20px;
+                font-weight: 600;
+            }
+
+            .text-common {
+                font-size: 20px;
+            }
+
+
+
+            #profile-title {
+                display: flex;
+                flex: 0 0 100%;
+                height: 126px;
+                justify-content: center;
+                align-items: center;
+            }
+
+
+            #profile-title span {
+                font-size: 32px;
+                font-weight: 600;
+                color: #205495;
+            }
+
+            #profile-name-text {
+                font-size: 26px;
+                text-decoration: underline;
+                font-weight: 600;
+                color: #3869AB;
+                margin-left: 20px;
+
+            }
+
+            .profile-name {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: row;
+                flex: 0 0 100%;
+                height: 116px;
+                background-color: #EDF2F8;
+            }
+
+            .profile a {
+                text-decoration: none;
+                color: inherit;
+            }
+
+            .profile-option {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+
+
+            @media (max-width: 768px) {
+
+
+                .border-phone {
+                    border-bottom: 1px solid rgba(112, 112, 112, 0.3);
+                }
+
+                .menu {
+                    display: none;
+                }
+
+                .profile {
+                    flex: 0 0 100%;
+                }
+
+                .contact {
+                    display: flex;
+                    flex-direction: column;
+                    height: 155.63px;
+                }
+
+                .profile-email,
+                .profile-phone {
+                    margin-left: 26px;
+                    height: 100%;
+                    padding: 0px;
+                }
+
+
+
+                .profile-address {
+                    margin-top: 15px;
+                    display: flex;
+                    flex-direction: column;
+                    height: 156.37px;
+                    padding: 0px 26px 26px 26px;
+                }
+
+
+                #profile-button {
+                    height: 46px;
+                    padding: 0px;
+                }
+
+                #profile-location {
+                    padding-left: 0px;
+                    margin-bottom: 17px;
+                    height: 53px;
+                }
+
+                .btn {
+                    flex: 0 0 100%;
+                    padding: 16px 84px 15px 75px;
+                }
+
+                .btn-text {
+                    font-size: 17px;
+                }
+
+                .main {
+                    padding: 0 23px;
+                }
+
+                #profile-title {
+                    height: 86px;
+                }
+
+                .profile-name {
+                    height: 79px;
+                }
+
+                .profile-body {
+                    height: 415px;
+                    border-radius: 8px;
+                    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+                }
+
+                #profile-title span {
+                    font-size: 24px;
+                }
+
+                #profile-name-text {
+                    font-size: 19px;
+                    margin-left: 7px;
+                }
+
+                .svgName {
+                    height: 26px;
+                    width: 26px;
+                }
+
+
+                .title-common {
+                    font-size: 15px;
+                }
+
+                .text-common {
+                    font-size: 14px;
+                }
+
+                .profile-footer-text {
+                    margin-left: 14px;
+                    font-size: 15px;
+                }
+
+
+                .profile-order {
+                    margin-top: 27px;
+
+                }
+
+                .profile-order,
+                .profile-point,
+                .profile-password,
+                .profile-logout {
+                    align-items: center;
+                    justify-content: space-between;
+                    padding-top: auto;
+                    padding-bottom: auto;
+                    border-radius: 8px;
+                    padding-left: 25px;
+                    margin-bottom: 15px;
+                    height: 46px;
+                }
+
+
+            }
+
+            @media (max-width:375px) {
+                .btn-text {
+                    font-size: 14px;
+                }
+
+            }
+
+
+            @media (min-width: 600px) and (max-width: 1024px) {
+
+                .border-phone {
+                    border-bottom: 1px solid rgba(112, 112, 112, 0.3);
+                }
+
+                .menu {
+                    display: none;
+                }
+
+                .profile {
+                    flex: 0 0 100%;
+                }
+
+                .contact {
+                    display: flex;
+                    flex-direction: column;
+                    height: 155.63px;
+                }
+
+                .profile-email,
+                .profile-phone {
+                    margin-left: 26px;
+                    height: 100%;
+                    padding: 0px;
+                }
+
+
+
+                .profile-address {
+                    margin-top: 15px;
+                    display: flex;
+                    flex-direction: column;
+                    height: 156.37px;
+                    padding: 0px 26px 26px 26px;
+                }
+
+
+                #profile-button {
+                    height: 46px;
+                    padding: 0px;
+                }
+
+                #profile-location {
+                    padding-left: 0px;
+                    margin-bottom: 17px;
+                    height: 53px;
+                }
+
+                .btn {
+                    flex: 0 0 100%;
+                    padding: 16px 84px 15px 75px;
+                }
+
+                .btn-text {
+                    font-size: 17px;
+                }
+
+                .main {
+                    padding: 0 23px;
+                }
+
+                #profile-title {
+                    height: 86px;
+                }
+
+                .profile-name {
+                    height: 79px;
+                }
+
+                .profile-body {
+                    height: 415px;
+                    border-radius: 8px;
+                    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+                }
+
+                #profile-title span {
+                    font-size: 24px;
+                }
+
+                #profile-name-text {
+                    font-size: 19px;
+                    margin-left: 7px;
+                }
+
+                .svgName {
+                    height: 26px;
+                    width: 26px;
+                }
+
+
+                .title-common {
+                    font-size: 15px;
+                }
+
+                .text-common {
+                    font-size: 14px;
+                }
+
+                .profile-footer-text {
+                    margin-left: 14px;
+                    font-size: 15px;
+                }
+
+
+                .profile-order {
+                    margin-top: 27px;
+
+                }
+
+                .profile-order,
+                .profile-point,
+                .profile-password,
+                .profile-logout {
+                    align-items: center;
+                    justify-content: space-between;
+                    padding-top: auto;
+                    padding-bottom: auto;
+                    border-radius: 8px;
+                    padding-left: 25px;
+                    margin-bottom: 15px;
+                    height: 46px;
+                }
+
+
+            }
+      /* -------------------------------- */
+      /* -------------------------------- */
+  </style>
+</section>

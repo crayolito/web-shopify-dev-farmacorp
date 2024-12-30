@@ -1,0 +1,24 @@
+{% if customer %}
+  {% if customer.default_address.address1 %}
+    <form
+      action="{{ routes.cart_url }}"
+      method="post"
+      aria-label="cart checkout"
+    >
+      <button class="button-primary atc-button--checkout" type="submit" name="checkout">
+        {% if settings.enable_checkout_lock_icon %}
+          {% include 'icon-checkout-lock' %}
+        {% endif %}
+        <span>{{ 'add_to_cart_banner.general.checkout' | t }}</span>
+      </button>
+    </form>
+  {% else %}
+  <a class="button-primary atc-button--checkout" href="{{ routes.account_addresses_url }}" data-atc-banner-cart-button>
+    {{ 'Ir a direcciones' }}
+  </a>  
+  {% endif %}
+{% else %}
+  <a class="button-primary atc-button--checkout" href="{{ routes.account_login_url }}" data-atc-banner-cart-button>
+    {{ 'Ir a login' }}
+  </a>
+{% endif %}

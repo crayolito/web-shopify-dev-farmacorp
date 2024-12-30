@@ -1,0 +1,56 @@
+<script type="text/javascript">
+{% comment %}
+/**
+ * Optimize rendering the combo products widget by the main PickyStory app.
+ * Rendered by layout/theme.liquid.
+ * If you choose to uninstall PickyStory, this snippet can be safely deleted.
+ * Get the app: https://go.pickystory.com/8nsjceym
+ * Contact us for any questions: hello@pickystory.com.
+ * Copyright (C) 2022 Picky Story Ltd. - All Rights Reserved
+ */
+{% endcomment %}
+; (() => {
+  const getPageProductHandle = () => {
+    const path = window.location.pathname
+    const searchTerm = '/products/'
+    const start = path.lastIndexOf(searchTerm)
+    if (start < 0) return null
+    const encoded = path.slice(start + searchTerm.length).replace('/', '')
+    return decodeURI(encoded) // Decode to handle non-English letters
+  }
+  const findProductForms = ({ productHandle, compoundProductHandles, insertionMode, productFormSelector }) => {
+    if (!compoundProductHandles.includes(productHandle) || insertionMode !== 'replace') {
+      return []
+    }
+    // Override cart URL inside the selector with a localized version if necessary
+    const selector = productFormSelector.replace('"/cart/add"', '"{{ routes.cart_add_url }}"')
+    return document.querySelectorAll(selector)
+  }
+  const isProductPage = /^.*\/products\/[A-Za-z0-9-_%]+\/?$/i.test(window.location.pathname)
+  if (!isProductPage) {
+    return
+  }
+  const productHandle = getPageProductHandle()
+  if (!productHandle) {
+    return
+  }
+  const productForms = [
+    ...findProductForms({
+      productHandle,
+      compoundProductHandles: ["losartan-potasico-50mg-lch-x-blister-de-15-unidades", "xarelto-20mg", "xarelto-15mg", "xarelto-10mg", "incoril-60mg-diltiazem", "simperten-d-50mg-losartan-y-12-5mg-hidroclorotiazida-x-blister-de-10-unidades", "simperten-d-losartan-potasico-100mg-y-hidroclorotiazida-25mg-x-blister-de-10-unidades", "simperten-50mg-losartan-potasico-x-blister-de-10-unidades", "plenacor-50mg-atenolol-x-blister-de-10-unidades", "novadol-forte-diclofenaco-paracetamol-farmacorp-x-blister-de-10-unidades", "novadol-75-diclofenaco-75mg-y-paracetamol-500mg-farmacorp-x-blister-de-10-unidades", "novadol-diclofenaco-sodico-50mg-y-paracetamol-500mg-farmacorp-x-blister-de-10-unidades", "paracetamol-500mg-farmacorp-x-blister-8-unidades", "refrianex-comprimidos-x-blister-de-10-unidades", "combolosana", "album-display"],
+      insertionMode: 'replace',
+      productFormSelector: 'form[action="/cart/add"]',
+    }),
+    ...findProductForms({
+      productHandle,
+      compoundProductHandles: [],
+      insertionMode: 'replace',
+      productFormSelector: 'form[action="/cart/add"]',
+    }),
+  ]
+  const productForm = productForms.length === 1 && productForms[0]
+  if (productForm) {
+    productForm.style.setProperty('visibility', 'hidden')
+  }
+})()
+</script>

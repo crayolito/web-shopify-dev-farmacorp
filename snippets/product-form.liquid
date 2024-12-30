@@ -1,0 +1,335 @@
+
+{% comment %}
+  Product form
+
+  @param product
+
+  @param selected_variant
+{% endcomment %}
+
+{% if is_product_modal and settings.quickshop_show_dcb %}
+  {% assign quickshop_smart_buttons = true %}
+{% endif %}
+
+{% if is_product_modal == false and section.settings.show_dcb %}
+  {% assign product_smart_buttons = true %}
+{% endif %}
+
+{% if selected_variant.available == false %}
+  {% assign quickshop_smart_buttons = false %}
+  {% assign product_smart_buttons = false %}
+{% endif %}
+
+{% assign filmity = shop.metafields.farmacorp.online_membeship.value | first %}
+{% assign product_form_class = '' %}
+{% if product_smart_buttons or quickshop_smart_buttons %}
+  {% assign product_form_class = 'smart-payment-enabled' %}
+{% endif %}
+
+{% form 'product', product, class: product_form_class, data-product-form: '' %}
+  {% if product.has_only_default_variant %}
+    <input
+      name="id"
+      value="{{ product.variants[0].id }}"
+      type="hidden">
+  {% else %}
+    {%
+      include 'product-options',
+      product: product,
+      selected_variant: selected_variant,
+      style: settings.product_option_style
+    %}
+  {% endif %}
+
+
+  {% if selected_variant.available %}
+
+
+
+ 		{% if product.metafields.custom.mensaje_personalizado and product.metafields.custom.mensaje_personalizado <> '' %}
+  
+             <div class=" alert alert-danger alert-dismissible fade show" role="alert">
+                {{product.metafields.custom.mensaje_personalizado}}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>   
+        {% endif %}
+
+    
+        {% if product.tags contains  filmity.itemTag  %} 
+           <div class=" alert alert-warning alert-dismissible fade show" role="alert">
+                {{'farmacorp.producto.filmity_html' | t}}
+           </div> 
+          
+        {% endif %}
+    
+
+
+ 		{% if settings.mostrarAlertaSoloFarmacia == true and product.metafields.inventory.venta_online == "false" %}
+  
+           <div id="ventaSoloFarmacia">
+             <div class=" alert alert-{{settings.tipoAlertaVentaFarmacia}} alert-dismissible fade show" role="alert">
+                {{'farmacorp.producto.ventaSoloFarmacia_html' | t}}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>   
+            </div> 
+            {% assign quickshop_smart_buttons = false %}
+            {% assign product_smart_buttons = false %}
+ 		{% else %}
+             {% assign ArticuloFlag = product.metafields.inventory.ArticuloFlag | split: "," | where: "PORENCARGO"  %}
+             {%- if ArticuloFlag  contains "PORENCARGO"-%}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    {{ 'farmacorp.producto.porEncargo_html' | t }}
+                    <button type="button" class="close"  aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                 </div>
+ 				{% assign quickshop_smart_buttons = false %}
+            	{% assign product_smart_buttons = false %}
+		 	{% else %}
+
+        
+           {% assign init2x1 = false %}
+          {% assign bngm = shop.metafields.farmacorp.buy_x_get_y.value | where: "key", product.metafields.inventory.buy_x_get_y   %} 
+          {% assign bngm_item = shop.metafields.farmacorp.buy_x_get_y.value | where: "key", product.metafields.inventory.buy_x_get_y | first   %} 
+            <div class="product-form--atc"  style="width:100%;">
+
+               {% if product.tags contains  filmity.itemTag  %} 
+            {% else %}
+              <div class="product-form--atc-qty form-fields--qty" data-quantity-wrapper  style="width:100%;">
+                <div class="form-field form-field--qty-select" >
+                  <div class="form-field-select-wrapper" >
+
+
+                    {% if bngm.size  == 1 %}
+                        </div>
+                          <h3 style="color: red; font-style: italic;">{{ bngm_item.label }}</h3>
+                          
+                      
+                          <div class="form-field form-field--qty-input hidden">
+                            <input
+                              id="product-quantity-input"
+                              class="form-field-input form-field-number form-field-filled"
+                              value="{{ bngm_item.GetValue }}"
+                              name="quantity"
+                              alt="{{ bngm_item.key }}"
+                              type="text"
+                              pattern="\d*"
+                              aria-label="{{ 'general.general.quantity' | t }}"
+                              data-quantity-input
+                            >
+                            <label
+                              for="product-quantity-input"
+                              class="form-field-title"
+                            >
+                              {{ 'general.general.quantity' | t }}
+                            </label>
+                          </div>
+
+                        </div>             
+                               
+           
+                      {% else %}
+                  
+
+                       {% if settings.item_campania_2x1_enable  and product.tags contains settings.item_campania_2x1_tag %}
+                         {% comment %}
+                           <select
+                              id="product-quantity-select"
+                              class="form-field-input form-field-select" 
+                              aria-label="{{ 'general.general.quantity' | t }}"
+                              data-quantity-select
+                            >
+                              {% assign my_array = "2,4,6,8,10,12,14,16,18,20" | split: "," %}
+                              {% for i in  my_array %}
+                                <option {% if i == 2 %}selected {% endif %}value="{{ i }}">
+                                  {{ i }}  {% if settings.product_unidad_venta_cantidad == true %} {{ product.metafields.inventory.unidad_medida }} {% endif %}
+                                </option>
+                              {% endfor %}
+    
+                             {% assign init2x1 = true %}
+                              
+                            </select>
+                           {% endcomment %}
+
+                          <h3 style="color: red; font-style: italic;">{{ 'farmacorp.producto.buy_x_get_y_label' | t }}</h3>
+                          
+                      
+                          <div class="form-field form-field--qty-input hidden">
+                            <input
+                              id="product-quantity-input"
+                              class="form-field-input form-field-number form-field-filled"
+                              value="2"
+                              name="quantity"
+                              alt="2x1"
+                              type="text"
+                              pattern="\d*"
+                              aria-label="{{ 'general.general.quantity' | t }}"
+                              data-quantity-input
+                            >
+                            <label
+                              for="product-quantity-input"
+                              class="form-field-title"
+                            >
+                              {{ 'general.general.quantity' | t }}
+                            </label>
+                          </div>
+                         
+                          {% assign init2x1 = true %}
+                          {% else %}}
+                           <select
+                              id="product-quantity-select"
+                              class="form-field-input form-field-select" 
+                              aria-label="{{ 'general.general.quantity' | t }}"
+                              data-quantity-select
+                            >
+                                
+                              {% for i in (1..9) %}
+                                <option {% if i == 1 %}selected {% endif %}value="{{ i }}">
+                                  {{ i }}  {% if settings.product_unidad_venta_cantidad == true %} {{ product.metafields.inventory.unidad_medida }} {% endif %}
+                                </option>
+                              {% endfor %}
+                              <option value="10+">
+                                10+ {% if settings.product_unidad_venta_cantidad == true %} {{ product.metafields.inventory.unidad_medida }} {% endif %}
+                              </option>
+                            </select>
+                          {% endif %}
+
+                   {% if init2x1 == false %}
+                
+                          <label
+                            for="product-quantity-select"
+                            class="form-field-title"
+                          >
+                            {{ 'general.general.quantity' | t }}
+                          </label>
+                          {% include 'icon-chevron-down-small' %}
+                  {% endif %}
+                        </div>
+                       
+                  </div>
+          
+                          <div class="form-field form-field--qty-input hidden">
+                            <input
+                              id="product-quantity-input"
+                              class="form-field-input form-field-number form-field-filled"
+                              value="{% if init2x1 %}2{% else %}1{% endif %}"
+                              name="quantity"
+                              alt="{% if init2x1 %}2x1{% else %}ok{% endif %}"
+                              type="text"
+                              pattern="\d*"
+                              aria-label="{{ 'general.general.quantity' | t }}"
+                              data-quantity-input
+                            >
+                            <label
+                              for="product-quantity-input"
+                              class="form-field-title"
+                            >
+                              {{ 'general.general.quantity' | t }}
+                            </label>
+                          </div>
+                        </div>          
+                      
+                      
+                      {% endif %}
+  
+
+               
+             
+           
+                  {% if product.price > 0 %}
+                    <button
+                      class="product-form--atc-button {% unless selected_variant.available %}disabled{% endunless %}"
+                      type="submit"
+                      style="width:100%; {% if bngm.size == 1 or init2x1 %}background-color: red;{%endif%} "
+                      {% comment %}
+                        {% unless selected_variant.available %}disabled{% endunless %}
+                         disabled
+                      {% endcomment %}
+
+                      data-product-atc
+                      onclick="gtag_report_conversion_AGREGAR_CARRITO();"
+                    >
+                      <span class="atc-button--text">
+                        {% if selected_variant.available %}
+                          {% if bngm.size == 1 %}
+                            Agregar el combo {{ bngm_item.key }} al carrito
+                          {% else %}
+                            {% if init2x1 %}
+                              Agregar el combo 2 X 1 al carrito
+                            {% else %}
+                              {{ 'product.buttons.add_to_cart' | t }}
+                            {% endif %}
+                          {% endif %}
+
+                        {% else %}
+                          {{ 'product.buttons.sold_out' | t }}
+                        {% endif %}
+                      </span>
+                      <span class="atc-button--icon">
+                        {%- include 'icon-spinner' -%}
+                      </span>
+                    </button>
+                  {% endif %}
+            {% endif %}
+            </div> 
+		{% endif %}
+      {% endif %}
+  {% else %}   
+  {% endif %}
+
+    {% if bngm.size == 1 or init2x1 %}
+
+       {% else %}
+      {% if product_smart_buttons or quickshop_smart_buttons %}
+        {{ form | payment_button }}
+      {% endif %}
+    {%endif%}
+
+  {% if product.metafields.inventory.brands == '03'  %}
+  	<input id="producto-a-market" style="display:none;" type="text" name="properties[Producto]" value="Amarket">
+  {%endif%}
+
+  {% if init2x1  %}
+  	<input id="2x1" style="display:none;" type="text" name="properties[Oferta]" value="2x1">
+  {%endif%}
+
+  
+{% endform %}
+
+      {% if bngm.size == 1%}
+        {% if bngm_item.buyOneEnabled == true %}
+            <form class="newaddcart" method="post" action="/cart/add">
+              <input type="hidden" name="id" value="{{ product.variants.first.id }}" />
+              <input min="1" type="number" style="display:none;" id="quantity" name="quantity" value="1"/>
+              <input type="submit" class="product-form--atc-button"value="Agregar solo una unidad" />
+            </form>
+        {%endif%}
+    {%endif%}
+
+
+
+
+<script>
+
+
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+
+      var inputElement = document.getElementById('product-quantity-input');
+      inputElement.addEventListener('change', function(event) {
+          var nuevoValor = event.target.value;
+          console.log('El nuevo valor es: ' + nuevoValor);
+      });
+
+   
+    });
+
+  
+  <!-- Agregado por geperez -->
+  document.getElementsByClassName('smart-payment-enabled')[0].addEventListener('submit', function() { setTimeout(function() { document.getElementsByClassName('atc-banner--close')[0].click(); }, 3000); });
+</script>

@@ -1,0 +1,191 @@
+ <head>
+  <link rel="icon" href="https://cdn.shopify.com/s/files/1/0368/1363/5716/files/Star.svg?v=1734739016" type="image/png">
+ </head>
+
+
+{%- capture contentForQuerystring -%}{{ content_for_header }}{%- endcapture -%}
+{%- assign page_url = contentForQuerystring | split:'"pageurl":"' | last | split:'"' | first | split:'.myshopify.com' | last |   replace:'\/','/' |    replace:'%20',' ' |    replace:'\u0026','&'  -%}
+{%- assign param_page = '' -%}
+{%- assign param_page_2 = '' -%}
+{%- for i in (1..1) -%}
+	{%- unless page_url contains "?" -%}{% break %}{%- endunless -%}
+	{%- assign query_string = page_url | split:'?' | last -%}
+	{%- assign qry_parts= query_string | split:'&' -%}
+	{%- for part in qry_parts -%}
+		{%- assign key_and_value = part | split:'=' -%}
+		{%- if key_and_value.size > 1 -%}
+			{% if key_and_value[0] == 'order' %}
+				{%- assign order = key_and_value[1] -%}
+			{% endif%}
+			{% if key_and_value[0] == 'orderid' %}
+				{%- assign orderid = key_and_value[1] -%}
+			{% endif%}
+            {% if key_and_value[0] == 'monto' %}
+				{%- assign monto = key_and_value[1] -%}
+			{% endif%}
+
+            {% if key_and_value[0] == 'tipo' %}
+				{%- assign tipo = key_and_value[1] -%}
+			{% endif%}
+
+            {% if key_and_value[0] == 'operationCode' %}
+				{%- assign operationCode = key_and_value[1] -%}
+			{% endif%}
+          
+		{%- endif -%}
+	{%- endfor -%}
+{%- endfor -%}
+
+{% layout none %}
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+{% assign primaryColor = '00539B' %}
+<link rel="stylesheet" href="{{ 'checkout.css' | asset_url }}">
+ 
+ <style>
+        @media only screen and (min-width : 100px) {
+            #ifarma {
+                height: 1455px !important
+            }
+        }
+
+        @media only screen and (min-width : 320px) {
+            #ifarma {
+                height: 1455px !important
+            }
+        }
+
+        /* Extra Small Devices, Phones */
+        @media only screen and (min-width : 480px) {
+            #ifarma {
+                height: 1455px !important
+            }
+        }
+
+        /* Small Devices, Tablets */
+        @media only screen and (min-width : 768px) {
+            #ifarma {
+                height: 1455px !important
+            }
+        }
+
+        /* Medium Devices, Desktops */
+        @media only screen and (min-width : 992px) {
+            #ifarma {
+                height: 1455px !important
+            }
+        }
+
+        /* Large Devices, Wide Screens */
+        @media only screen and (min-width : 1200px) {
+            #ifarma {
+                height: 1400px !important
+            }
+        }
+    </style>
+
+
+<div class="header-fixed">
+  <div class="header-content">
+    <div class="center-section">
+      <img src="https://cdn.shopify.com/s/files/1/0368/1363/5716/files/Farmacorp-Logo.svg?v=1734739375" alt="Amarket" class="logo">
+    </div>
+    <div class="right-section" style="padding-right : 30px;">
+      <span class="user-info">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#{{primaryColor}}" class="bi bi-person-circle" viewBox="0 0 16 16">
+          <path d="M13 8a5 5 0 1 0-10 0 5 5 0 0 0 10 0zM8 1a7 7 0 1 1 0 14A7 7 0 0 1 8 1z"></path>
+          <path d="M8 8.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5zm0 1c-2.33 0-4.39 1.17-5.63 2.9C2.745 12.1 3.815 13 5.146 13h5.708c1.331 0 2.401-.9 2.776-1.6C12.39 10.67 10.33 9.5 8 9.5z"></path>
+        </svg>
+        {{ customer.first_name }} {{ customer.last_name }}
+      </span>
+    </div>
+  </div>
+</div>
+    
+<div class="container-fluid">
+      {% assign fiscal_data = customer.metafields.farmacorp.LastFiscalNitNombre.value | parse_json %}
+
+       <form   target="ifarma" action="https://www.livees.net/Checkout/api4.5-m-produccion" method="POST" id="ID-FORM">
+	 <input type="hidden" name="_" value="nb51oj6r22du438qk1t3eav24zpc629ig7sx0mf5lhwe2y590">
+	 <input type="hidden" name="__" value="6pb7z4kcdao36vra0g2c1c2qm01xcfs5l620jyituf89en5wh">
+	 <input type="hidden" name="postURL" value="{{ settings.checkout_domain }}">
+	 <input type="hidden" name="mp" value="{{ tipo }}">
+	 <input type="hidden" name="amt2" value="{{ monto }}">
+	 <input type="hidden" name="currency" value="BOB">
+	 <input type="hidden" name="invno" value="{{ order }}">
+	 <input type="hidden" name="name" value="{{ customer.name}}">
+	 <input type="hidden" name="lastname" value="{{ customer.last_name}}">
+	 <input type="hidden" name="email" value="{{ customer.metafields.farmacorp.emailAlterno.value }}">
+	 <input type="hidden" name="pais" value="BO">
+	 <input type="hidden" name="ciudad" value="{{ customer.default_address.city}}">
+	 <input type="hidden" name="estado_lbl" value="{{ customer.default_address.city}}">
+	 <input type="hidden" name="direccion" value="{{ customer.default_address.address1}}">
+	 <input type="hidden" name="phone" value="{{ customer.metafields.farmacorp.telefono }}">
+	 <input type="hidden" name="nombre_factura" value="{{ fiscal_data.Name }}">
+	 <input type="hidden" name="nit" value="{{ fiscal_data.DocumentIdentity }}">
+	 <input type="hidden" name="param2" value="">
+	 <input type="hidden" name="id_shopify" value="{{ orderid }}">
+	 <input type="hidden" name="on_shopify" value="{{ order }}">
+	 <input type="hidden" name="customer_id" value="{{ customer.id}}">
+    </form>
+    <iframe id="ifarma" name="ifarma" scrolling="no" style="width:100%;border:none"></iframe>
+
+</div>
+
+  <script src="{{ 'checkout.js' | asset_url }}" defer></script>  
+    <script> 
+
+window.addEventListener('message', function(event) {
+  console.log(event);
+  if (event.origin === 'https://www.livees.net') {
+    if (event.data.content === '1'&& event.data.messageType === "FarmacorpCallback" ) {
+         clearCartAndRedirect({{orderid}}, '{{operationCode}}');
+    }
+  }
+});
+
+ function clearCartAndRedirect(orderId, operationCode) {
+  fetch('/cart/clear.js', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Error al vaciar el carrito');
+      }
+         console.log(orderId);
+      dameOrderInfo(orderId).then((res) => {                     
+                if(res.data){
+                   const jobId = res.data.data[0].instaleapJobId;
+                  console.log(res.data.data[0]);
+                  if(jobId!=='')
+                     window.location.href = `{{ settings.checkout_domain }}pages/lst?jobId=${jobId}&type=${operationCode}`;
+                  else
+                    clearCartAndRedirect(orderId, operationCode);
+                }
+               
+              })
+              .catch((error) => {
+                  console.error('Error processing pickup request:', error);
+              });
+    })
+    .catch((error) => {
+      console.error('Hubo un problema al vaciar el carrito:', error);
+    });
+}
+      
+      
+      window.onload = function () {      
+
+            history.pushState(null, null, location.href);
+
+            window.onpopstate = function () {
+              history.pushState(null, null, location.href); // Bloquear el retroceso
+            };
+        
+            document.getElementById("ID-FORM").submit();
+      };
+    
+    </script>

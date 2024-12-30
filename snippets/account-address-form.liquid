@@ -1,0 +1,322 @@
+{% comment %}
+  @param address {Object}
+    Object containing address items
+
+  @param visible {Bool}
+    Determine if the address form is visible
+{% endcomment %}
+
+{% if address.id != null %}
+  {% assign address_id = address.id %}
+{% else %}
+  {% assign address_id = 'new' %}
+{% endif %}
+
+{% if visible != blank %}
+  {% assign visible = visible %}
+{% else %}
+  {% assign visible = false %}
+{% endif %}
+<script src="{{ 'MySetting.js' | asset_url }}">
+</script>
+{% assign citys = settings.citys | split: ',' %}  
+<div
+  class="account-address-form {% if visible %}visible{% endif %}"
+  data-address-id="{{ address_id }}">
+  <h2 class="account-page-subtitle">
+    {%- if address_id == 'new' -%}
+      {{ 'customers.addresses.add_new_title' | t }}
+    {%- else -%}
+      {{ 'customers.addresses.edit_existing_title' | t }}
+    {%- endif -%}
+  </h2>
+
+  {% form 'customer_address', address, id: 'frm-address' %}
+    <div class="ocultar form-fields-columns">
+      <div class="hide form-field form-field--half">
+        <input
+          class="form-field-input form-field-text"
+          id="customer_addr_{{ address_id }}_firstname"
+          name="address[first_name]"
+          type="text"
+          value="{{ form.first_name }}">
+
+        <label class="form-field-title" for="customer_addr_{{ address_id }}_firstname">
+          {{ 'customers.forms.first_name' | t }}
+        </label>
+      </div>
+   {% assign mAlias = shop.metafields.farmacorp.alias.value  %}
+      <div class="form-field form-field--half">
+        <input
+          class="form-field-input form-field-text"
+          id="customer_addr_{{ address_id }}_lastname"
+          name="address[last_name]"
+          type="text"
+          value="{% if form.last_name == blank   %}{{ mAlias.elements.first }} {% else %}{{ form.last_name }} {% endif %}">
+
+        <label class="form-field-title" for="customer_addr_{{ address_id }}_lastname">
+          {{ 'customers.forms.last_name' | t }}
+        </label>
+      </div>
+    </div>
+    <p></p>
+    <div class="ocultar form-field">
+      <input
+        class="form-field-input form-field-text"
+        id="customer_addr_{{ address_id }}_company"
+        name="address[company]"
+        type="text"
+        value="{{ form.company }}">
+
+      <label class="form-field-title" for="customer_addr_{{ address_id }}_company">
+        {{ 'customers.forms.company' | t }}
+      </label>
+    </div>
+
+    <div class="form-field">
+      <input
+        class="form-field-input form-field-text"
+        id="customer_addr_{{ address_id }}_address1"
+        name="address[address1]"
+        type="text"
+        required
+        value="{{ form.address1 }}">
+
+      <label class="form-field-title" for="customer_addr_{{ address_id }}_address1">
+        {{ 'customers.forms.address_1' | t }}
+      </label>
+    </div>
+    <p></p>
+      <div class="form-fields-columns">
+      <div class="hide form-field form-field--half">
+        <input
+        class="form-field-input form-field-text"
+        id="customer_addr_{{ address_id }}_address2"
+        name="address[address2]"
+        type="text"
+             
+        value="{{ form.address2 }}">
+
+      <label class="form-field-title" for="customer_addr_{{ address_id }}_address2">
+        {{ 'customers.forms.address_2' | t }}
+      </label>
+      </div>
+
+      <div class="form-field form-field--half">
+       <div class="form-field-select-wrapper">
+            <select
+              class="form-field-input form-field-select form-field-filled" 
+              id="keyAliasAddress_{{ address_id }}"
+              onchange="cambioAliasAddress('{{ address_id }}');"
+              aria-label="Alias">
+                {% assign mAlias = shop.metafields.farmacorp.alias.value  %}
+
+               
+              {% for alias in mAlias.elements %}   
+
+                  {% if alias != mAlias.otherKey %}
+                         {%- if alias == form.last_name -%}
+                             <option selected value="{{alias}}">{{alias}}</option>
+                         {%- else -%}               
+           					<option value="{{alias}}">{{alias}}</option>
+                         {%- endif -%}
+                  {% endif %}
+      		  {% endfor %}
+                
+
+                 {% if mAlias.elements contains form.last_name  %}
+                {%- else -%}
+                     {% if form.last_name == blank %}
+                       {% else %}
+                         <option selected value="{{form.last_name}}">{{form.last_name}}</option>
+                     {% endif %}
+                {% endif %}
+
+                <option value="{{mAlias.otherKey}}">{{mAlias.otherKey}}</option>
+            </select>
+            
+            <label id="lblAlias" class="form-field-title" for="keyAliasAddress">
+              Alias
+            </label>
+            <svg
+                aria-hidden="true"
+                focusable="false"
+                role="presentation"
+                xmlns="http://www.w3.org/2000/svg"
+                width="8"
+                height="6"
+                viewBox="0 0 8 6"
+              >
+                <g fill="currentColor" fill-rule="evenodd">
+                  <polygon class="icon-chevron-down-left" points="4 5.371 7.668 1.606 6.665 .629 4 3.365"/>
+                  <polygon class="icon-chevron-down-right" points="4 3.365 1.335 .629 1.335 .629 .332 1.606 4 5.371"/>
+                </g>
+              </svg>
+
+            </div>
+      </div>
+    </div>
+    <p></p>
+    <div class="form-fields-columns">
+      <div class="ocultar form-field form-field--half">
+        <input
+          class="form-field-input form-field-text"
+          id="customer_addr_{{ address_id }}_city"
+          type="text"
+          name="address[city]"
+          {%- if address_id == 'new' -%}
+     	  value="{{citys[0]}}"
+    	  {%- else -%}
+          value="{{form.city}}">
+          {%- endif -%}
+        <label class="form-field-title" for="customer_addr_{{ address_id }}_city">
+          {{ 'customers.forms.city' | t }}
+        </label>
+      </div>
+
+      <div class="ocultar form-field form-field--half">
+        <div class="form-field-select-wrapper">
+          <select
+            class="form-field-input form-field-select form-field-filled"
+            id="customer_addr_{{ address_id }}_country"
+            name="address[country]"
+            data-default="{{ form.country }}">
+            {{ country_option_tags }}
+          </select>
+          <label class="form-field-title" for="customer_addr_{{ address_id }}_country">
+            {{ 'customers.forms.country' | t }}
+          </label>
+          {% include 'icon-chevron-down-small' %}
+        </div>
+      </div>
+      
+      <div class="form-field form-field--half">
+          <div class="form-field-select-wrapper">
+            <select
+              class="form-field-input form-field-select form-field-filled" 
+              id="keyCiudadAddress_{{ address_id }}"
+              onchange="cambioCiudadAddress('{{ address_id }}');"
+              aria-label="Ciudad">
+              {% for city in citys %}   
+              
+               {%- if city == form.city -%}
+                   <option selected value="{{city}}">{{city}}</option>
+               {%- else -%}               
+ 					<option value="{{city}}">{{city}}</option>
+               {%- endif -%}
+              
+      		  {% endfor %}
+            </select>
+            
+            <label id="lblCiuada" class="form-field-title" for="keyCiudadAddress">
+              Ciudad
+            </label>
+            <svg
+                aria-hidden="true"
+                focusable="false"
+                role="presentation"
+                xmlns="http://www.w3.org/2000/svg"
+                width="8"
+                height="6"
+                viewBox="0 0 8 6"
+              >
+                <g fill="currentColor" fill-rule="evenodd">
+                  <polygon class="icon-chevron-down-left" points="4 5.371 7.668 1.606 6.665 .629 4 3.365"/>
+                  <polygon class="icon-chevron-down-right" points="4 3.365 1.335 .629 1.335 .629 .332 1.606 4 5.371"/>
+                </g>
+              </svg>
+
+            </div>
+        </div>
+
+
+      <div class="ocultar form-field form-field--half" id="address_province_container_{{ address_id }}">
+        <div class="form-field-select-wrapper">
+          <select
+            class="form-field-input form-field-select form-field-filled"
+            id="customer_addr_{{ address_id }}_province"
+            name="address[province]"
+            data-default="{{ form.province }}">
+          </select>
+          <label class="form-field-title" for="customer_addr_{{ address_id }}_province">
+            {{ 'customers.forms.province' | t }}
+          </label>
+          {% include 'icon-chevron-down-small' %}
+        </div>
+      </div>
+
+      <div class="ocultar form-field form-field--half">
+        <input
+          class="form-field-input form-field-text"
+          id="customer_addr_{{ address_id }}_zip"
+          name="address[zip]"
+          type="text"
+          value="{{form.zip}}">
+        <label class="form-field-title" for="customer_addr_{{ address_id }}_zip">
+          {{ 'customers.forms.zip' | t }}
+        </label>
+      </div>
+
+      <div class="form-field form-field--half">
+        <input
+          class="form-field-input form-field-text"
+          id="customer_addr_{{ address_id }}_phone"
+          name="address[phone]"
+          type="text"
+          required
+          value="{{form.phone}}">
+        <label class="form-field-title" for="customer_addr_{{ address_id }}_phone">
+          {{ 'customers.forms.phone' | t }}
+        </label>
+      </div>
+
+      <div class="form-field form-field--half">
+        <label class="form-field-checkbox" for="address_default_address_{{ address_id }}">
+          {{ form.set_as_default_checkbox }}
+
+          <span class="form-icon--checkbox">
+            {%- include 'icon-checkbox' -%}
+          </span>
+          <span class="form-field-title--inline">
+            {{ 'customers.addresses.set_default' | t }}
+          </span>
+        </label>
+      </div>
+      
+      <div class="form-field form-field--half" style="text-align : right;vertical-align: text-bottom;">
+      	<button type="button" class="btn btn-link" onclick="geolocation()">{{ 'farmacorp.direccion.encuentrame' | t}}</button>
+      </div>
+      
+    </div>
+  
+  	<div class="map_parent">                  
+                <div id="map_{{address_id}}" class="map">
+                </div>
+                <img height="32px" src="{{ 'gps-marker-icon.svg'  | asset_url }}" id="pin" />
+    </div>
+
+    <div class="form-action-row">
+     
+        {%- if address_id == 'new' -%}
+       	<button class="button-primary" type="button" id="submit-{{form.id}}" 
+            onclick="crearDireccion(customer_addr_{{ address_id }}_address1.value, customer_addr_{{ address_id }}_address2.value, customer_addr_{{ address_id }}_city.value, customer_addr_{{ address_id }}_phone.value, customer_addr_{{ address_id }}_firstname.value, customer_addr_{{ address_id }}_lastname.value,'{{ address_id }}', address_default_address_{{ address_id }}.checked);"
+                >   {{ 'customers.addresses.submit' | t }}
+        </button>
+      
+        {%- else -%}
+         
+          <button class="button-primary" type="button" id="submit-{{form.id}}" 
+                   onclick="crearDireccion(customer_addr_{{ address_id }}_address1.value, customer_addr_{{ address_id }}_address2.value, customer_addr_{{ address_id }}_city.value, customer_addr_{{ address_id }}_phone.value, customer_addr_{{ address_id }}_firstname.value, customer_addr_{{ address_id }}_lastname.value,'{{ address_id }}', address_default_address_{{ address_id }}.checked);"
+          	>{{ 'customers.addresses.update' | t }}
+          </button>
+        {%- endif -%}
+
+        <button class="button-secondary" type="button" data-edit-address-cancel 
+                onclick="document.getElementById('modal_{{address_id}}').style.display = 'none'; ">
+          {{ 'customers.forms.cancel' | t }}
+        </button>
+     
+    </div>
+     <!-- <p></p><p></p><p></p> <p></p><p></p><p></p> <p></p><p></p><p></p> -->
+  {% endform %}
+                  </div>

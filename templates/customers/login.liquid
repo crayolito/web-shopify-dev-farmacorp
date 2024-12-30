@@ -1,0 +1,514 @@
+
+<style>
+.center {
+  margin: auto;
+  width: 320px;
+  padding: 30px 10px 10px 10px;
+}
+    @media all and (min-width: 480px) {
+    .deskContent {display:block;}
+    .phoneContent {display:none;}
+}
+
+@media all and (max-width: 479px) {
+    .deskContent {display:none;}
+    .phoneContent {display:block;}
+  }
+
+  
+</style>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<section
+  class="account-page"
+  data-template-account
+  data-template-account-login>
+  <header class="account-page-masthead">
+    <h1 class="account-page-title">
+      {{ 'customers.login.title' | t }}
+    </h1>
+  </header>
+
+  <article class="account-page-content">
+
+<div class="container text-center">
+  <div class="row">
+    <div id="datos_formulario" class="col deskContent">
+
+    
+    <div class="account-login visible" data-account-login-main>
+      {% form 'customer_login' %}
+
+        {% if form.errors != blank %}
+          <div class="account-message message--error">
+            {{ form.errors | default_errors }}
+          </div>
+        
+      <p>
+ 			<img width="100%" src="https://cdn.shopify.com/s/files/1/0368/1363/5716/files/banner-Actualiza-tu-contrasena.png?v=1602706952">
+      </p>
+         
+        {% endif %}
+
+        <div class="form-field">
+          <input
+            class="form-field-input form-field-text"
+            id="customer_email"
+            name="customer[email]"
+            type="text"
+            autocorrect="off"
+            autocapitalize="off">
+          <label
+            class="form-field-title"
+            for="customer_email">
+            {{ 'customers.forms.email' | t }}
+          </label>
+        </div>
+
+        {% if form.password_needed %}
+          <div class="form-field form-field--account-password">
+            <input
+              class="form-field-input form-field-text"
+              id="customer_password"
+              name="customer[password]"
+              type="password">
+            <label
+              class="form-field-title"
+              for="customer_password">
+              {{ 'customers.forms.password' | t }}
+            </label>
+          </div>
+        {% endif %}
+
+        <div class="form-action-row">
+          <button class="button-primary form-action--submit" type="submit" onclick="dameCredenciales();">
+            {{ 'customers.login.sign_in' | t }}
+          </button>
+          <br/>
+          <div class="form-action-row--helper">
+            <span class="form-action-row--helper-item">
+              {{ 'customers.new_customer.title' | t }}
+              {{ 'customers.register.title' | t | customer_register_link }}
+            </span>
+
+            {% if form.password_needed %}
+              <br/>
+              <span class="form-action-row--helper-item">
+                <a href="#customer_recovery" data-login-toggle>
+                  {{ 'customers.login.forgot_password' | t }}
+                </a>
+              </span>
+            {% endif %}
+          </div>
+        </div>
+      {% endform %}
+    </div>
+
+    <div
+      class="account-recovery"
+      id="customer_recovery"
+      data-account-login-recovery>
+      {% form 'recover_customer_password' %}
+
+        <h2 class="account-page-subtitle">
+          {{ 'customers.recover_password.title' | t }}
+        </h2>
+
+        <p>{{ 'customers.recover_password.subtitle' | t }}</p>
+      
+       <p>
+ 			<img width="100%" src="https://cdn.shopify.com/s/files/1/0368/1363/5716/files/thumbnail_banner-Actualiza-tu-contrasena_y_datos.png?v=1602801235">
+       </p>
+
+        {% assign has_message = false %}
+
+        {% if form.errors != blank %}
+          {% assign has_message = true %}
+          {% assign message_type = 'error' %}
+        {% endif %}
+
+        {% if form.posted_successfully? %}
+          {% assign has_message = true %}
+          {% assign message_type = 'success' %}
+        {% endif %}
+
+        {% if has_message %}
+          <div class="account-message message--{{ message_type }}" data-recovery-has-message>
+            {% case message_type %}
+              {% when 'success' %}
+                <p>
+                  {{ 'customers.recover_password.success' | t }}
+                </p>
+              {% when 'error' %}
+                {{ form.errors | default_errors }}
+            {% endcase %}
+          </div>
+        {% endif %}
+
+        <div class="form-field">
+          <input
+            class="form-field-input form-field-text"
+            id="customer_recovery_email"
+            name="email"
+            type="text"
+            autocorrect="off"
+            autocapitalize="off">
+          <label
+            class="form-field-title"
+            for="customer_recovery_email">
+            {{ 'customers.forms.email' | t }}
+          </label>
+        </div>
+
+        <div class="form-action-row">
+          <button class="button-primary" type="submit">
+            {{ 'customers.forms.submit' | t }}
+          </button>
+
+          <button
+            class="button-secondary"
+            type="button"
+            data-login-toggle>
+            {{ 'customers.forms.cancel' | t }}
+          </button>
+        </div>
+      {% endform %}
+    </div>
+
+    {% if shop.checkout.guest_login %}
+      <div class="account-register account-register--guest">
+        <h2 class="account-register-subtitle">
+          {{ 'customers.guest_login.title' | t }}
+        </h2>
+
+        {% form 'guest_login' %}
+          <button class="button-primary" type="submit">
+            {{ 'customers.guest_login.submit' | t }}
+          </button>
+        {% endform %}
+      </div>
+    {% endif %}
+ </div>
+  <div class="col deskContent" style="border-left: 1px solid #D6D6D6;">
+
+    
+     <div class="center">
+       {% if shop.metafields.app.update_info.value.EnableLoginFacebook %}
+ <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/es_ES/sdk.js#xfbml=1&version=v15.0&appId=657863972925266&autoLogAppEvents=1" nonce="yCg3FP1e"></script>
+  
+    <div 
+      class="fb-login-button" 
+      data-width="300" 
+      data-size="large" 
+      data-button-type="continue_with" 
+      onlogin="onloginFB"
+      size="large"
+      data-layout="default" 
+      data-auto-logout-link="false" 
+      data-use-continue-as="true"
+      data-scope="public_profile,email">
+      </div>
+
+      <script>
+          
+          window.fbAsyncInit = function() {
+            FB.init({
+              appId      : '657863972925266',
+              cookie     : true, 
+              xfbml      : true, 
+              version    : 'v15.0'
+            });
+          
+          };
+        function onloginFB(res){
+            if(res.status== "connected")
+            {
+
+      jquery.blockUI(
+    			{ 
+    				message : 'Iniciando sesión...',
+    				css: { 
+    					border: 'none', 
+    					padding: '15px', 
+    					backgroundColor: '#000', 
+    					'-webkit-border-radius': '10px', 
+    					'-moz-border-radius': '10px', 
+    					opacity: .5, 
+    					color: '#fff' 
+    				} 
+    			}); 
+   
+              
+              console.log(res.authResponse);
+               FB.api('/me?fields=id,name,first_name,last_name,email', function(response) {
+                 console.log('id: ' + response.id);
+                 console.log('name: ' + response.name);
+                 console.log('first_name: ' + response.first_name);
+                 console.log('last_name: ' + response.last_name);
+                 console.log('email: ' + response.email);
+
+                  oauthLogin('facebook', response.id, response.first_name, response.last_name,response.email, res.authResponse.accessToken);
+
+                });
+                 
+            }
+         }
+        
+      </script>
+
+     
+    <br>
+   <br>
+       {% endif %}
+            <div id="g_id_onload"
+                 data-client_id="658161391897-43e6il3h9ugg7vmecsmstrc8fbl0esmg.apps.googleusercontent.com"
+                 data-callback="handleCredentialResponse"
+                 data-context="signin"
+                 data-ux_mode="popup"
+                 data-login_uri="https://farmacorp.com/account/login"
+                 data-nonce=""
+                
+                 data-auto_prompt="false">
+            </div>
+            
+            <div class="g_id_signin"
+                 data-type="standard"
+                 data-shape="rectangular"
+                 data-theme="outline"
+                 data-text="continue_with"
+                 data-size="large"
+                 data-locale="es-419"
+                 data-width=300
+                 data-logo_alignment="left">
+            </div>
+
+
+      <br>
+     </div>
+     </div>
+
+     </div>
+
+
+  <div class="col phoneContent">
+
+     <div class="center">
+              {% if shop.metafields.app.update_info.value.EnableLoginFacebook %}
+ <div id="fb-root"></div>
+    <script  defer crossorigin="anonymous" src="https://connect.facebook.net/es_ES/sdk.js#xfbml=1&version=v15.0&appId=657863972925266&autoLogAppEvents=1" nonce="yCg3FP1e"></script>
+  
+    <div 
+      class="fb-login-button" 
+      data-width="300" 
+      data-size="large" 
+      data-button-type="continue_with" 
+      onlogin="onloginFB"
+      size="large"
+      data-layout="default" 
+      data-auto-logout-link="false" 
+      data-use-continue-as="true"
+      data-scope="public_profile,email">
+      </div>
+
+      <script>
+          
+          window.fbAsyncInit = function() {
+            FB.init({
+              appId      : '657863972925266',
+              cookie     : true, 
+              xfbml      : true, 
+              version    : 'v15.0'
+            });
+          
+          };
+        function onloginFB(res){
+            if(res.status== "connected")
+            {
+      jquery.blockUI(
+    			{ 
+    				message : 'Iniciando sesión...',
+    				css: { 
+    					border: 'none', 
+    					padding: '15px', 
+    					backgroundColor: '#000', 
+    					'-webkit-border-radius': '10px', 
+    					'-moz-border-radius': '10px', 
+    					opacity: .5, 
+    					color: '#fff' 
+    				} 
+    			}); 
+   
+
+              
+              console.log(res.authResponse);
+               FB.api('/me?fields=id,name,first_name,last_name,email', function(response) {
+                 console.log('id: ' + response.id);
+                 console.log('name: ' + response.name);
+                 console.log('first_name: ' + response.first_name);
+                 console.log('last_name: ' + response.last_name);
+                 console.log('email: ' + response.email);
+
+                  oauthLogin('facebook', response.id, response.first_name, response.last_name,response.email, res.authResponse.accessToken);
+
+                });
+                 
+            }
+         }
+        
+      </script>
+
+     
+    <br>
+   <br>
+              {% endif %}
+            <div id="g_id_onload"
+                 data-client_id="658161391897-43e6il3h9ugg7vmecsmstrc8fbl0esmg.apps.googleusercontent.com"
+                 data-callback="handleCredentialResponse"
+                 data-context="signin"
+                 data-ux_mode="popup"
+                 data-login_uri="https://farmacorp.com/account/login"
+                 data-nonce=""
+                
+                 data-auto_prompt="false">
+            </div>
+            
+            <div class="g_id_signin"
+                 data-type="standard"
+                 data-shape="rectangular"
+                 data-theme="outline"
+                 data-text="continue_with"
+                 data-size="large"
+                 data-locale="es-419"
+                 data-width=300
+                 data-logo_alignment="left">
+            </div>
+
+
+      <br>
+       <button type="button" id="dameLogin" style="width:300px;" class="btn btn-secondary" onclick="dameLogin();">Continuar con E-mail</button>
+     </div>
+     </div>
+
+     </div>
+  
+     </div>
+
+      
+  </article>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script> 
+<script src="https://malsup.github.io/jquery.blockUI.js"></script>
+<script type="text/javascript">
+  var jquery = null;
+  if (window.jQuery) {
+    jquery = window.jQuery;
+  }
+
+
+   function loadBlockUIScript() {
+        return new Promise(function(resolve, reject) {
+            var script = document.createElement('script');
+            script.src = "https://malsup.github.io/jquery.blockUI.js";
+            script.onload = () => resolve();
+            script.onerror = () => reject(new Error("Error al cargar blockUI"));
+            document.head.appendChild(script);
+        });
+    }
+
+    loadBlockUIScript().then(() => {
+        console.log("blockUI ha sido cargado correctamente.");
+    }).catch((err) => {
+        console.error(err.message);
+    });
+  
+  function dameCredenciales(){
+    
+    getTokenUsuario(jquery('#customer_email').val(), jquery('#customer_password').val())
+    .then(function(data) { 
+      	console.log(data);
+    }).catch(function(err) {
+      alert(JSON.parse(err));
+        console.log(err);
+    });  
+  }
+  
+  jquery(document).ready(function(){ 
+      let formu = jquery("#customer_login");
+      jquery('input[type=submit]', formu).one("click", function() {   
+			//alert('hol');
+      });
+    
+  });
+
+function parseJwt (token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+};
+
+ function dameLogin() {   
+    
+    jquery('#datos_formulario').removeClass("deskContent");
+    jquery('#dameLogin').hide();
+   
+  }
+  
+  function handleCredentialResponse(response) {   
+
+  
+      jquery.blockUI(
+    			{ 
+    				message : 'Iniciando sesión...',
+    				css: { 
+    					border: 'none', 
+    					padding: '15px', 
+    					backgroundColor: '#000', 
+    					'-webkit-border-radius': '10px', 
+    					'-moz-border-radius': '10px', 
+    					opacity: 0.5,
+    					color: '#fff' 
+    				} 
+    			}); 
+ 
+      const responsePayload = parseJwt(response.credential);
+
+      oauthLogin('google', responsePayload.sub, responsePayload.given_name, responsePayload.family_name,responsePayload.email, response.credential);
+  }
+
+ function oauthLogin(provider,id,first_name, last_name, email, token) {
+
+
+    loginExternalProvider(provider, token, id,first_name, last_name, email)
+    .then(function(data) { 
+     var x = window.atob(data.data.user.scriptAutenticationWEB);
+      eval(x);
+
+      
+      
+      setTimeout(() => {
+
+          const queryString = window.location.search;
+          const urlParams = new URLSearchParams(queryString);
+          const checkout_url = urlParams.get('checkout_url')
+          if(checkout_url){
+            window.location.href = checkout_url;
+          }else
+          {
+             window.location.href = "/account";
+          }      
+      }  , 1000);
+      // para esconder la opcion de 'cambiar contrasena'
+      document.cookie = 'isSocialLogin=yes;path=/';
+
+    }).catch(function(err) {
+      alert(JSON.parse(err));
+        console.log(err);
+    });  
+  }
+  
+</script>
